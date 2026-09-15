@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{{ super() }}
+
+<div class="monlau-page-navigation">
+
+    {% if page.previous_page %}
+    <a class="previous" href="{{ page.previous_page.url | url }}">
+        ← {{ page.previous_page.title }}
+    </a>
+    {% else %}
+    <span></span>
+    {% endif %}
+
+    {% if page.next_page %}
+    <a class="next" href="{{ page.next_page.url | url }}">
+        {{ page.next_page.title }} →
+    </a>
+    {% else %}
+    <span></span>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -5,6 +5,8 @@ site_author: Jose Aguilera
 theme:
   name: mkdocs
   language: es
+  navigation_depth: 3
+  custom_dir: overrides
 
 nav:
   - Inicio: index.md
@@ -28,3 +30,6 @@ markdown_extensions:
       permalink: true
       toc_depth: 2
   - attr_list
+
+extra_css:
+  - stylesheets/extra.css

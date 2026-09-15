@@ -1,5 +1,8 @@
 # Python con Visual Studio Code
 
+![Portada del libro Python con Visual Studio Code](assets/images/portada.png)
+
+
 ## Programación y scripting para sistemas y redes
 
 Bienvenido al curso de **Python con Visual Studio Code**.
