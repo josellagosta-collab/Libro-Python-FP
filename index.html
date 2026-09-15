@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Programación y scripting con Python para administración de sistemas y redes">
+        <meta name="author" content="Jose Aguilera">
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Python con Visual Studio Code</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">Python con Visual Studio Code</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">Inicio</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Parte I — Scripting para Sistemas</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="parte1/capitulo1/" class="dropdown-item">Gestión del sistema de archivos</a>
+</li>
+                                    
+<li>
+    <a href="parte1/capitulo2/" class="dropdown-item">Comandos del sistema</a>
+</li>
+                                    
+<li>
+    <a href="parte1/capitulo3/" class="dropdown-item">Scripting y control de errores</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Parte II — Redes y APIs</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="parte2/capitulo4/" class="dropdown-item">HTTP y APIs</a>
+</li>
+                                    
+<li>
+    <a href="parte2/capitulo5/" class="dropdown-item">Diagnóstico de red</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Parte III — Proyecto e Integración</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="parte3/capitulo6/" class="dropdown-item">Depuración en VS Code</a>
+</li>
+                                    
+<li>
+    <a href="parte3/capitulo7/" class="dropdown-item">Proyecto final</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="parte1/capitulo1/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#python-con-visual-studio-code" class="nav-link">Python con Visual Studio Code</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#programacion-y-scripting-para-sistemas-y-redes" class="nav-link">Programación y scripting para sistemas y redes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#organizacion-del-curso" class="nav-link">Organización del curso</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#que-aprenderemos" class="nav-link">¿Qué aprenderemos?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="python-con-visual-studio-code">Python con Visual Studio Code<a class="headerlink" href="#python-con-visual-studio-code" title="Permanent link">&para;</a></h1>
+<h2 id="programacion-y-scripting-para-sistemas-y-redes">Programación y scripting para sistemas y redes<a class="headerlink" href="#programacion-y-scripting-para-sistemas-y-redes" title="Permanent link">&para;</a></h2>
+<p>Bienvenido al curso de <strong>Python con Visual Studio Code</strong>.</p>
+<p>Este libro introduce el uso de Python como herramienta para la creación de scripts orientados a la <strong>administración de sistemas, automatización de tareas y diagnóstico de redes</strong>.</p>
+<p>El curso tendrá un enfoque principalmente práctico y utilizaremos <strong>Visual Studio Code</strong> como entorno de desarrollo.</p>
+<hr />
+<h2 id="organizacion-del-curso">Organización del curso<a class="headerlink" href="#organizacion-del-curso" title="Permanent link">&para;</a></h2>
+<p>El curso tiene una duración total de <strong>36 horas</strong> y está dividido en tres módulos.</p>
+<table>
+<thead>
+<tr>
+<th>Módulo</th>
+<th style="text-align: right;">Horas</th>
+<th>Contenido principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Scripting para Sistemas</td>
+<td style="text-align: right;">20 h</td>
+<td>Ficheros, sistema operativo, subprocess y control de errores</td>
+</tr>
+<tr>
+<td>2. Automatización de Redes y APIs</td>
+<td style="text-align: right;">10 h</td>
+<td>Peticiones HTTP, APIs y diagnóstico mediante socket</td>
+</tr>
+<tr>
+<td>3. Proyecto Final e Integración</td>
+<td style="text-align: right;">6 h</td>
+<td>Depuración y desarrollo de un script integrador</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="que-aprenderemos">¿Qué aprenderemos?<a class="headerlink" href="#que-aprenderemos" title="Permanent link">&para;</a></h2>
+<p>A lo largo del curso aprenderemos progresivamente a utilizar Python para:</p>
+<ul>
+<li>Leer y escribir archivos.</li>
+<li>Procesar archivos CSV.</li>
+<li>Trabajar con archivos, carpetas y rutas.</li>
+<li>Ejecutar comandos del sistema.</li>
+<li>Automatizar tareas repetitivas.</li>
+<li>Gestionar errores y excepciones.</li>
+<li>Crear registros de actividad mediante logs.</li>
+<li>Realizar peticiones HTTP.</li>
+<li>Consumir APIs.</li>
+<li>Procesar información JSON.</li>
+<li>Comprobar servicios y puertos de red.</li>
+<li>Resolver nombres mediante DNS.</li>
+<li>Depurar programas desde Visual Studio Code.</li>
+</ul>
+<p>Todo lo aprendido se aplicará finalmente en el desarrollo de un <strong>proyecto integrador de administración de red</strong>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Metodología</p>
+<p>El curso tendrá un enfoque práctico. Los conceptos se introducirán mediante pequeños ejemplos y posteriormente se aplicarán en ejercicios y scripts relacionados con situaciones reales de administración de sistemas y redes.</p>
+</div></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2026-09-15 11:48:27.884785+00:00
+-->
