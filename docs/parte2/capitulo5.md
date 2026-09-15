@@ -1,0 +1,1 @@
+# Diagnóstico básico de red
