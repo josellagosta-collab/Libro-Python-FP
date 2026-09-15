@@ -17,6 +17,7 @@
         <link href="../../css/base.css" rel="stylesheet">
         <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
         <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../../stylesheets/extra.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
         <script>hljs.highlightAll();</script> 
     </head>
@@ -105,6 +106,8 @@
 
         <div class="container">
             <div class="row">
+
+
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
         <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
@@ -118,6 +121,30 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#gestion-del-sistema-de-archivos" class="nav-link">Gestión del sistema de archivos</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-introduccion" class="nav-link">1. Introducción</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#2-archivos-y-directorios" class="nav-link">2. Archivos y directorios</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#3-rutas-de-archivos" class="nav-link">3. Rutas de archivos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#4-el-directorio-de-trabajo" class="nav-link">4. El directorio de trabajo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#5-nuestra-primera-practica-con-archivos" class="nav-link">5. Nuestra primera práctica con archivos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -125,7 +152,225 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="gestion-del-sistema-de-archivos">Gestión del sistema de archivos<a class="headerlink" href="#gestion-del-sistema-de-archivos" title="Permanent link">&para;</a></h1></div>
+<h1 id="gestion-del-sistema-de-archivos">Gestión del sistema de archivos<a class="headerlink" href="#gestion-del-sistema-de-archivos" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>Una de las aplicaciones más importantes de Python en la administración de sistemas es la <strong>automatización de tareas relacionadas con archivos y directorios</strong>.</p>
+<p>Un programa Python puede, por ejemplo:</p>
+<ul>
+<li>Leer información almacenada en un archivo.</li>
+<li>Crear automáticamente nuevos archivos.</li>
+<li>Modificar archivos existentes.</li>
+<li>Procesar archivos de configuración.</li>
+<li>Leer inventarios de equipos.</li>
+<li>Crear informes.</li>
+<li>Comprobar si un archivo o una carpeta existe.</li>
+<li>Crear, copiar, mover o eliminar archivos y directorios.</li>
+</ul>
+<p>Estas operaciones permiten construir <strong>scripts de administración</strong> capaces de realizar automáticamente tareas que manualmente serían repetitivas.</p>
+<div class="admonition example">
+<p class="admonition-title">Ejemplo</p>
+<p>Imaginemos que administramos una red con 200 ordenadores.</p>
+<p>Podemos guardar sus nombres y direcciones IP en un archivo y crear un programa Python que lea automáticamente esa información para realizar diferentes operaciones sobre los equipos.</p>
+</div>
+<hr />
+<h2 id="2-archivos-y-directorios">2. Archivos y directorios<a class="headerlink" href="#2-archivos-y-directorios" title="Permanent link">&para;</a></h2>
+<p>Antes de trabajar con archivos desde Python debemos distinguir dos conceptos básicos.</p>
+<h3 id="archivo">Archivo<a class="headerlink" href="#archivo" title="Permanent link">&para;</a></h3>
+<p>Un <strong>archivo</strong> es una unidad de información almacenada en un dispositivo.</p>
+<p>Algunos ejemplos son:</p>
+<pre><code class="language-text">usuarios.txt
+equipos.csv
+configuracion.json
+informe.txt
+errores.log
+</code></pre>
+<p>La extensión suele indicar el tipo de información almacenada:</p>
+<table>
+<thead>
+<tr>
+<th>Extensión</th>
+<th>Uso habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.txt</code></td>
+<td>Texto</td>
+</tr>
+<tr>
+<td><code>.csv</code></td>
+<td>Datos separados por campos</td>
+</tr>
+<tr>
+<td><code>.json</code></td>
+<td>Datos estructurados</td>
+</tr>
+<tr>
+<td><code>.log</code></td>
+<td>Registros de actividad</td>
+</tr>
+<tr>
+<td><code>.py</code></td>
+<td>Programa Python</td>
+</tr>
+</tbody>
+</table>
+<h3 id="directorio">Directorio<a class="headerlink" href="#directorio" title="Permanent link">&para;</a></h3>
+<p>Un <strong>directorio</strong> o carpeta permite organizar archivos y otros directorios.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">proyecto/
+│
+├── datos/
+│   ├── equipos.csv
+│   └── usuarios.txt
+│
+├── informes/
+│   └── informe.txt
+│
+└── programa.py
+</code></pre>
+<p>En este ejemplo, nuestro programa <code>programa.py</code> podría leer información de <code>datos/equipos.csv</code> y generar posteriormente un informe dentro de <code>informes</code>.</p>
+<hr />
+<h2 id="3-rutas-de-archivos">3. Rutas de archivos<a class="headerlink" href="#3-rutas-de-archivos" title="Permanent link">&para;</a></h2>
+<p>Para acceder a un archivo, Python necesita conocer su <strong>ruta</strong>.</p>
+<p>Una ruta indica dónde se encuentra un archivo o directorio dentro del sistema de archivos.</p>
+<p>En Windows podemos encontrar rutas como:</p>
+<pre><code class="language-text">C:\Users\Jose\Documents\datos\equipos.csv
+</code></pre>
+<p>Podemos trabajar principalmente con dos tipos de rutas:</p>
+<ul>
+<li><strong>Rutas absolutas</strong></li>
+<li><strong>Rutas relativas</strong></li>
+</ul>
+<h3 id="ruta-absoluta">Ruta absoluta<a class="headerlink" href="#ruta-absoluta" title="Permanent link">&para;</a></h3>
+<p>Una ruta absoluta especifica completamente la ubicación del archivo.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">C:\Users\Jose\Documents\Python\datos\equipos.csv
+</code></pre>
+<p>La ruta comienza desde una ubicación concreta del sistema.</p>
+<p>El problema es que una ruta absoluta suele depender del ordenador en el que ejecutemos el programa.</p>
+<p>Por ejemplo, este archivo:</p>
+<pre><code class="language-text">C:\Users\Jose\Documents\Python\datos\equipos.csv
+</code></pre>
+<p>probablemente no exista en el ordenador de otro alumno.</p>
+<h3 id="ruta-relativa">Ruta relativa<a class="headerlink" href="#ruta-relativa" title="Permanent link">&para;</a></h3>
+<p>Una ruta relativa indica la ubicación de un archivo tomando como referencia el directorio desde el que estamos trabajando.</p>
+<p>Supongamos esta estructura:</p>
+<pre><code class="language-text">proyecto/
+│
+├── datos/
+│   └── equipos.csv
+│
+└── programa.py
+</code></pre>
+<p>Desde <code>programa.py</code> podemos referirnos al archivo simplemente como:</p>
+<pre><code class="language-text">datos/equipos.csv
+</code></pre>
+<p>Esto hace que nuestros programas sean mucho más fáciles de trasladar entre diferentes ordenadores.</p>
+<div class="admonition tip">
+<p class="admonition-title">Recomendación</p>
+<p>Siempre que sea posible utilizaremos <strong>rutas relativas</strong> en nuestros proyectos.</p>
+<p>De esta manera podremos copiar el proyecto completo a otro ordenador sin tener que modificar las rutas utilizadas por nuestros programas.</p>
+</div>
+<hr />
+<h2 id="4-el-directorio-de-trabajo">4. El directorio de trabajo<a class="headerlink" href="#4-el-directorio-de-trabajo" title="Permanent link">&para;</a></h2>
+<p>Cuando ejecutamos un programa Python existe un directorio denominado <strong>directorio de trabajo actual</strong>.</p>
+<p>Podemos averiguar cuál es utilizando el módulo <code>os</code>.</p>
+<p>Crea un archivo llamado:</p>
+<pre><code class="language-text">directorio_actual.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import os
+
+directorio = os.getcwd()
+
+print(&quot;Directorio de trabajo actual:&quot;)
+print(directorio)
+</code></pre>
+<p>Ejecuta el programa desde la terminal de VS Code:</p>
+<pre><code class="language-powershell">python directorio_actual.py
+</code></pre>
+<p>Obtendremos una salida similar a:</p>
+<pre><code class="language-text">Directorio de trabajo actual:
+C:\Users\Jose\Documents\Proyectos\Python
+</code></pre>
+<p>La función:</p>
+<pre><code class="language-python">os.getcwd()
+</code></pre>
+<p>significa <strong>Get Current Working Directory</strong> y devuelve el directorio de trabajo actual.</p>
+<div class="admonition note">
+<p class="admonition-title">Importante</p>
+<p>El directorio de trabajo es especialmente importante cuando utilizamos <strong>rutas relativas</strong>, ya que Python buscará los archivos tomando este directorio como referencia.</p>
+</div>
+<hr />
+<h2 id="5-nuestra-primera-practica-con-archivos">5. Nuestra primera práctica con archivos<a class="headerlink" href="#5-nuestra-primera-practica-con-archivos" title="Permanent link">&para;</a></h2>
+<p>Vamos a preparar una pequeña estructura que utilizaremos en los siguientes apartados.</p>
+<p>Crea una carpeta llamada:</p>
+<pre><code class="language-text">practicas
+</code></pre>
+<p>Dentro crea:</p>
+<pre><code class="language-text">practicas/
+│
+└── capitulo1/
+    │
+    ├── datos/
+    └── programas/
+</code></pre>
+<p>Dentro de <code>datos</code> crea manualmente el archivo:</p>
+<pre><code class="language-text">equipos.txt
+</code></pre>
+<p>Introduce estas líneas:</p>
+<pre><code class="language-text">PC-AULA-01
+PC-AULA-02
+PC-AULA-03
+SERVIDOR-01
+ROUTER-01
+</code></pre>
+<p>La estructura quedará:</p>
+<pre><code class="language-text">practicas/
+└── capitulo1/
+    │
+    ├── datos/
+    │   └── equipos.txt
+    │
+    └── programas/
+</code></pre>
+<p>Todavía <strong>no vamos a leer el archivo desde Python</strong>.</p>
+<p>En el siguiente apartado aprenderemos a abrirlo correctamente mediante:</p>
+<pre><code class="language-python">with open(...)
+</code></pre>
+<p>y veremos por qué esta es una de las formas más adecuadas de trabajar con archivos desde Python.</p>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<p>En esta primera parte hemos aprendido que:</p>
+<ul>
+<li>Python puede automatizar tareas relacionadas con archivos y directorios.</li>
+<li>Los archivos almacenan información.</li>
+<li>Los directorios permiten organizar archivos.</li>
+<li>Una ruta indica dónde se encuentra un archivo.</li>
+<li>Las rutas pueden ser absolutas o relativas.</li>
+<li>Las rutas relativas facilitan que nuestros programas funcionen en diferentes ordenadores.</li>
+<li>Python puede conocer el directorio de trabajo mediante <code>os.getcwd()</code>.</li>
+</ul>
+<p>En el siguiente apartado comenzaremos a <strong>leer archivos de texto desde Python</strong>.</p></div>
+
+<div class="monlau-page-navigation">
+
+    
+    <a class="previous" href="../..">
+        ← Inicio
+    </a>
+    
+
+    
+    <a class="next" href="../capitulo2/">
+        Comandos del sistema →
+    </a>
+    
+
+</div>
+
+
             </div>
         </div>
 
