@@ -214,3 +214,42 @@ footer {
 .navbar-nav .nav-item:has(a[rel="next"]) {
     display: none !important;
 }
+
+/* =========================================================
+   FIGURAS DEL LIBRO
+   ========================================================= */
+
+.figura-libro {
+    margin: 20px auto 25px auto;
+    padding: 0;
+    text-align: center;
+}
+
+.figura-libro img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.figura-libro figcaption {
+    margin-top: 6px;
+    padding: 0;
+    text-align: center;
+    font-size: 0.9em;
+    font-style: italic;
+    color: #555555;
+}
+
+/* =========================================================
+   PIE DE LAS FIGURAS
+   ========================================================= */
+
+.pie-figura {
+    text-align: center;
+    font-size: 0.9em;
+    font-style: italic;
+    color: #555;
+    margin-top: -20px;
+    margin-bottom: 25px;
+}
