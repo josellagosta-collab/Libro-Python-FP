@@ -14,7 +14,7 @@ nav:
   - Parte I — Scripting para Sistemas:
       - Gestión del sistema de archivos: parte1/capitulo1.md
       - Comandos del sistema: parte1/capitulo2.md
-      - Scripting y control de errores: parte1/capitulo3.md
+      - Automatización: parte1/capitulo3.md
 
   - Parte II — Redes y APIs:
       - HTTP y APIs: parte2/capitulo4.md
