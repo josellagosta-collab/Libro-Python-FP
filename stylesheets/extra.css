@@ -253,3 +253,35 @@ footer {
     margin-top: -20px;
     margin-bottom: 25px;
 }
+
+/* =========================================================
+   ÍNDICE LATERAL DEL CAPÍTULO
+   Scroll independiente para capítulos largos
+   ========================================================= */
+
+.bs-sidebar {
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: sticky;
+    top: 80px;
+}
+
+/* Pequeño espacio inferior para poder ver el último apartado */
+.bs-sidebar .nav {
+    padding-bottom: 30px;
+}
+
+/* Scroll más discreto */
+.bs-sidebar::-webkit-scrollbar {
+    width: 7px;
+}
+
+.bs-sidebar::-webkit-scrollbar-thumb {
+    background: #07579b;
+    border-radius: 4px;
+}
+
+.bs-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
