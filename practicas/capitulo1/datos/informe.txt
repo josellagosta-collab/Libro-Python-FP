@@ -1,0 +1,5 @@
+INFORME DE EQUIPOS
+===================
+PC-AULA-01
+PC-AULA-02
+SERVIDOR-01
