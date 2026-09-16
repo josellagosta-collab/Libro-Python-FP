@@ -8,7 +8,7 @@
         <meta name="author" content="Jose Aguilera">
         
         <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>Scripting y control de errores - Python con Visual Studio Code</title>
+        <title>Automatización - Python con Visual Studio Code</title>
         <link href="../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../css/fontawesome.min.css" rel="stylesheet">
         <link href="../../css/brands.min.css" rel="stylesheet">
@@ -51,7 +51,7 @@
 </li>
                                     
 <li>
-    <a href="./" class="dropdown-item active" aria-current="page">Scripting y control de errores</a>
+    <a href="./" class="dropdown-item active" aria-current="page">Automatización</a>
 </li>
                                 </ul>
                             </li>
@@ -119,8 +119,380 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#scripting-avanzado-y-control-de-errores" class="nav-link">Scripting avanzado y control de errores</a>
+            <li class="nav-item" data-bs-level="1"><a href="#automatizacion-de-tareas-repetitivas" class="nav-link">Automatización de tareas repetitivas</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-introduccion" class="nav-link">1. Introducción</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#2-que-significa-automatizar" class="nav-link">2. ¿Qué significa automatizar?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#3-preparar-las-practicas-del-capitulo" class="nav-link">3. Preparar las prácticas del capítulo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#4-automatizar-una-prueba-de-conectividad" class="nav-link">4. Automatizar una prueba de conectividad</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#5-crear-una-funcion-reutilizable" class="nav-link">5. Crear una función reutilizable</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#6-contar-los-resultados" class="nav-link">6. Contar los resultados</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#7-anadir-control-de-errores" class="nav-link">7. Añadir control de errores</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#8-practica-propuesta-comprobar-un-aula" class="nav-link">8. Práctica propuesta: comprobar un aula</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#9-el-siguiente-problema-donde-almacenamos-los-equipos" class="nav-link">9. El siguiente problema: ¿dónde almacenamos los equipos?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#10-separar-los-datos-del-programa" class="nav-link">10. Separar los datos del programa</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#11-leer-automaticamente-la-lista-de-equipos" class="nav-link">11. Leer automáticamente la lista de equipos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#12-cargar-los-equipos-en-una-lista" class="nav-link">12. Cargar los equipos en una lista</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#13-automatizar-ping-desde-un-archivo" class="nav-link">13. Automatizar ping desde un archivo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#14-crear-una-funcion-para-cargar-equipos" class="nav-link">14. Crear una función para cargar equipos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#15-combinar-funciones-y-archivos" class="nav-link">15. Combinar funciones y archivos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#16-utilizar-un-inventario-csv" class="nav-link">16. Utilizar un inventario CSV</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#17-leer-el-inventario-csv" class="nav-link">17. Leer el inventario CSV</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#18-comprobar-automaticamente-un-inventario-csv" class="nav-link">18. Comprobar automáticamente un inventario CSV</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#19-contar-los-equipos-disponibles" class="nav-link">19. Contar los equipos disponibles</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#20-guardar-los-resultados" class="nav-link">20. Guardar los resultados</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#21-flujo-completo-de-automatizacion" class="nav-link">21. Flujo completo de automatización</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#22-practica-propuesta-inventario-del-aula" class="nav-link">22. Práctica propuesta: inventario del aula</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#23-reto-de-ampliacion" class="nav-link">23. Reto de ampliación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_1" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#24-generar-automaticamente-grupos-de-equipos" class="nav-link">24. Generar automáticamente grupos de equipos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#25-utilizar-range" class="nav-link">25. Utilizar range()</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#26-comprobar-un-rango-de-direcciones" class="nav-link">26. Comprobar un rango de direcciones</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#27-elegir-el-rango-desde-el-programa" class="nav-link">27. Elegir el rango desde el programa</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#28-crear-una-funcion-para-generar-direcciones" class="nav-link">28. Crear una función para generar direcciones</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#29-separar-generacion-y-comprobacion" class="nav-link">29. Separar generación y comprobación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#30-guardar-unicamente-los-equipos-que-responden" class="nav-link">30. Guardar únicamente los equipos que responden</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#31-guardar-los-equipos-activos-en-un-archivo" class="nav-link">31. Guardar los equipos activos en un archivo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#32-utilizar-parametros-de-configuracion" class="nav-link">32. Utilizar parámetros de configuración</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#33-validar-los-datos-introducidos" class="nav-link">33. Validar los datos introducidos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#34-practica-propuesta-comprobador-de-rango" class="nav-link">34. Práctica propuesta: comprobador de rango</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#35-practica-de-ampliacion-generar-un-informe" class="nav-link">35. Práctica de ampliación: generar un informe</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#36-inventario-o-generacion-automatica" class="nav-link">36. Inventario o generación automática</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#37-un-patron-reutilizable-de-automatizacion" class="nav-link">37. Un patrón reutilizable de automatización</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_2" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#38-automatizar-tareas-con-archivos" class="nav-link">38. Automatizar tareas con archivos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#39-preparar-un-directorio-de-pruebas" class="nav-link">39. Preparar un directorio de pruebas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#40-recorrer-los-archivos-de-un-directorio" class="nav-link">40. Recorrer los archivos de un directorio</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#41-filtrar-archivos-por-extension" class="nav-link">41. Filtrar archivos por extensión</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#42-utilizar-glob" class="nav-link">42. Utilizar glob()</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#43-contar-archivos-automaticamente" class="nav-link">43. Contar archivos automáticamente</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#44-crear-directorios-automaticamente" class="nav-link">44. Crear directorios automáticamente</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#45-copiar-archivos-automaticamente" class="nav-link">45. Copiar archivos automáticamente</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#46-clasificar-varios-tipos-de-archivo" class="nav-link">46. Clasificar varios tipos de archivo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#47-copiar-o-mover" class="nav-link">47. Copiar o mover</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#48-generar-un-informe-de-clasificacion" class="nav-link">48. Generar un informe de clasificación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#49-buscar-archivos-de-forma-recursiva" class="nav-link">49. Buscar archivos de forma recursiva</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#50-obtener-informacion-de-los-archivos" class="nav-link">50. Obtener información de los archivos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#51-practica-propuesta-organizador-automatico" class="nav-link">51. Práctica propuesta: organizador automático</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#52-ampliacion-clasificador-generico" class="nav-link">52. Ampliación: clasificador genérico</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#53-automatizacion-y-seguridad" class="nav-link">53. Automatización y seguridad</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_3" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#54-automatizar-copias-de-seguridad" class="nav-link">54. Automatizar copias de seguridad</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#55-preparar-los-archivos-de-prueba" class="nav-link">55. Preparar los archivos de prueba</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#56-copiar-un-directorio-completo" class="nav-link">56. Copiar un directorio completo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#57-trabajar-con-la-fecha-y-la-hora" class="nav-link">57. Trabajar con la fecha y la hora</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#58-crear-una-copia-con-fecha-y-hora" class="nav-link">58. Crear una copia con fecha y hora</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#59-comprobar-que-el-origen-existe" class="nav-link">59. Comprobar que el origen existe</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#60-controlar-errores-durante-la-copia" class="nav-link">60. Controlar errores durante la copia</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#61-registrar-las-copias-realizadas" class="nav-link">61. Registrar las copias realizadas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#62-crear-una-funcion-de-registro" class="nav-link">62. Crear una función de registro</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#63-programa-completo-de-backup" class="nav-link">63. Programa completo de backup</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#64-contar-las-copias-existentes" class="nav-link">64. Contar las copias existentes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#65-practica-propuesta-gestor-de-copias" class="nav-link">65. Práctica propuesta: gestor de copias</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#66-reto-controlar-el-numero-de-copias" class="nav-link">66. Reto: controlar el número de copias</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#67-automatizar-no-significa-programar-la-ejecucion" class="nav-link">67. Automatizar no significa programar la ejecución</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#68-buenas-practicas-en-copias-automatizadas" class="nav-link">68. Buenas prácticas en copias automatizadas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_4" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#69-practica-final-herramienta-de-automatizacion" class="nav-link">69. Práctica final: herramienta de automatización</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#70-preparar-el-proyecto" class="nav-link">70. Preparar el proyecto</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#71-definir-las-rutas" class="nav-link">71. Definir las rutas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#72-crear-el-registro-de-operaciones" class="nav-link">72. Crear el registro de operaciones</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#73-cargar-el-inventario" class="nav-link">73. Cargar el inventario</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#74-comprobar-un-equipo" class="nav-link">74. Comprobar un equipo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#75-comprobar-todo-el-inventario" class="nav-link">75. Comprobar todo el inventario</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#76-generar-un-informe-de-red" class="nav-link">76. Generar un informe de red</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#77-incorporar-las-copias-de-seguridad" class="nav-link">77. Incorporar las copias de seguridad</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#78-mostrar-las-copias-existentes" class="nav-link">78. Mostrar las copias existentes</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#79-mostrar-el-historial" class="nav-link">79. Mostrar el historial</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#80-crear-el-menu-principal" class="nav-link">80. Crear el menú principal</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#81-funcionamiento-de-la-aplicacion" class="nav-link">81. Funcionamiento de la aplicación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#82-que-estamos-automatizando" class="nav-link">82. Qué estamos automatizando</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#83-practica-de-ampliacion" class="nav-link">83. Práctica de ampliación</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#84-reto-final" class="nav-link">84. Reto final</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#85-que-hemos-aprendido" class="nav-link">85. Qué hemos aprendido</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#86-integracion-de-los-tres-primeros-capitulos" class="nav-link">86. Integración de los tres primeros capítulos</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#87-buenas-practicas" class="nav-link">87. Buenas prácticas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#88-conclusion" class="nav-link">88. Conclusión</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -128,7 +500,5303 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="scripting-avanzado-y-control-de-errores">Scripting avanzado y control de errores<a class="headerlink" href="#scripting-avanzado-y-control-de-errores" title="Permanent link">&para;</a></h1></div>
+<h1 id="automatizacion-de-tareas-repetitivas">Automatización de tareas repetitivas<a class="headerlink" href="#automatizacion-de-tareas-repetitivas" title="Permanent link">&para;</a></h1>
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>En los capítulos anteriores hemos aprendido dos grupos de herramientas fundamentales para la administración de sistemas.</p>
+<p>En el <strong>capítulo 1</strong> aprendimos a trabajar con:</p>
+<pre><code class="language-text">Archivos
+Directorios
+CSV
+os
+pathlib
+</code></pre>
+<p>En el <strong>capítulo 2</strong> aprendimos a utilizar:</p>
+<pre><code class="language-text">subprocess
+hostname
+ipconfig
+ping
+systeminfo
+PowerShell
+</code></pre>
+<p>Ahora vamos a combinar estos conocimientos para conseguir uno de los principales objetivos del scripting:</p>
+<blockquote>
+<p><strong>Automatizar tareas repetitivas.</strong></p>
+</blockquote>
+<p>Un administrador puede necesitar realizar una misma operación sobre muchos equipos, archivos o directorios.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Comprobar 1 equipo
+Comprobar 2 equipos
+Comprobar 3 equipos
+...
+Comprobar 30 equipos
+</code></pre>
+<p>Podríamos realizar las comprobaciones manualmente, pero sería lento y propenso a errores.</p>
+<p>Python permite transformar ese trabajo en:</p>
+<pre><code class="language-text">Lista de equipos
+       ↓
+      Python
+       ↓
+ repetir automáticamente
+       ↓
+ ejecutar operación
+       ↓
+ guardar resultados
+</code></pre>
+<p>Este será el objetivo principal del capítulo.</p>
+<hr />
+<h2 id="2-que-significa-automatizar">2. ¿Qué significa automatizar?<a class="headerlink" href="#2-que-significa-automatizar" title="Permanent link">&para;</a></h2>
+<p>Automatizar consiste en conseguir que un programa realice de forma automática una tarea que normalmente tendríamos que repetir manualmente.</p>
+<p>Supongamos que queremos comprobar tres equipos.</p>
+<p>Manualmente podríamos ejecutar:</p>
+<pre><code class="language-powershell">ping 192.168.1.10
+ping 192.168.1.11
+ping 192.168.1.12
+</code></pre>
+<p>Si tenemos 50 equipos, tendríamos que escribir 50 comandos.</p>
+<p>Python puede hacerlo utilizando una lista y un bucle.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">equipos = [
+    &quot;192.168.1.10&quot;,
+    &quot;192.168.1.11&quot;,
+    &quot;192.168.1.12&quot;
+]
+
+for equipo in equipos:
+    print(equipo)
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">192.168.1.10
+192.168.1.11
+192.168.1.12
+</code></pre>
+<p>El bucle:</p>
+<pre><code class="language-python">for equipo in equipos:
+</code></pre>
+<p>hace que Python repita automáticamente las instrucciones para cada elemento de la lista.</p>
+<p>Este mecanismo será una de las bases de la automatización.</p>
+<hr />
+<h3 id="de-una-tarea-manual-a-una-tarea-automatica">De una tarea manual a una tarea automática<a class="headerlink" href="#de-una-tarea-manual-a-una-tarea-automatica" title="Permanent link">&para;</a></h3>
+<p>Podemos representar el proceso de esta forma:</p>
+<pre><code class="language-text">TAREA MANUAL
+
+ping equipo1
+ping equipo2
+ping equipo3
+ping equipo4
+...
+</code></pre>
+<p>frente a:</p>
+<pre><code class="language-text">AUTOMATIZACIÓN
+
+lista de equipos
+      ↓
+   bucle for
+      ↓
+     ping
+      ↓
+resultado de cada equipo
+</code></pre>
+<p>La ventaja aumenta cuanto mayor es el número de elementos que debemos procesar.</p>
+<div class="admonition example">
+<p class="admonition-title">Ejemplo</p>
+<p>Imagina que administramos un aula con 30 ordenadores.</p>
+<p>Comprobar manualmente todos los equipos supondría ejecutar 30 veces el comando <code>ping</code>.</p>
+<p>Con Python podemos escribir el código una sola vez y dejar que el programa realice las 30 comprobaciones.</p>
+</div>
+<hr />
+<h2 id="3-preparar-las-practicas-del-capitulo">3. Preparar las prácticas del capítulo<a class="headerlink" href="#3-preparar-las-practicas-del-capitulo" title="Permanent link">&para;</a></h2>
+<p>Dentro de nuestra carpeta:</p>
+<pre><code class="language-text">practicas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">capitulo3/
+</code></pre>
+<p>Dentro crea:</p>
+<pre><code class="language-text">datos/
+programas/
+resultados/
+</code></pre>
+<p>La estructura será:</p>
+<pre><code class="language-text">practicas/
+├── capitulo1/
+├── capitulo2/
+│
+└── capitulo3/
+    ├── datos/
+    ├── programas/
+    └── resultados/
+</code></pre>
+<p>Durante este capítulo utilizaremos:</p>
+<pre><code class="language-text">datos
+</code></pre>
+<p>para almacenar la información de entrada.</p>
+<pre><code class="language-text">programas
+</code></pre>
+<p>para nuestros scripts Python.</p>
+<p>Y:</p>
+<pre><code class="language-text">resultados
+</code></pre>
+<p>para los informes generados automáticamente.</p>
+<hr />
+<h2 id="4-automatizar-una-prueba-de-conectividad">4. Automatizar una prueba de conectividad<a class="headerlink" href="#4-automatizar-una-prueba-de-conectividad" title="Permanent link">&para;</a></h2>
+<p>Vamos a recuperar lo aprendido en el capítulo anterior.</p>
+<p>Podíamos comprobar un equipo mediante:</p>
+<pre><code class="language-python">import subprocess
+
+resultado = subprocess.run(
+    [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, &quot;127.0.0.1&quot;],
+    capture_output=True,
+    text=True
+)
+
+if resultado.returncode == 0:
+    print(&quot;RESPONDE&quot;)
+else:
+    print(&quot;NO RESPONDE&quot;)
+</code></pre>
+<p>Ahora queremos realizar la misma operación sobre varios equipos.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">comprobar_varios_equipos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+
+
+equipos = [
+    &quot;127.0.0.1&quot;,
+    &quot;192.168.1.1&quot;,
+    &quot;8.8.8.8&quot;
+]
+
+
+for equipo in equipos:
+
+    resultado = subprocess.run(
+        [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo],
+        capture_output=True,
+        text=True
+    )
+
+    if resultado.returncode == 0:
+        print(f&quot;{equipo}: RESPONDE&quot;)
+    else:
+        print(f&quot;{equipo}: NO RESPONDE&quot;)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python comprobar_varios_equipos.py
+</code></pre>
+<p>Obtendrás un resultado parecido a:</p>
+<pre><code class="language-text">127.0.0.1: RESPONDE
+192.168.1.1: RESPONDE
+8.8.8.8: RESPONDE
+</code></pre>
+<p>Los resultados dependerán de tu red.</p>
+<p>Acabamos de automatizar nuestra primera tarea.</p>
+<hr />
+<h3 id="analizar-el-programa">Analizar el programa<a class="headerlink" href="#analizar-el-programa" title="Permanent link">&para;</a></h3>
+<p>Tenemos una lista:</p>
+<pre><code class="language-python">equipos = [
+    &quot;127.0.0.1&quot;,
+    &quot;192.168.1.1&quot;,
+    &quot;8.8.8.8&quot;
+]
+</code></pre>
+<p>El bucle:</p>
+<pre><code class="language-python">for equipo in equipos:
+</code></pre>
+<p>selecciona cada dirección sucesivamente.</p>
+<p>En la primera iteración:</p>
+<pre><code class="language-text">equipo = 127.0.0.1
+</code></pre>
+<p>En la segunda:</p>
+<pre><code class="language-text">equipo = 192.168.1.1
+</code></pre>
+<p>En la tercera:</p>
+<pre><code class="language-text">equipo = 8.8.8.8
+</code></pre>
+<p>Y en cada iteración ejecutamos:</p>
+<pre><code class="language-python">subprocess.run(
+    [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo]
+)
+</code></pre>
+<p>Por tanto:</p>
+<pre><code class="language-text">LISTA
+ │
+ ├── 127.0.0.1
+ │       ↓
+ │      ping
+ │
+ ├── 192.168.1.1
+ │       ↓
+ │      ping
+ │
+ └── 8.8.8.8
+         ↓
+        ping
+</code></pre>
+<p>No importa demasiado si tenemos 3, 10 o 100 direcciones.</p>
+<p>El código encargado de comprobar cada equipo es el mismo.</p>
+<hr />
+<h2 id="5-crear-una-funcion-reutilizable">5. Crear una función reutilizable<a class="headerlink" href="#5-crear-una-funcion-reutilizable" title="Permanent link">&para;</a></h2>
+<p>Podemos mejorar el programa separando la operación de comprobación en una función.</p>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_con_funcion.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+
+
+def comprobar_equipo(equipo):
+
+    resultado = subprocess.run(
+        [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo],
+        capture_output=True,
+        text=True
+    )
+
+    if resultado.returncode == 0:
+        return True
+
+    return False
+
+
+equipos = [
+    &quot;127.0.0.1&quot;,
+    &quot;192.168.1.1&quot;,
+    &quot;8.8.8.8&quot;
+]
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+        print(f&quot;{equipo}: RESPONDE&quot;)
+    else:
+        print(f&quot;{equipo}: NO RESPONDE&quot;)
+</code></pre>
+<p>Ahora tenemos claramente separadas dos responsabilidades.</p>
+<p>La función:</p>
+<pre><code class="language-python">comprobar_equipo()
+</code></pre>
+<p>realiza la prueba.</p>
+<p>El bucle:</p>
+<pre><code class="language-python">for equipo in equipos:
+</code></pre>
+<p>decide sobre qué equipos debemos realizarla.</p>
+<p>Podemos representarlo así:</p>
+<pre><code class="language-text">        equipos
+           │
+           ▼
+        bucle for
+           │
+           ▼
+ comprobar_equipo()
+           │
+      ┌────┴────┐
+      ▼         ▼
+     True      False
+      │         │
+      ▼         ▼
+  RESPONDE   NO RESPONDE
+</code></pre>
+<p>Esta separación hará que nuestros programas sean más fáciles de ampliar.</p>
+<hr />
+<h2 id="6-contar-los-resultados">6. Contar los resultados<a class="headerlink" href="#6-contar-los-resultados" title="Permanent link">&para;</a></h2>
+<p>Un administrador probablemente no quiera únicamente ver una larga lista de resultados.</p>
+<p>También puede interesarle obtener un resumen.</p>
+<p>Vamos a contar:</p>
+<pre><code class="language-text">Equipos comprobados
+Equipos que responden
+Equipos que no responden
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">resumen_conectividad.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+
+
+def comprobar_equipo(equipo):
+
+    resultado = subprocess.run(
+        [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo],
+        capture_output=True,
+        text=True
+    )
+
+    return resultado.returncode == 0
+
+
+equipos = [
+    &quot;127.0.0.1&quot;,
+    &quot;192.168.1.1&quot;,
+    &quot;8.8.8.8&quot;
+]
+
+
+responden = 0
+no_responden = 0
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+
+        print(f&quot;{equipo}: RESPONDE&quot;)
+        responden += 1
+
+    else:
+
+        print(f&quot;{equipo}: NO RESPONDE&quot;)
+        no_responden += 1
+
+
+print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+
+print(f&quot;Equipos comprobados: {len(equipos)}&quot;)
+print(f&quot;Responden: {responden}&quot;)
+print(f&quot;No responden: {no_responden}&quot;)
+</code></pre>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">127.0.0.1: RESPONDE
+192.168.1.1: RESPONDE
+8.8.8.8: RESPONDE
+
+RESUMEN
+=======
+Equipos comprobados: 3
+Responden: 3
+No responden: 0
+</code></pre>
+<p>Ahora nuestro script no solo ejecuta tareas repetitivas.</p>
+<p>También <strong>resume automáticamente los resultados</strong>.</p>
+<hr />
+<h3 id="simplificar-una-funcion-booleana">Simplificar una función booleana<a class="headerlink" href="#simplificar-una-funcion-booleana" title="Permanent link">&para;</a></h3>
+<p>Observa esta versión:</p>
+<pre><code class="language-python">def comprobar_equipo(equipo):
+
+    resultado = subprocess.run(
+        [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo],
+        capture_output=True,
+        text=True
+    )
+
+    return resultado.returncode == 0
+</code></pre>
+<p>La expresión:</p>
+<pre><code class="language-python">resultado.returncode == 0
+</code></pre>
+<p>ya produce:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">False
+</code></pre>
+<p>Por tanto, no necesitamos escribir:</p>
+<pre><code class="language-python">if resultado.returncode == 0:
+    return True
+else:
+    return False
+</code></pre>
+<p>Podemos devolver directamente el resultado de la comparación.</p>
+<hr />
+<h2 id="7-anadir-control-de-errores">7. Añadir control de errores<a class="headerlink" href="#7-anadir-control-de-errores" title="Permanent link">&para;</a></h2>
+<p>Nuestro programa todavía tiene un problema.</p>
+<p>¿Qué ocurre si:</p>
+<pre><code class="language-text">ping
+</code></pre>
+<p>no puede ejecutarse o tarda demasiado?</p>
+<p>Podemos recuperar las técnicas estudiadas en el capítulo 2.</p>
+<p>Modifica la función:</p>
+<pre><code class="language-python">def comprobar_equipo(equipo):
+
+    try:
+
+        resultado = subprocess.run(
+            [&quot;ping&quot;, &quot;-n&quot;, &quot;2&quot;, equipo],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        return resultado.returncode == 0
+
+    except FileNotFoundError:
+
+        print(&quot;ERROR: no se encuentra el comando ping.&quot;)
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        print(f&quot;ERROR: tiempo agotado para {equipo}.&quot;)
+        return False
+</code></pre>
+<p>Nuestro proceso es ahora más robusto:</p>
+<pre><code class="language-text">EQUIPO
+  │
+  ▼
+PING
+  │
+  ├── responde ─────────→ True
+  │
+  ├── no responde ──────→ False
+  │
+  ├── timeout ──────────→ False
+  │
+  └── comando no existe → False
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Automatización robusta</p>
+<p>Cuando automatizamos una tarea muchas veces, controlar los errores es especialmente importante.</p>
+<p>Un fallo en un único elemento no debería provocar necesariamente que se detenga todo el proceso.</p>
+</div>
+<hr />
+<h2 id="8-practica-propuesta-comprobar-un-aula">8. Práctica propuesta: comprobar un aula<a class="headerlink" href="#8-practica-propuesta-comprobar-un-aula" title="Permanent link">&para;</a></h2>
+<p>Supongamos que tenemos un aula con equipos cuyas direcciones son:</p>
+<pre><code class="language-text">192.168.1.101
+192.168.1.102
+192.168.1.103
+192.168.1.104
+192.168.1.105
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_aula.py
+</code></pre>
+<p>El programa debe:</p>
+<ol>
+<li>Guardar las direcciones en una lista.</li>
+<li>Recorrerlas mediante <code>for</code>.</li>
+<li>Ejecutar <code>ping</code>.</li>
+<li>Mostrar <code>RESPONDE</code> o <code>NO RESPONDE</code>.</li>
+<li>Contar los resultados.</li>
+<li>Mostrar un resumen final.</li>
+</ol>
+<p>El resultado deberá tener una estructura similar a:</p>
+<pre><code class="language-text">COMPROBACIÓN DEL AULA
+=====================
+
+192.168.1.101    RESPONDE
+192.168.1.102    RESPONDE
+192.168.1.103    NO RESPONDE
+192.168.1.104    RESPONDE
+192.168.1.105    NO RESPONDE
+
+RESUMEN
+=======
+
+Equipos comprobados: 5
+Responden: 3
+No responden: 2
+</code></pre>
+<p>Los resultados reales dependerán de la red utilizada.</p>
+<div class="admonition example">
+<p class="admonition-title">Ampliación</p>
+<p>Añade control de errores y un:</p>
+<p><code>python
+timeout=10</code></p>
+<p>para evitar que una comprobación pueda mantener el programa bloqueado demasiado tiempo.</p>
+</div>
+<hr />
+<h2 id="9-el-siguiente-problema-donde-almacenamos-los-equipos">9. El siguiente problema: ¿dónde almacenamos los equipos?<a class="headerlink" href="#9-el-siguiente-problema-donde-almacenamos-los-equipos" title="Permanent link">&para;</a></h2>
+<p>Nuestro programa funciona, pero tenemos las direcciones escritas directamente dentro del código:</p>
+<pre><code class="language-python">equipos = [
+    &quot;192.168.1.101&quot;,
+    &quot;192.168.1.102&quot;,
+    &quot;192.168.1.103&quot;,
+    &quot;192.168.1.104&quot;,
+    &quot;192.168.1.105&quot;
+]
+</code></pre>
+<p>Esto presenta un problema.</p>
+<p>Si queremos cambiar los equipos tendremos que modificar el programa.</p>
+<p>En administración es preferible separar:</p>
+<pre><code class="language-text">PROGRAMA
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">DATOS
+</code></pre>
+<p>Podemos almacenar las direcciones en un archivo:</p>
+<pre><code class="language-text">equipos.txt
+</code></pre>
+<p>o utilizar un inventario:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<p>De esta forma:</p>
+<pre><code class="language-text">      equipos.txt
+           │
+           ▼
+         Python
+           │
+           ▼
+      bucle automático
+           │
+           ▼
+          ping
+           │
+           ▼
+       resultados
+</code></pre>
+<p>Esto nos permitirá modificar el listado de equipos <strong>sin tocar el código Python</strong>.</p>
+<p>Será el siguiente paso del capítulo.</p>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<p>En esta primera parte del capítulo hemos comenzado a automatizar tareas repetitivas.</p>
+<p>Hemos combinado:</p>
+<pre><code class="language-text">listas
+  +
+bucles
+  +
+funciones
+  +
+subprocess
+  +
+control de errores
+</code></pre>
+<p>para realizar automáticamente una misma operación sobre varios equipos.</p>
+<p>El patrón fundamental es:</p>
+<pre><code class="language-text">        DATOS
+          │
+          ▼
+        BUCLE
+          │
+          ▼
+        FUNCIÓN
+          │
+          ▼
+        ACCIÓN
+          │
+          ▼
+       RESULTADO
+</code></pre>
+<p>Este patrón aparece continuamente en los scripts de administración.</p>
+<p>En la siguiente parte eliminaremos las listas escritas directamente dentro del programa y aprenderemos a <strong>cargar automáticamente los equipos desde archivos TXT y CSV</strong>, combinando los conocimientos de los capítulos 1 y 2.</p>
+<hr />
+<h2 id="10-separar-los-datos-del-programa">10. Separar los datos del programa<a class="headerlink" href="#10-separar-los-datos-del-programa" title="Permanent link">&para;</a></h2>
+<p>En los ejemplos anteriores utilizábamos una lista escrita directamente en el programa:</p>
+<pre><code class="language-python">equipos = [
+    &quot;192.168.1.101&quot;,
+    &quot;192.168.1.102&quot;,
+    &quot;192.168.1.103&quot;,
+    &quot;192.168.1.104&quot;,
+    &quot;192.168.1.105&quot;
+]
+</code></pre>
+<p>El programa funciona, pero presenta un inconveniente importante.</p>
+<p>Si queremos añadir o eliminar un equipo debemos modificar el código Python.</p>
+<p>En administración de sistemas resulta mucho más práctico separar:</p>
+<pre><code class="language-text">DATOS
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">PROGRAMA
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">equipos.txt
+     │
+     ▼
+   Python
+     │
+     ▼
+procesamiento
+</code></pre>
+<p>De esta forma podemos modificar los equipos sin cambiar el programa.</p>
+<hr />
+<h3 id="crear-el-archivo-de-equipos">Crear el archivo de equipos<a class="headerlink" href="#crear-el-archivo-de-equipos" title="Permanent link">&para;</a></h3>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/datos/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">equipos.txt
+</code></pre>
+<p>Introduce:</p>
+<pre><code class="language-text">127.0.0.1
+192.168.1.1
+8.8.8.8
+</code></pre>
+<p>Cada línea contiene una dirección que queremos comprobar.</p>
+<p>Nuestra estructura será:</p>
+<pre><code class="language-text">capitulo3/
+├── datos/
+│   └── equipos.txt
+│
+├── programas/
+│
+└── resultados/
+</code></pre>
+<hr />
+<h2 id="11-leer-automaticamente-la-lista-de-equipos">11. Leer automáticamente la lista de equipos<a class="headerlink" href="#11-leer-automaticamente-la-lista-de-equipos" title="Permanent link">&para;</a></h2>
+<p>Vamos a crear un programa que lea el archivo.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">leer_equipos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_EQUIPOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;equipos.txt&quot;
+)
+
+
+with open(
+    ARCHIVO_EQUIPOS,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    for linea in archivo:
+
+        equipo = linea.strip()
+
+        if equipo:
+            print(equipo)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python leer_equipos.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">127.0.0.1
+192.168.1.1
+8.8.8.8
+</code></pre>
+<p>Observa que utilizamos:</p>
+<pre><code class="language-python">linea.strip()
+</code></pre>
+<p>para eliminar saltos de línea y posibles espacios.</p>
+<p>También comprobamos:</p>
+<pre><code class="language-python">if equipo:
+</code></pre>
+<p>para ignorar líneas vacías.</p>
+<hr />
+<h3 id="ventaja-de-utilizar-un-archivo-externo">Ventaja de utilizar un archivo externo<a class="headerlink" href="#ventaja-de-utilizar-un-archivo-externo" title="Permanent link">&para;</a></h3>
+<p>Ahora podemos modificar:</p>
+<pre><code class="language-text">equipos.txt
+</code></pre>
+<p>sin modificar:</p>
+<pre><code class="language-text">leer_equipos.py
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">127.0.0.1
+192.168.1.1
+192.168.1.20
+192.168.1.21
+192.168.1.22
+8.8.8.8
+</code></pre>
+<p>El programa procesará automáticamente el nuevo contenido.</p>
+<p>Estamos separando claramente:</p>
+<pre><code class="language-text">CONFIGURACIÓN / DATOS
+        │
+        ▼
+    equipos.txt
+
+        +
+
+      PROGRAMA
+        │
+        ▼
+   script Python
+</code></pre>
+<p>Este principio será muy importante en programas más grandes.</p>
+<hr />
+<h2 id="12-cargar-los-equipos-en-una-lista">12. Cargar los equipos en una lista<a class="headerlink" href="#12-cargar-los-equipos-en-una-lista" title="Permanent link">&para;</a></h2>
+<p>También podemos leer el archivo y almacenar sus datos en una lista.</p>
+<p>Crea:</p>
+<pre><code class="language-text">cargar_equipos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_EQUIPOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;equipos.txt&quot;
+)
+
+
+equipos = []
+
+
+with open(
+    ARCHIVO_EQUIPOS,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    for linea in archivo:
+
+        equipo = linea.strip()
+
+        if equipo:
+            equipos.append(equipo)
+
+
+print(equipos)
+</code></pre>
+<p>La salida será similar a:</p>
+<pre><code class="language-text">['127.0.0.1', '192.168.1.1', '8.8.8.8']
+</code></pre>
+<p>Ahora tenemos los datos del archivo almacenados en:</p>
+<pre><code class="language-python">equipos
+</code></pre>
+<p>y podemos recorrerlos:</p>
+<pre><code class="language-python">for equipo in equipos:
+    print(equipo)
+</code></pre>
+<p>El proceso es:</p>
+<pre><code class="language-text">equipos.txt
+     │
+     ▼
+ lectura
+     │
+     ▼
+   lista
+     │
+     ▼
+ bucle for
+</code></pre>
+<hr />
+<h2 id="13-automatizar-ping-desde-un-archivo">13. Automatizar <code>ping</code> desde un archivo<a class="headerlink" href="#13-automatizar-ping-desde-un-archivo" title="Permanent link">&para;</a></h2>
+<p>Ahora vamos a unir:</p>
+<pre><code class="language-text">archivo
++
+bucle
++
+subprocess
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">ping_desde_archivo.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_EQUIPOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;equipos.txt&quot;
+)
+
+
+with open(
+    ARCHIVO_EQUIPOS,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    for linea in archivo:
+
+        equipo = linea.strip()
+
+        if not equipo:
+            continue
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;2&quot;,
+                equipo
+            ],
+            capture_output=True,
+            text=True
+        )
+
+        if resultado.returncode == 0:
+            print(f&quot;{equipo}: RESPONDE&quot;)
+        else:
+            print(f&quot;{equipo}: NO RESPONDE&quot;)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python ping_desde_archivo.py
+</code></pre>
+<p>Obtendremos un resultado parecido a:</p>
+<pre><code class="language-text">127.0.0.1: RESPONDE
+192.168.1.1: RESPONDE
+8.8.8.8: RESPONDE
+</code></pre>
+<p>Los resultados dependerán de la red.</p>
+<hr />
+<h3 id="utilizar-continue">Utilizar <code>continue</code><a class="headerlink" href="#utilizar-continue" title="Permanent link">&para;</a></h3>
+<p>En el programa aparece:</p>
+<pre><code class="language-python">if not equipo:
+    continue
+</code></pre>
+<p>Si encontramos una línea vacía:</p>
+<pre><code class="language-python">equipo = &quot;&quot;
+</code></pre>
+<p>la instrucción:</p>
+<pre><code class="language-python">continue
+</code></pre>
+<p>hace que Python pase directamente a la siguiente iteración del bucle.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">línea
+  │
+  ▼
+¿está vacía?
+  │
+ ┌┴───────────┐
+ │            │
+Sí            No
+ │            │
+ ▼            ▼
+continue     ping
+ │
+ ▼
+siguiente línea
+</code></pre>
+<p>Esto evita intentar ejecutar:</p>
+<pre><code class="language-powershell">ping
+</code></pre>
+<p>sin una dirección.</p>
+<hr />
+<h2 id="14-crear-una-funcion-para-cargar-equipos">14. Crear una función para cargar equipos<a class="headerlink" href="#14-crear-una-funcion-para-cargar-equipos" title="Permanent link">&para;</a></h2>
+<p>Podemos mejorar nuestro programa creando una función específica.</p>
+<pre><code class="language-python">def cargar_equipos(archivo_equipos):
+
+    equipos = []
+
+    with open(
+        archivo_equipos,
+        &quot;r&quot;,
+        encoding=&quot;utf-8&quot;
+    ) as archivo:
+
+        for linea in archivo:
+
+            equipo = linea.strip()
+
+            if equipo:
+                equipos.append(equipo)
+
+    return equipos
+</code></pre>
+<p>Ahora podemos utilizar:</p>
+<pre><code class="language-python">equipos = cargar_equipos(
+    ARCHIVO_EQUIPOS
+)
+</code></pre>
+<p>Esto separa las diferentes responsabilidades del programa:</p>
+<pre><code class="language-text">cargar_equipos()
+       ↓
+obtiene los datos
+
+comprobar_equipo()
+       ↓
+realiza el ping
+
+programa principal
+       ↓
+coordina las operaciones
+</code></pre>
+<p>Esta organización facilita mucho la lectura del código.</p>
+<hr />
+<h2 id="15-combinar-funciones-y-archivos">15. Combinar funciones y archivos<a class="headerlink" href="#15-combinar-funciones-y-archivos" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_inventario_txt.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_EQUIPOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;equipos.txt&quot;
+)
+
+
+def cargar_equipos(archivo_equipos):
+
+    equipos = []
+
+    with open(
+        archivo_equipos,
+        &quot;r&quot;,
+        encoding=&quot;utf-8&quot;
+    ) as archivo:
+
+        for linea in archivo:
+
+            equipo = linea.strip()
+
+            if equipo:
+                equipos.append(equipo)
+
+    return equipos
+
+
+def comprobar_equipo(equipo):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;2&quot;,
+                equipo
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        return resultado.returncode == 0
+
+    except FileNotFoundError:
+
+        print(
+            &quot;ERROR: no se encuentra &quot;
+            &quot;el comando ping.&quot;
+        )
+
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        print(
+            f&quot;ERROR: tiempo agotado &quot;
+            f&quot;para {equipo}.&quot;
+        )
+
+        return False
+
+
+equipos = cargar_equipos(
+    ARCHIVO_EQUIPOS
+)
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+        print(f&quot;{equipo}: RESPONDE&quot;)
+    else:
+        print(f&quot;{equipo}: NO RESPONDE&quot;)
+</code></pre>
+<p>Nuestro programa tiene ahora dos funciones claramente diferenciadas:</p>
+<pre><code class="language-text">cargar_equipos()
+       │
+       ▼
+     lista
+       │
+       ▼
+comprobar_equipo()
+       │
+       ▼
+    resultado
+</code></pre>
+<hr />
+<h2 id="16-utilizar-un-inventario-csv">16. Utilizar un inventario CSV<a class="headerlink" href="#16-utilizar-un-inventario-csv" title="Permanent link">&para;</a></h2>
+<p>Un archivo TXT es suficiente si únicamente necesitamos almacenar una dirección por equipo.</p>
+<p>Pero normalmente tendremos más información.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Nombre
+Dirección IP
+Sistema operativo
+Ubicación
+</code></pre>
+<p>Para ello podemos recuperar los archivos CSV estudiados en el capítulo 1.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/datos/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<p>Introduce:</p>
+<pre><code class="language-csv">nombre,ip,sistema,ubicacion
+PC-AULA-01,192.168.1.101,Windows 11,Aula 1
+PC-AULA-02,192.168.1.102,Windows 11,Aula 1
+PC-AULA-03,192.168.1.103,Windows 11,Aula 1
+SERVIDOR-01,192.168.1.10,Ubuntu Server,CPD
+ROUTER-01,192.168.1.1,Cisco IOS,Armario comunicaciones
+</code></pre>
+<p>Nuestra carpeta <code>datos</code> contiene ahora:</p>
+<pre><code class="language-text">datos/
+├── equipos.txt
+└── inventario.csv
+</code></pre>
+<hr />
+<h2 id="17-leer-el-inventario-csv">17. Leer el inventario CSV<a class="headerlink" href="#17-leer-el-inventario-csv" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">leer_inventario_csv.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import csv
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+
+with open(
+    ARCHIVO_INVENTARIO,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    lector = csv.DictReader(archivo)
+
+    for equipo in lector:
+
+        print(
+            f&quot;{equipo['nombre']} - &quot;
+            f&quot;{equipo['ip']} - &quot;
+            f&quot;{equipo['sistema']} - &quot;
+            f&quot;{equipo['ubicacion']}&quot;
+        )
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">PC-AULA-01 - 192.168.1.101 - Windows 11 - Aula 1
+PC-AULA-02 - 192.168.1.102 - Windows 11 - Aula 1
+PC-AULA-03 - 192.168.1.103 - Windows 11 - Aula 1
+SERVIDOR-01 - 192.168.1.10 - Ubuntu Server - CPD
+ROUTER-01 - 192.168.1.1 - Cisco IOS - Armario comunicaciones
+</code></pre>
+<p>Ahora cada equipo contiene varios campos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ip&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;sistema&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ubicacion&quot;]
+</code></pre>
+<hr />
+<h2 id="18-comprobar-automaticamente-un-inventario-csv">18. Comprobar automáticamente un inventario CSV<a class="headerlink" href="#18-comprobar-automaticamente-un-inventario-csv" title="Permanent link">&para;</a></h2>
+<p>Ahora vamos a utilizar la dirección IP de cada registro para realizar la comprobación.</p>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_inventario_csv.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import csv
+import subprocess
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+
+def comprobar_equipo(ip):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;2&quot;,
+                ip
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        return resultado.returncode == 0
+
+    except FileNotFoundError:
+
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        return False
+
+
+with open(
+    ARCHIVO_INVENTARIO,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    lector = csv.DictReader(archivo)
+
+    for equipo in lector:
+
+        nombre = equipo[&quot;nombre&quot;]
+        ip = equipo[&quot;ip&quot;]
+
+        if comprobar_equipo(ip):
+            estado = &quot;RESPONDE&quot;
+        else:
+            estado = &quot;NO RESPONDE&quot;
+
+        print(
+            f&quot;{nombre} - &quot;
+            f&quot;{ip} - &quot;
+            f&quot;{estado}&quot;
+        )
+</code></pre>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">PC-AULA-01 - 192.168.1.101 - RESPONDE
+PC-AULA-02 - 192.168.1.102 - NO RESPONDE
+PC-AULA-03 - 192.168.1.103 - RESPONDE
+SERVIDOR-01 - 192.168.1.10 - RESPONDE
+ROUTER-01 - 192.168.1.1 - RESPONDE
+</code></pre>
+<p>Los resultados dependerán de los equipos realmente disponibles en nuestra red.</p>
+<hr />
+<h2 id="19-contar-los-equipos-disponibles">19. Contar los equipos disponibles<a class="headerlink" href="#19-contar-los-equipos-disponibles" title="Permanent link">&para;</a></h2>
+<p>Podemos añadir contadores.</p>
+<p>Antes del bucle:</p>
+<pre><code class="language-python">total = 0
+activos = 0
+inactivos = 0
+</code></pre>
+<p>Dentro del bucle:</p>
+<pre><code class="language-python">total += 1
+</code></pre>
+<p>Cuando responde:</p>
+<pre><code class="language-python">activos += 1
+</code></pre>
+<p>Cuando no responde:</p>
+<pre><code class="language-python">inactivos += 1
+</code></pre>
+<p>Al terminar podemos mostrar:</p>
+<pre><code class="language-python">print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print(f&quot;Equipos comprobados: {total}&quot;)
+print(f&quot;Responden: {activos}&quot;)
+print(f&quot;No responden: {inactivos}&quot;)
+</code></pre>
+<p>Nuestro script puede producir:</p>
+<pre><code class="language-text">PC-AULA-01 - 192.168.1.101 - RESPONDE
+PC-AULA-02 - 192.168.1.102 - NO RESPONDE
+PC-AULA-03 - 192.168.1.103 - RESPONDE
+SERVIDOR-01 - 192.168.1.10 - RESPONDE
+ROUTER-01 - 192.168.1.1 - RESPONDE
+
+RESUMEN
+=======
+Equipos comprobados: 5
+Responden: 4
+No responden: 1
+</code></pre>
+<hr />
+<h2 id="20-guardar-los-resultados">20. Guardar los resultados<a class="headerlink" href="#20-guardar-los-resultados" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora los resultados desaparecen cuando cerramos la terminal.</p>
+<p>Vamos a guardarlos automáticamente.</p>
+<p>Queremos crear:</p>
+<pre><code class="language-text">resultados/estado_equipos.txt
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">generar_estado_red.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import csv
+import subprocess
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = Path(__file__).resolve().parent
+DIRECTORIO_CAPITULO = DIRECTORIO_PROGRAMA.parent
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+ARCHIVO_RESULTADOS = (
+    DIRECTORIO_RESULTADOS
+    / &quot;estado_equipos.txt&quot;
+)
+
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+def comprobar_equipo(ip):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;2&quot;,
+                ip
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        return resultado.returncode == 0
+
+    except FileNotFoundError:
+
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        return False
+
+
+total = 0
+activos = 0
+inactivos = 0
+
+lineas_resultado = []
+
+
+with open(
+    ARCHIVO_INVENTARIO,
+    &quot;r&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    lector = csv.DictReader(archivo)
+
+    for equipo in lector:
+
+        nombre = equipo[&quot;nombre&quot;]
+        ip = equipo[&quot;ip&quot;]
+
+        total += 1
+
+        if comprobar_equipo(ip):
+
+            estado = &quot;RESPONDE&quot;
+            activos += 1
+
+        else:
+
+            estado = &quot;NO RESPONDE&quot;
+            inactivos += 1
+
+        linea = (
+            f&quot;{nombre} - &quot;
+            f&quot;{ip} - &quot;
+            f&quot;{estado}&quot;
+        )
+
+        print(linea)
+
+        lineas_resultado.append(linea)
+
+
+informe = &quot;&quot;
+
+informe += &quot;ESTADO DE LOS EQUIPOS\n&quot;
+informe += &quot;======================\n\n&quot;
+
+for linea in lineas_resultado:
+    informe += linea + &quot;\n&quot;
+
+informe += &quot;\n&quot;
+informe += &quot;RESUMEN\n&quot;
+informe += &quot;=======\n&quot;
+
+informe += (
+    f&quot;Equipos comprobados: {total}\n&quot;
+)
+
+informe += (
+    f&quot;Responden: {activos}\n&quot;
+)
+
+informe += (
+    f&quot;No responden: {inactivos}\n&quot;
+)
+
+
+ARCHIVO_RESULTADOS.write_text(
+    informe,
+    encoding=&quot;utf-8&quot;
+)
+
+
+print()
+print(&quot;Informe generado:&quot;)
+print(ARCHIVO_RESULTADOS)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python generar_estado_red.py
+</code></pre>
+<p>Después comprueba:</p>
+<pre><code class="language-text">practicas/capitulo3/resultados/
+</code></pre>
+<p>Debe aparecer:</p>
+<pre><code class="language-text">estado_equipos.txt
+</code></pre>
+<hr />
+<h2 id="21-flujo-completo-de-automatizacion">21. Flujo completo de automatización<a class="headerlink" href="#21-flujo-completo-de-automatizacion" title="Permanent link">&para;</a></h2>
+<p>Ahora ya tenemos un proceso completo:</p>
+<pre><code class="language-text">inventario.csv
+      │
+      ▼
+csv.DictReader()
+      │
+      ▼
+lista de equipos
+      │
+      ▼
+   bucle for
+      │
+      ▼
+subprocess.run()
+      │
+      ▼
+     ping
+      │
+      ▼
+  returncode
+      │
+ ┌────┴─────┐
+ ▼          ▼
+RESPONDE   NO RESPONDE
+ │          │
+ └────┬─────┘
+      ▼
+   resumen
+      │
+      ▼
+estado_equipos.txt
+</code></pre>
+<p>Estamos combinando ya los tres capítulos:</p>
+<pre><code class="language-text">CAPÍTULO 1
+Archivos + CSV + pathlib
+          │
+          ▼
+CAPÍTULO 2
+subprocess + comandos
+          │
+          ▼
+CAPÍTULO 3
+automatización
+          │
+          ▼
+HERRAMIENTA DE ADMINISTRACIÓN
+</code></pre>
+<hr />
+<h2 id="22-practica-propuesta-inventario-del-aula">22. Práctica propuesta: inventario del aula<a class="headerlink" href="#22-practica-propuesta-inventario-del-aula" title="Permanent link">&para;</a></h2>
+<p>Crea un archivo:</p>
+<pre><code class="language-text">datos/aula.csv
+</code></pre>
+<p>con al menos cinco equipos.</p>
+<p>Debe tener:</p>
+<pre><code class="language-csv">nombre,ip,sistema,ubicacion
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-csv">nombre,ip,sistema,ubicacion
+PC01,192.168.1.101,Windows 11,Aula 1
+PC02,192.168.1.102,Windows 11,Aula 1
+PC03,192.168.1.103,Windows 11,Aula 1
+PC04,192.168.1.104,Ubuntu,Aula 1
+PC05,192.168.1.105,Ubuntu,Aula 1
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_aula_csv.py
+</code></pre>
+<p>El programa deberá:</p>
+<ol>
+<li>Leer automáticamente <code>aula.csv</code>.</li>
+<li>Obtener el nombre y la IP de cada equipo.</li>
+<li>Realizar un <code>ping</code>.</li>
+<li>Mostrar el resultado.</li>
+<li>Contar equipos disponibles y no disponibles.</li>
+<li>Generar:</li>
+</ol>
+<pre><code class="language-text">resultados/informe_aula.txt
+</code></pre>
+<p>El informe deberá tener una estructura similar a:</p>
+<pre><code class="language-text">INFORME DEL AULA
+================
+
+PC01 - 192.168.1.101 - RESPONDE
+PC02 - 192.168.1.102 - RESPONDE
+PC03 - 192.168.1.103 - NO RESPONDE
+PC04 - 192.168.1.104 - RESPONDE
+PC05 - 192.168.1.105 - NO RESPONDE
+
+RESUMEN
+=======
+
+Equipos comprobados: 5
+Responden: 3
+No responden: 2
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Pistas</p>
+<p>Necesitarás combinar:</p>
+<ul>
+<li><code>csv.DictReader()</code></li>
+<li><code>Path</code></li>
+<li><code>subprocess.run()</code></li>
+<li><code>returncode</code></li>
+<li><code>for</code></li>
+<li><code>if</code></li>
+<li>funciones</li>
+<li>contadores</li>
+<li><code>write_text()</code></li>
+</ul>
+</div>
+<hr />
+<h2 id="23-reto-de-ampliacion">23. Reto de ampliación<a class="headerlink" href="#23-reto-de-ampliacion" title="Permanent link">&para;</a></h2>
+<p>Modifica la práctica anterior para mostrar también:</p>
+<pre><code class="language-text">nombre
+IP
+sistema operativo
+ubicación
+estado
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">PC01
+  IP: 192.168.1.101
+  Sistema: Windows 11
+  Ubicación: Aula 1
+  Estado: RESPONDE
+
+PC02
+  IP: 192.168.1.102
+  Sistema: Windows 11
+  Ubicación: Aula 1
+  Estado: NO RESPONDE
+</code></pre>
+<div class="admonition example">
+<p class="admonition-title">Objetivo</p>
+<p>El archivo CSV debe actuar como <strong>inventario de entrada</strong>.</p>
+<p>El programa Python debe realizar automáticamente las comprobaciones.</p>
+<p>El archivo generado debe actuar como <strong>informe de salida</strong>.</p>
+<p>Por tanto:</p>
+<p><code>text
+INVENTARIO
+    ↓
+AUTOMATIZACIÓN
+    ↓
+INFORME</code></p>
+</div>
+<hr />
+<h2 id="resumen_1">Resumen<a class="headerlink" href="#resumen_1" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos mejorado considerablemente nuestros scripts de automatización.</p>
+<p>Ya podemos separar:</p>
+<pre><code class="language-text">DATOS
+  │
+  ▼
+TXT / CSV
+
+PROGRAMA
+  │
+  ▼
+Python
+
+RESULTADOS
+  │
+  ▼
+TXT
+</code></pre>
+<p>Hemos aprendido a:</p>
+<ul>
+<li>Leer listas de equipos desde archivos TXT.</li>
+<li>Cargar datos en listas.</li>
+<li>Ignorar líneas vacías.</li>
+<li>Utilizar <code>continue</code>.</li>
+<li>Leer inventarios mediante <code>csv.DictReader()</code>.</li>
+<li>Ejecutar automáticamente una acción sobre cada registro.</li>
+<li>Combinar CSV y <code>subprocess</code>.</li>
+<li>Contar resultados.</li>
+<li>Generar informes.</li>
+<li>Separar los datos del código.</li>
+</ul>
+<p>El patrón fundamental es ahora:</p>
+<pre><code class="language-text">ARCHIVO DE ENTRADA
+       ↓
+      PYTHON
+       ↓
+     BUCLE
+       ↓
+    COMANDO
+       ↓
+   RESULTADO
+       ↓
+ARCHIVO DE SALIDA
+</code></pre>
+<p>En la siguiente parte mejoraremos esta automatización haciendo que nuestros scripts puedan <strong>generar automáticamente rangos de direcciones y procesar grupos de equipos sin tener que escribir manualmente cada IP</strong>, además de seguir organizando el código en funciones reutilizables.</p>
+<hr />
+<h2 id="24-generar-automaticamente-grupos-de-equipos">24. Generar automáticamente grupos de equipos<a class="headerlink" href="#24-generar-automaticamente-grupos-de-equipos" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora hemos utilizado archivos como:</p>
+<pre><code class="language-text">equipos.txt
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<p>para indicar qué equipos debe procesar nuestro programa.</p>
+<p>Esta solución es adecuada cuando cada equipo tiene información propia:</p>
+<pre><code class="language-text">nombre
+IP
+sistema operativo
+ubicación
+</code></pre>
+<p>Sin embargo, algunas tareas requieren simplemente procesar un conjunto de direcciones consecutivas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">192.168.1.101
+192.168.1.102
+192.168.1.103
+192.168.1.104
+192.168.1.105
+</code></pre>
+<p>Escribir manualmente todas estas direcciones no resulta práctico si tenemos que comprobar decenas de equipos.</p>
+<p>Python puede generarlas automáticamente.</p>
+<hr />
+<h2 id="25-utilizar-range">25. Utilizar <code>range()</code><a class="headerlink" href="#25-utilizar-range" title="Permanent link">&para;</a></h2>
+<p>La función:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>permite generar secuencias de números.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">for numero in range(1, 6):
+    print(numero)
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">1
+2
+3
+4
+5
+</code></pre>
+<p>Observa un detalle importante.</p>
+<p>Hemos utilizado:</p>
+<pre><code class="language-python">range(1, 6)
+</code></pre>
+<p>pero el último número obtenido es:</p>
+<pre><code class="language-text">5
+</code></pre>
+<p>El segundo valor indica el límite, pero <strong>no está incluido</strong>.</p>
+<p>Por tanto:</p>
+<pre><code class="language-python">range(1, 6)
+</code></pre>
+<p>genera:</p>
+<pre><code class="language-text">1
+2
+3
+4
+5
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">El último valor no se incluye</p>
+<p>Si queremos generar números desde <code>1</code> hasta <code>10</code>, utilizaremos:</p>
+<p><code>python
+range(1, 11)</code></p>
+</div>
+<hr />
+<h3 id="generar-direcciones-ip">Generar direcciones IP<a class="headerlink" href="#generar-direcciones-ip" title="Permanent link">&para;</a></h3>
+<p>Podemos combinar <code>range()</code> con una cadena formateada.</p>
+<p>Crea:</p>
+<pre><code class="language-text">generar_ips.py
+</code></pre>
+<p>dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/programas/
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">for numero in range(101, 106):
+
+    ip = f&quot;192.168.1.{numero}&quot;
+
+    print(ip)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python generar_ips.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">192.168.1.101
+192.168.1.102
+192.168.1.103
+192.168.1.104
+192.168.1.105
+</code></pre>
+<p>Python ha construido automáticamente las cinco direcciones.</p>
+<p>El proceso es:</p>
+<pre><code class="language-text">range(101, 106)
+        │
+        ▼
+101 102 103 104 105
+        │
+        ▼
+f&quot;192.168.1.{numero}&quot;
+        │
+        ▼
+direcciones IP
+</code></pre>
+<hr />
+<h2 id="26-comprobar-un-rango-de-direcciones">26. Comprobar un rango de direcciones<a class="headerlink" href="#26-comprobar-un-rango-de-direcciones" title="Permanent link">&para;</a></h2>
+<p>Ahora podemos combinar:</p>
+<pre><code class="language-text">range()
++
+subprocess
++
+ping
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_rango.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+
+
+for numero in range(101, 106):
+
+    ip = f&quot;192.168.1.{numero}&quot;
+
+    resultado = subprocess.run(
+        [
+            &quot;ping&quot;,
+            &quot;-n&quot;,
+            &quot;1&quot;,
+            ip
+        ],
+        capture_output=True,
+        text=True,
+        timeout=5
+    )
+
+    if resultado.returncode == 0:
+        print(f&quot;{ip}: RESPONDE&quot;)
+    else:
+        print(f&quot;{ip}: NO RESPONDE&quot;)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python comprobar_rango.py
+</code></pre>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">192.168.1.101: RESPONDE
+192.168.1.102: NO RESPONDE
+192.168.1.103: RESPONDE
+192.168.1.104: RESPONDE
+192.168.1.105: NO RESPONDE
+</code></pre>
+<p>Los resultados dependerán de nuestra red.</p>
+<div class="admonition warning">
+<p class="admonition-title">Comprobaciones en una red</p>
+<p>Realiza estas prácticas únicamente sobre equipos y redes en los que tengas autorización para efectuar las comprobaciones.</p>
+</div>
+<hr />
+<h2 id="27-elegir-el-rango-desde-el-programa">27. Elegir el rango desde el programa<a class="headerlink" href="#27-elegir-el-rango-desde-el-programa" title="Permanent link">&para;</a></h2>
+<p>Podemos almacenar los valores en variables:</p>
+<pre><code class="language-python">red = &quot;192.168.1&quot;
+inicio = 101
+fin = 105
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">for numero in range(inicio, fin + 1):
+
+    ip = f&quot;{red}.{numero}&quot;
+
+    print(ip)
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-python">fin + 1
+</code></pre>
+<p>Como el último valor de <code>range()</code> no se incluye, añadimos <code>1</code> para que la dirección final también sea procesada.</p>
+<p>Con:</p>
+<pre><code class="language-python">inicio = 101
+fin = 105
+</code></pre>
+<p>obtenemos:</p>
+<pre><code class="language-text">192.168.1.101
+192.168.1.102
+192.168.1.103
+192.168.1.104
+192.168.1.105
+</code></pre>
+<hr />
+<h3 id="solicitar-los-valores-al-usuario">Solicitar los valores al usuario<a class="headerlink" href="#solicitar-los-valores-al-usuario" title="Permanent link">&para;</a></h3>
+<p>Podemos permitir que el usuario indique el rango.</p>
+<p>Crea:</p>
+<pre><code class="language-text">rango_personalizado.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">red = input(
+    &quot;Introduce los tres primeros octetos &quot;
+    &quot;de la red: &quot;
+)
+
+inicio = int(
+    input(&quot;Primer equipo: &quot;)
+)
+
+fin = int(
+    input(&quot;Último equipo: &quot;)
+)
+
+
+for numero in range(inicio, fin + 1):
+
+    ip = f&quot;{red}.{numero}&quot;
+
+    print(ip)
+</code></pre>
+<p>Una ejecución podría ser:</p>
+<pre><code class="language-text">Introduce los tres primeros octetos de la red: 192.168.1
+Primer equipo: 20
+Último equipo: 25
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">192.168.1.20
+192.168.1.21
+192.168.1.22
+192.168.1.23
+192.168.1.24
+192.168.1.25
+</code></pre>
+<p>Ahora el programa puede trabajar con diferentes rangos sin modificar el código.</p>
+<hr />
+<h2 id="28-crear-una-funcion-para-generar-direcciones">28. Crear una función para generar direcciones<a class="headerlink" href="#28-crear-una-funcion-para-generar-direcciones" title="Permanent link">&para;</a></h2>
+<p>Podemos separar nuevamente las responsabilidades.</p>
+<p>Crea:</p>
+<pre><code class="language-text">funcion_generar_ips.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def generar_ips(red, inicio, fin):
+
+    direcciones = []
+
+    for numero in range(
+        inicio,
+        fin + 1
+    ):
+
+        ip = f&quot;{red}.{numero}&quot;
+
+        direcciones.append(ip)
+
+    return direcciones
+
+
+equipos = generar_ips(
+    &quot;192.168.1&quot;,
+    101,
+    105
+)
+
+
+for equipo in equipos:
+    print(equipo)
+</code></pre>
+<p>La función:</p>
+<pre><code class="language-python">generar_ips()
+</code></pre>
+<p>recibe:</p>
+<pre><code class="language-text">red
+inicio
+fin
+</code></pre>
+<p>y devuelve una lista.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">equipos = generar_ips(
+    &quot;192.168.1&quot;,
+    101,
+    105
+)
+</code></pre>
+<p>produce conceptualmente:</p>
+<pre><code class="language-python">[
+    &quot;192.168.1.101&quot;,
+    &quot;192.168.1.102&quot;,
+    &quot;192.168.1.103&quot;,
+    &quot;192.168.1.104&quot;,
+    &quot;192.168.1.105&quot;
+]
+</code></pre>
+<hr />
+<h2 id="29-separar-generacion-y-comprobacion">29. Separar generación y comprobación<a class="headerlink" href="#29-separar-generacion-y-comprobacion" title="Permanent link">&para;</a></h2>
+<p>Ahora podemos crear dos funciones independientes:</p>
+<pre><code class="language-text">generar_ips()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">comprobar_equipo()
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_red.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+
+
+def generar_ips(red, inicio, fin):
+
+    direcciones = []
+
+    for numero in range(
+        inicio,
+        fin + 1
+    ):
+
+        direcciones.append(
+            f&quot;{red}.{numero}&quot;
+        )
+
+    return direcciones
+
+
+def comprobar_equipo(ip):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;1&quot;,
+                ip
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        return resultado.returncode == 0
+
+    except FileNotFoundError:
+
+        print(
+            &quot;ERROR: no se encuentra &quot;
+            &quot;el comando ping.&quot;
+        )
+
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        return False
+
+
+equipos = generar_ips(
+    &quot;192.168.1&quot;,
+    101,
+    105
+)
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+        print(f&quot;{equipo}: RESPONDE&quot;)
+    else:
+        print(f&quot;{equipo}: NO RESPONDE&quot;)
+</code></pre>
+<p>Fíjate en la organización:</p>
+<pre><code class="language-text">generar_ips()
+      │
+      ▼
+lista de direcciones
+      │
+      ▼
+     for
+      │
+      ▼
+comprobar_equipo()
+      │
+      ▼
+RESPONDE / NO RESPONDE
+</code></pre>
+<p>Cada función tiene una responsabilidad concreta.</p>
+<hr />
+<h2 id="30-guardar-unicamente-los-equipos-que-responden">30. Guardar únicamente los equipos que responden<a class="headerlink" href="#30-guardar-unicamente-los-equipos-que-responden" title="Permanent link">&para;</a></h2>
+<p>En algunas situaciones nos interesará obtener una lista de los equipos que han respondido.</p>
+<p>Podemos crear:</p>
+<pre><code class="language-python">equipos_activos = []
+</code></pre>
+<p>y añadir las direcciones disponibles:</p>
+<pre><code class="language-python">if comprobar_equipo(equipo):
+
+    equipos_activos.append(equipo)
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">equipos_activos = []
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+
+        print(f&quot;{equipo}: RESPONDE&quot;)
+
+        equipos_activos.append(
+            equipo
+        )
+
+    else:
+
+        print(
+            f&quot;{equipo}: NO RESPONDE&quot;
+        )
+</code></pre>
+<p>Al finalizar, la lista podría contener:</p>
+<pre><code class="language-python">[
+    &quot;192.168.1.101&quot;,
+    &quot;192.168.1.103&quot;,
+    &quot;192.168.1.104&quot;
+]
+</code></pre>
+<p>Ahora podemos utilizar esa lista para realizar otras operaciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">COMPROBAR RED
+      ↓
+EQUIPOS ACTIVOS
+      ↓
+OTRAS TAREAS
+</code></pre>
+<p>Este patrón es muy habitual en automatización:</p>
+<blockquote>
+<p>Primero seleccionamos los elementos que cumplen una condición y después trabajamos únicamente con ellos.</p>
+</blockquote>
+<hr />
+<h2 id="31-guardar-los-equipos-activos-en-un-archivo">31. Guardar los equipos activos en un archivo<a class="headerlink" href="#31-guardar-los-equipos-activos-en-un-archivo" title="Permanent link">&para;</a></h2>
+<p>Vamos a utilizar nuevamente <code>pathlib</code>.</p>
+<p>Crea:</p>
+<pre><code class="language-text">guardar_equipos_activos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import subprocess
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+ARCHIVO_ACTIVOS = (
+    DIRECTORIO_RESULTADOS
+    / &quot;equipos_activos.txt&quot;
+)
+
+
+def generar_ips(red, inicio, fin):
+
+    direcciones = []
+
+    for numero in range(
+        inicio,
+        fin + 1
+    ):
+
+        direcciones.append(
+            f&quot;{red}.{numero}&quot;
+        )
+
+    return direcciones
+
+
+def comprobar_equipo(ip):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;1&quot;,
+                ip
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        return resultado.returncode == 0
+
+    except (
+        FileNotFoundError,
+        subprocess.TimeoutExpired
+    ):
+
+        return False
+
+
+equipos = generar_ips(
+    &quot;192.168.1&quot;,
+    101,
+    105
+)
+
+equipos_activos = []
+
+
+for equipo in equipos:
+
+    if comprobar_equipo(equipo):
+
+        print(
+            f&quot;{equipo}: RESPONDE&quot;
+        )
+
+        equipos_activos.append(
+            equipo
+        )
+
+    else:
+
+        print(
+            f&quot;{equipo}: NO RESPONDE&quot;
+        )
+
+
+contenido = &quot;\n&quot;.join(
+    equipos_activos
+)
+
+
+ARCHIVO_ACTIVOS.write_text(
+    contenido,
+    encoding=&quot;utf-8&quot;
+)
+
+
+print()
+print(
+    f&quot;Equipos activos encontrados: &quot;
+    f&quot;{len(equipos_activos)}&quot;
+)
+
+print(
+    f&quot;Resultado guardado en: &quot;
+    f&quot;{ARCHIVO_ACTIVOS}&quot;
+)
+</code></pre>
+<p>Después de ejecutar el programa tendremos:</p>
+<pre><code class="language-text">resultados/
+└── equipos_activos.txt
+</code></pre>
+<p>Su contenido podría ser:</p>
+<pre><code class="language-text">192.168.1.101
+192.168.1.103
+192.168.1.104
+</code></pre>
+<hr />
+<h2 id="32-utilizar-parametros-de-configuracion">32. Utilizar parámetros de configuración<a class="headerlink" href="#32-utilizar-parametros-de-configuracion" title="Permanent link">&para;</a></h2>
+<p>Nuestro programa todavía contiene estos valores:</p>
+<pre><code class="language-python">equipos = generar_ips(
+    &quot;192.168.1&quot;,
+    101,
+    105
+)
+</code></pre>
+<p>Podemos agruparlos al principio:</p>
+<pre><code class="language-python">RED = &quot;192.168.1&quot;
+INICIO = 101
+FIN = 105
+TIMEOUT = 5
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">equipos = generar_ips(
+    RED,
+    INICIO,
+    FIN
+)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">resultado = subprocess.run(
+    [
+        &quot;ping&quot;,
+        &quot;-n&quot;,
+        &quot;1&quot;,
+        ip
+    ],
+    capture_output=True,
+    text=True,
+    timeout=TIMEOUT
+)
+</code></pre>
+<p>Ahora todos los valores que probablemente necesitemos modificar están localizados al principio del programa.</p>
+<pre><code class="language-text">CONFIGURACIÓN
+      │
+      ├── RED
+      ├── INICIO
+      ├── FIN
+      └── TIMEOUT
+            │
+            ▼
+         PROGRAMA
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Configuración</p>
+<p>Separar los valores de configuración del resto del código facilita la modificación y reutilización de nuestros scripts.</p>
+<p>Más adelante podremos incluso almacenar esta configuración fuera del propio programa.</p>
+</div>
+<hr />
+<h2 id="33-validar-los-datos-introducidos">33. Validar los datos introducidos<a class="headerlink" href="#33-validar-los-datos-introducidos" title="Permanent link">&para;</a></h2>
+<p>En este programa:</p>
+<pre><code class="language-python">inicio = int(
+    input(&quot;Primer equipo: &quot;)
+)
+</code></pre>
+<p>suponemos que el usuario introduce un número.</p>
+<p>Pero podría escribir:</p>
+<pre><code class="language-text">cien
+</code></pre>
+<p>En ese caso:</p>
+<pre><code class="language-python">int(&quot;cien&quot;)
+</code></pre>
+<p>produce:</p>
+<pre><code class="language-text">ValueError
+</code></pre>
+<p>Podemos controlarlo:</p>
+<pre><code class="language-python">try:
+
+    inicio = int(
+        input(&quot;Primer equipo: &quot;)
+    )
+
+    fin = int(
+        input(&quot;Último equipo: &quot;)
+    )
+
+except ValueError:
+
+    print(
+        &quot;ERROR: debes introducir &quot;
+        &quot;valores numéricos.&quot;
+    )
+</code></pre>
+<p>También podemos comprobar:</p>
+<pre><code class="language-python">if inicio &lt; 1 or inicio &gt; 254:
+    print(&quot;El valor inicial no es válido.&quot;)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">if fin &lt; 1 or fin &gt; 254:
+    print(&quot;El valor final no es válido.&quot;)
+</code></pre>
+<p>Además:</p>
+<pre><code class="language-python">if inicio &gt; fin:
+    print(
+        &quot;El valor inicial no puede &quot;
+        &quot;ser mayor que el final.&quot;
+    )
+</code></pre>
+<p>La validación evita que nuestro programa continúe trabajando con datos incorrectos.</p>
+<hr />
+<h2 id="34-practica-propuesta-comprobador-de-rango">34. Práctica propuesta: comprobador de rango<a class="headerlink" href="#34-practica-propuesta-comprobador-de-rango" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">comprobador_rango.py
+</code></pre>
+<p>El programa debe solicitar:</p>
+<pre><code class="language-text">Red: 192.168.1
+Primera dirección: 100
+Última dirección: 110
+</code></pre>
+<p>Después debe comprobar automáticamente:</p>
+<pre><code class="language-text">192.168.1.100
+192.168.1.101
+192.168.1.102
+...
+192.168.1.110
+</code></pre>
+<p>El resultado debe mostrar:</p>
+<pre><code class="language-text">COMPROBACIÓN DE RED
+===================
+
+192.168.1.100    NO RESPONDE
+192.168.1.101    RESPONDE
+192.168.1.102    RESPONDE
+...
+</code></pre>
+<p>Al finalizar:</p>
+<pre><code class="language-text">RESUMEN
+=======
+
+Direcciones comprobadas: 11
+Responden: 6
+No responden: 5
+</code></pre>
+<p>Los valores dependerán de la red utilizada.</p>
+<div class="admonition example">
+<p class="admonition-title">Requisitos</p>
+<p>El programa debe utilizar:</p>
+<ul>
+<li><code>range()</code></li>
+<li>funciones</li>
+<li><code>subprocess.run()</code></li>
+<li><code>returncode</code></li>
+<li><code>timeout</code></li>
+<li>control de excepciones</li>
+<li>listas</li>
+<li>contadores</li>
+</ul>
+<p>También debe comprobar que los valores inicial y final sean válidos.</p>
+</div>
+<hr />
+<h2 id="35-practica-de-ampliacion-generar-un-informe">35. Práctica de ampliación: generar un informe<a class="headerlink" href="#35-practica-de-ampliacion-generar-un-informe" title="Permanent link">&para;</a></h2>
+<p>Amplía:</p>
+<pre><code class="language-text">comprobador_rango.py
+</code></pre>
+<p>para generar:</p>
+<pre><code class="language-text">resultados/informe_rango.txt
+</code></pre>
+<p>El archivo deberá contener tanto los resultados como el resumen.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">INFORME DE COMPROBACIÓN DE RED
+==============================
+
+Red: 192.168.1
+Rango: 100 - 110
+
+192.168.1.100    NO RESPONDE
+192.168.1.101    RESPONDE
+192.168.1.102    RESPONDE
+192.168.1.103    NO RESPONDE
+
+RESUMEN
+=======
+
+Direcciones comprobadas: 11
+Responden: 6
+No responden: 5
+</code></pre>
+<p>Utiliza:</p>
+<pre><code class="language-python">Path
+</code></pre>
+<p>para generar correctamente la ruta del archivo.</p>
+<hr />
+<h2 id="36-inventario-o-generacion-automatica">36. Inventario o generación automática<a class="headerlink" href="#36-inventario-o-generacion-automatica" title="Permanent link">&para;</a></h2>
+<p>Ahora disponemos de dos formas diferentes de indicar qué equipos queremos procesar.</p>
+<h3 id="inventario">Inventario<a class="headerlink" href="#inventario" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">inventario.csv
+       ↓
+     Python
+       ↓
+    equipos
+</code></pre>
+<p>Esta solución es adecuada cuando necesitamos información adicional:</p>
+<pre><code class="language-text">nombre
+IP
+sistema
+ubicación
+</code></pre>
+<h3 id="generacion-automatica">Generación automática<a class="headerlink" href="#generacion-automatica" title="Permanent link">&para;</a></h3>
+<pre><code class="language-text">red + rango
+     ↓
+   range()
+     ↓
+direcciones
+</code></pre>
+<p>Esta solución es adecuada cuando únicamente necesitamos generar direcciones consecutivas.</p>
+<p>No existe una única solución para todas las situaciones.</p>
+<p>Debemos elegir la estructura que mejor se adapte al problema que queremos automatizar.</p>
+<hr />
+<h2 id="37-un-patron-reutilizable-de-automatizacion">37. Un patrón reutilizable de automatización<a class="headerlink" href="#37-un-patron-reutilizable-de-automatizacion" title="Permanent link">&para;</a></h2>
+<p>Los programas que estamos creando empiezan a compartir una estructura común:</p>
+<pre><code class="language-text">1. OBTENER DATOS
+       ↓
+2. VALIDAR DATOS
+       ↓
+3. GENERAR / CARGAR ELEMENTOS
+       ↓
+4. RECORRER ELEMENTOS
+       ↓
+5. EJECUTAR UNA ACCIÓN
+       ↓
+6. COMPROBAR EL RESULTADO
+       ↓
+7. ALMACENAR RESULTADOS
+       ↓
+8. GENERAR UN INFORME
+</code></pre>
+<p>Este patrón no sirve únicamente para comprobar direcciones IP.</p>
+<p>Podemos utilizarlo para:</p>
+<pre><code class="language-text">archivos
+usuarios
+equipos
+servicios
+directorios
+procesos
+copias de seguridad
+logs
+</code></pre>
+<p>La acción concreta cambiará, pero la estructura general será muy similar.</p>
+<hr />
+<h2 id="resumen_2">Resumen<a class="headerlink" href="#resumen_2" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos aprendido a generar automáticamente grupos de elementos mediante:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>y hemos aplicado esta técnica a direcciones IP.</p>
+<p>También hemos aprendido a:</p>
+<ul>
+<li>Generar secuencias numéricas.</li>
+<li>Construir direcciones mediante f-strings.</li>
+<li>Definir un rango inicial y final.</li>
+<li>Solicitar parámetros al usuario.</li>
+<li>Crear funciones para generar listas.</li>
+<li>Separar generación y procesamiento.</li>
+<li>Guardar únicamente determinados resultados.</li>
+<li>Generar archivos con los equipos activos.</li>
+<li>Utilizar parámetros de configuración.</li>
+<li>Validar datos introducidos por el usuario.</li>
+<li>Controlar <code>ValueError</code>.</li>
+</ul>
+<p>Nuestro flujo de automatización ha evolucionado hasta:</p>
+<pre><code class="language-text">     CONFIGURACIÓN
+           │
+           ▼
+   GENERAR / CARGAR
+           │
+           ▼
+        VALIDAR
+           │
+           ▼
+         BUCLE
+           │
+           ▼
+         ACCIÓN
+           │
+           ▼
+       RESULTADOS
+           │
+           ▼
+        INFORME
+</code></pre>
+<p>En la siguiente parte aplicaremos este patrón a <strong>tareas sobre archivos y directorios</strong>, automatizando operaciones como localizar archivos, procesar grupos de ficheros y realizar acciones sobre ellos sin tener que trabajar archivo por archivo.</p>
+<hr />
+<h2 id="38-automatizar-tareas-con-archivos">38. Automatizar tareas con archivos<a class="headerlink" href="#38-automatizar-tareas-con-archivos" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora hemos utilizado la automatización principalmente para trabajar con equipos de una red.</p>
+<p>Sin embargo, un administrador también realiza continuamente tareas relacionadas con archivos:</p>
+<pre><code class="language-text">buscar archivos
+copiar archivos
+crear directorios
+clasificar documentos
+renombrar archivos
+generar informes
+</code></pre>
+<p>Realizar estas operaciones manualmente puede resultar lento cuando tenemos decenas o cientos de archivos.</p>
+<p>Python permite aplicar el mismo principio que hemos utilizado anteriormente:</p>
+<pre><code class="language-text">OBTENER ELEMENTOS
+       ↓
+RECORRERLOS
+       ↓
+COMPROBAR CONDICIONES
+       ↓
+REALIZAR ACCIONES
+       ↓
+GENERAR RESULTADOS
+</code></pre>
+<p>Vamos a aplicar este patrón al sistema de archivos.</p>
+<hr />
+<h2 id="39-preparar-un-directorio-de-pruebas">39. Preparar un directorio de pruebas<a class="headerlink" href="#39-preparar-un-directorio-de-pruebas" title="Permanent link">&para;</a></h2>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">archivos/
+</code></pre>
+<p>Dentro crea manualmente algunos archivos de prueba:</p>
+<pre><code class="language-text">informe.txt
+usuarios.csv
+servidor.log
+notas.txt
+equipos.csv
+errores.log
+</code></pre>
+<p>La estructura será:</p>
+<pre><code class="language-text">capitulo3/
+├── archivos/
+│   ├── informe.txt
+│   ├── usuarios.csv
+│   ├── servidor.log
+│   ├── notas.txt
+│   ├── equipos.csv
+│   └── errores.log
+│
+├── datos/
+├── programas/
+└── resultados/
+</code></pre>
+<p>No es necesario que los archivos contengan información importante.</p>
+<p>Los utilizaremos para realizar nuestras pruebas.</p>
+<hr />
+<h2 id="40-recorrer-los-archivos-de-un-directorio">40. Recorrer los archivos de un directorio<a class="headerlink" href="#40-recorrer-los-archivos-de-un-directorio" title="Permanent link">&para;</a></h2>
+<p>En el capítulo 1 aprendimos a utilizar:</p>
+<pre><code class="language-python">pathlib
+</code></pre>
+<p>Vamos a recuperarlo.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">listar_archivos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_ARCHIVOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;archivos&quot;
+)
+
+
+for elemento in DIRECTORIO_ARCHIVOS.iterdir():
+
+    print(elemento.name)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python listar_archivos.py
+</code></pre>
+<p>Obtendremos los elementos contenidos en la carpeta.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">informe.txt
+usuarios.csv
+servidor.log
+notas.txt
+equipos.csv
+errores.log
+</code></pre>
+<p>La instrucción:</p>
+<pre><code class="language-python">DIRECTORIO_ARCHIVOS.iterdir()
+</code></pre>
+<p>permite recorrer los elementos que contiene un directorio.</p>
+<hr />
+<h3 id="comprobar-que-son-archivos">Comprobar que son archivos<a class="headerlink" href="#comprobar-que-son-archivos" title="Permanent link">&para;</a></h3>
+<p>Un directorio puede contener:</p>
+<pre><code class="language-text">archivos
+carpetas
+</code></pre>
+<p>Si queremos trabajar únicamente con archivos podemos utilizar:</p>
+<pre><code class="language-python">is_file()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">for elemento in DIRECTORIO_ARCHIVOS.iterdir():
+
+    if elemento.is_file():
+        print(elemento.name)
+</code></pre>
+<p>De esta forma ignoraremos los subdirectorios.</p>
+<hr />
+<h2 id="41-filtrar-archivos-por-extension">41. Filtrar archivos por extensión<a class="headerlink" href="#41-filtrar-archivos-por-extension" title="Permanent link">&para;</a></h2>
+<p>Supongamos que únicamente queremos localizar archivos:</p>
+<pre><code class="language-text">.txt
+</code></pre>
+<p>Podemos consultar la extensión mediante:</p>
+<pre><code class="language-python">elemento.suffix
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">buscar_txt.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_ARCHIVOS = (
+    DIRECTORIO_PROGRAMA.parent
+    / &quot;archivos&quot;
+)
+
+
+for archivo in DIRECTORIO_ARCHIVOS.iterdir():
+
+    if archivo.is_file():
+
+        if archivo.suffix == &quot;.txt&quot;:
+            print(archivo.name)
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">informe.txt
+notas.txt
+</code></pre>
+<p>Podemos representar el proceso:</p>
+<pre><code class="language-text">DIRECTORIO
+    │
+    ▼
+  iterdir()
+    │
+    ▼
+¿es archivo?
+    │
+    ▼
+¿termina en .txt?
+    │
+ ┌──┴──┐
+ Sí    No
+ │      │
+ ▼      ▼
+usar  ignorar
+</code></pre>
+<hr />
+<h2 id="42-utilizar-glob">42. Utilizar <code>glob()</code><a class="headerlink" href="#42-utilizar-glob" title="Permanent link">&para;</a></h2>
+<p><code>pathlib</code> proporciona una forma especialmente cómoda de buscar archivos mediante patrones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">DIRECTORIO_ARCHIVOS.glob(&quot;*.txt&quot;)
+</code></pre>
+<p>significa:</p>
+<blockquote>
+<p>Busca todos los elementos cuyo nombre termine en <code>.txt</code>.</p>
+</blockquote>
+<p>Podemos simplificar el programa anterior:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_ARCHIVOS = (
+    DIRECTORIO_PROGRAMA.parent
+    / &quot;archivos&quot;
+)
+
+
+for archivo in DIRECTORIO_ARCHIVOS.glob(&quot;*.txt&quot;):
+
+    print(archivo.name)
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">informe.txt
+notas.txt
+</code></pre>
+<p>Otros ejemplos:</p>
+<pre><code class="language-python">DIRECTORIO_ARCHIVOS.glob(&quot;*.csv&quot;)
+</code></pre>
+<p>busca archivos CSV.</p>
+<pre><code class="language-python">DIRECTORIO_ARCHIVOS.glob(&quot;*.log&quot;)
+</code></pre>
+<p>busca archivos LOG.</p>
+<pre><code class="language-python">DIRECTORIO_ARCHIVOS.glob(&quot;informe*&quot;)
+</code></pre>
+<p>busca nombres que comiencen por:</p>
+<pre><code class="language-text">informe
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Patrones</p>
+<p>El carácter:</p>
+<p><code>text
+*</code></p>
+<p>representa cualquier conjunto de caracteres.</p>
+<p>Por ejemplo:</p>
+<p><code>text
+*.txt</code></p>
+<p>significa cualquier nombre que termine en <code>.txt</code>.</p>
+</div>
+<hr />
+<h2 id="43-contar-archivos-automaticamente">43. Contar archivos automáticamente<a class="headerlink" href="#43-contar-archivos-automaticamente" title="Permanent link">&para;</a></h2>
+<p>Podemos utilizar contadores para obtener información sobre un directorio.</p>
+<p>Crea:</p>
+<pre><code class="language-text">contar_archivos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_ARCHIVOS = (
+    DIRECTORIO_PROGRAMA.parent
+    / &quot;archivos&quot;
+)
+
+
+total = 0
+txt = 0
+csv = 0
+log = 0
+
+
+for archivo in DIRECTORIO_ARCHIVOS.iterdir():
+
+    if not archivo.is_file():
+        continue
+
+    total += 1
+
+    if archivo.suffix == &quot;.txt&quot;:
+        txt += 1
+
+    elif archivo.suffix == &quot;.csv&quot;:
+        csv += 1
+
+    elif archivo.suffix == &quot;.log&quot;:
+        log += 1
+
+
+print(&quot;RESUMEN DE ARCHIVOS&quot;)
+print(&quot;===================&quot;)
+
+print(f&quot;Total: {total}&quot;)
+print(f&quot;TXT: {txt}&quot;)
+print(f&quot;CSV: {csv}&quot;)
+print(f&quot;LOG: {log}&quot;)
+</code></pre>
+<p>Con nuestros archivos de ejemplo obtendríamos:</p>
+<pre><code class="language-text">RESUMEN DE ARCHIVOS
+===================
+
+Total: 6
+TXT: 2
+CSV: 2
+LOG: 2
+</code></pre>
+<p>Ya estamos automatizando una pequeña tarea de inventario.</p>
+<hr />
+<h2 id="44-crear-directorios-automaticamente">44. Crear directorios automáticamente<a class="headerlink" href="#44-crear-directorios-automaticamente" title="Permanent link">&para;</a></h2>
+<p>Supongamos ahora que queremos organizar los archivos según su tipo.</p>
+<p>Queremos crear:</p>
+<pre><code class="language-text">clasificados/
+├── txt/
+├── csv/
+└── log/
+</code></pre>
+<p>Podemos hacerlo con:</p>
+<pre><code class="language-python">mkdir()
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">crear_clasificacion.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_CLASIFICADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;clasificados&quot;
+)
+
+
+tipos = [
+    &quot;txt&quot;,
+    &quot;csv&quot;,
+    &quot;log&quot;
+]
+
+
+for tipo in tipos:
+
+    directorio = (
+        DIRECTORIO_CLASIFICADOS
+        / tipo
+    )
+
+    directorio.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    print(
+        f&quot;Directorio preparado: {directorio}&quot;
+    )
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python crear_clasificacion.py
+</code></pre>
+<p>Se creará:</p>
+<pre><code class="language-text">clasificados/
+├── txt/
+├── csv/
+└── log/
+</code></pre>
+<p>Observa nuevamente el patrón:</p>
+<pre><code class="language-text">LISTA
+  │
+  ▼
+FOR
+  │
+  ▼
+ACCIÓN
+</code></pre>
+<p>En este caso la acción repetitiva es:</p>
+<pre><code class="language-python">mkdir()
+</code></pre>
+<hr />
+<h2 id="45-copiar-archivos-automaticamente">45. Copiar archivos automáticamente<a class="headerlink" href="#45-copiar-archivos-automaticamente" title="Permanent link">&para;</a></h2>
+<p>Para copiar archivos podemos utilizar el módulo estándar:</p>
+<pre><code class="language-python">shutil
+</code></pre>
+<p>y concretamente:</p>
+<pre><code class="language-python">shutil.copy2()
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">copiar_txt.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;archivos&quot;
+)
+
+DESTINO = (
+    DIRECTORIO_CAPITULO
+    / &quot;clasificados&quot;
+    / &quot;txt&quot;
+)
+
+
+DESTINO.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+for archivo in ORIGEN.glob(&quot;*.txt&quot;):
+
+    destino_archivo = (
+        DESTINO
+        / archivo.name
+    )
+
+    shutil.copy2(
+        archivo,
+        destino_archivo
+    )
+
+    print(
+        f&quot;Copiado: {archivo.name}&quot;
+    )
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python copiar_txt.py
+</code></pre>
+<p>Los archivos:</p>
+<pre><code class="language-text">informe.txt
+notas.txt
+</code></pre>
+<p>se copiarán a:</p>
+<pre><code class="language-text">clasificados/txt/
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title"><code>copy2()</code></p>
+<p><code>shutil.copy2()</code> copia el archivo e intenta conservar también metadatos como las fechas del archivo.</p>
+</div>
+<hr />
+<h2 id="46-clasificar-varios-tipos-de-archivo">46. Clasificar varios tipos de archivo<a class="headerlink" href="#46-clasificar-varios-tipos-de-archivo" title="Permanent link">&para;</a></h2>
+<p>Ahora podemos automatizar todo el proceso.</p>
+<p>Queremos conseguir:</p>
+<pre><code class="language-text">archivos/
+├── informe.txt
+├── usuarios.csv
+├── servidor.log
+├── notas.txt
+├── equipos.csv
+└── errores.log
+
+        ↓ Python
+
+clasificados/
+├── txt/
+│   ├── informe.txt
+│   └── notas.txt
+│
+├── csv/
+│   ├── usuarios.csv
+│   └── equipos.csv
+│
+└── log/
+    ├── servidor.log
+    └── errores.log
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">clasificar_archivos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;archivos&quot;
+)
+
+DESTINO = (
+    DIRECTORIO_CAPITULO
+    / &quot;clasificados&quot;
+)
+
+
+for archivo in ORIGEN.iterdir():
+
+    if not archivo.is_file():
+        continue
+
+    extension = (
+        archivo.suffix
+        .lower()
+        .replace(&quot;.&quot;, &quot;&quot;)
+    )
+
+    if extension not in [
+        &quot;txt&quot;,
+        &quot;csv&quot;,
+        &quot;log&quot;
+    ]:
+        continue
+
+    carpeta_destino = (
+        DESTINO
+        / extension
+    )
+
+    carpeta_destino.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    archivo_destino = (
+        carpeta_destino
+        / archivo.name
+    )
+
+    shutil.copy2(
+        archivo,
+        archivo_destino
+    )
+
+    print(
+        f&quot;{archivo.name} -&gt; &quot;
+        f&quot;{extension}/&quot;
+    )
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python clasificar_archivos.py
+</code></pre>
+<p>El programa determinará automáticamente la carpeta de destino según la extensión.</p>
+<hr />
+<h3 id="analizar-la-extension">Analizar la extensión<a class="headerlink" href="#analizar-la-extension" title="Permanent link">&para;</a></h3>
+<p>Observa:</p>
+<pre><code class="language-python">archivo.suffix
+</code></pre>
+<p>Para:</p>
+<pre><code class="language-text">informe.txt
+</code></pre>
+<p>devuelve:</p>
+<pre><code class="language-text">.txt
+</code></pre>
+<p>Después utilizamos:</p>
+<pre><code class="language-python">.lower()
+</code></pre>
+<p>para convertirla a minúsculas.</p>
+<p>Esto permite tratar igual:</p>
+<pre><code class="language-text">.TXT
+.txt
+.Txt
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">.replace(&quot;.&quot;, &quot;&quot;)
+</code></pre>
+<p>elimina el punto.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">.TXT
+ ↓
+.txt
+ ↓
+txt
+</code></pre>
+<p>Este valor puede utilizarse directamente como nombre del directorio.</p>
+<hr />
+<h2 id="47-copiar-o-mover">47. Copiar o mover<a class="headerlink" href="#47-copiar-o-mover" title="Permanent link">&para;</a></h2>
+<p>En el ejemplo anterior hemos utilizado:</p>
+<pre><code class="language-python">shutil.copy2()
+</code></pre>
+<p>Por tanto, los archivos originales permanecen en:</p>
+<pre><code class="language-text">archivos/
+</code></pre>
+<p>y obtenemos una copia en:</p>
+<pre><code class="language-text">clasificados/
+</code></pre>
+<p>También existe:</p>
+<pre><code class="language-python">shutil.move()
+</code></pre>
+<p>que permite mover un archivo.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">shutil.move(
+    archivo,
+    archivo_destino
+)
+</code></pre>
+<p>La diferencia es:</p>
+<pre><code class="language-text">copy2()
+
+ORIGEN
+  │
+  ├──────────→ DESTINO
+  │
+archivo         copia
+permanece
+</code></pre>
+<p>frente a:</p>
+<pre><code class="language-text">move()
+
+ORIGEN ─────────→ DESTINO
+
+el archivo cambia
+de ubicación
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Trabajar con archivos reales</p>
+<p>Durante las prácticas utilizaremos archivos de prueba.</p>
+<p>Un script que mueve, renombra o elimina archivos puede modificar grandes cantidades de información muy rápidamente.</p>
+<p>Debemos probar primero nuestros programas con datos que podamos recuperar fácilmente.</p>
+</div>
+<hr />
+<h2 id="48-generar-un-informe-de-clasificacion">48. Generar un informe de clasificación<a class="headerlink" href="#48-generar-un-informe-de-clasificacion" title="Permanent link">&para;</a></h2>
+<p>Podemos registrar las operaciones realizadas.</p>
+<p>Crea:</p>
+<pre><code class="language-text">clasificar_con_informe.py
+</code></pre>
+<p>Partiremos de una lista:</p>
+<pre><code class="language-python">operaciones = []
+</code></pre>
+<p>Cada vez que copiemos un archivo añadiremos:</p>
+<pre><code class="language-python">operaciones.append(
+    f&quot;{archivo.name} -&gt; {extension}/&quot;
+)
+</code></pre>
+<p>Finalmente podemos crear un informe:</p>
+<pre><code class="language-python">contenido = &quot;\n&quot;.join(
+    operaciones
+)
+</code></pre>
+<p>y guardarlo:</p>
+<pre><code class="language-python">ARCHIVO_INFORME.write_text(
+    contenido,
+    encoding=&quot;utf-8&quot;
+)
+</code></pre>
+<p>El archivo podría contener:</p>
+<pre><code class="language-text">informe.txt -&gt; txt/
+usuarios.csv -&gt; csv/
+servidor.log -&gt; log/
+notas.txt -&gt; txt/
+equipos.csv -&gt; csv/
+errores.log -&gt; log/
+</code></pre>
+<p>Estamos aplicando nuevamente:</p>
+<pre><code class="language-text">ENTRADA
+   ↓
+PROCESAMIENTO
+   ↓
+ACCIÓN
+   ↓
+REGISTRO
+   ↓
+INFORME
+</code></pre>
+<hr />
+<h2 id="49-buscar-archivos-de-forma-recursiva">49. Buscar archivos de forma recursiva<a class="headerlink" href="#49-buscar-archivos-de-forma-recursiva" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora:</p>
+<pre><code class="language-python">iterdir()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">glob()
+</code></pre>
+<p>han trabajado sobre el directorio indicado.</p>
+<p>Pero podemos encontrarnos con una estructura como:</p>
+<pre><code class="language-text">datos/
+├── aula1/
+│   ├── equipos.csv
+│   └── notas.txt
+│
+├── aula2/
+│   └── equipos.csv
+│
+└── aula3/
+    └── inventario.csv
+</code></pre>
+<p>Si queremos buscar archivos también dentro de los subdirectorios podemos utilizar:</p>
+<pre><code class="language-python">rglob()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">for archivo in directorio.rglob(&quot;*.csv&quot;):
+    print(archivo)
+</code></pre>
+<p><code>rglob()</code> realiza una búsqueda recursiva.</p>
+<p>Es decir:</p>
+<pre><code class="language-text">DIRECTORIO
+    │
+    ├── archivos
+    │
+    ├── subdirectorio
+    │       │
+    │       └── archivos
+    │
+    └── subdirectorio
+            │
+            └── archivos
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">buscar_csv_recursivo.py
+</code></pre>
+<p>y prueba:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+
+for archivo in (
+    DIRECTORIO_CAPITULO.rglob(&quot;*.csv&quot;)
+):
+
+    print(archivo)
+</code></pre>
+<p>El programa localizará los archivos CSV dentro de toda la estructura del capítulo.</p>
+<hr />
+<h2 id="50-obtener-informacion-de-los-archivos">50. Obtener información de los archivos<a class="headerlink" href="#50-obtener-informacion-de-los-archivos" title="Permanent link">&para;</a></h2>
+<p>Los objetos <code>Path</code> también nos permiten obtener información útil.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">archivo.name
+</code></pre>
+<p>devuelve el nombre.</p>
+<pre><code class="language-python">archivo.suffix
+</code></pre>
+<p>devuelve la extensión.</p>
+<p>Y podemos consultar información adicional mediante:</p>
+<pre><code class="language-python">archivo.stat()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">tamano = archivo.stat().st_size
+</code></pre>
+<p>devuelve el tamaño del archivo en bytes.</p>
+<p>Crea:</p>
+<pre><code class="language-text">inventario_archivos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_ARCHIVOS = (
+    DIRECTORIO_PROGRAMA.parent
+    / &quot;archivos&quot;
+)
+
+
+for archivo in DIRECTORIO_ARCHIVOS.iterdir():
+
+    if archivo.is_file():
+
+        tamano = (
+            archivo.stat().st_size
+        )
+
+        print(
+            f&quot;{archivo.name} - &quot;
+            f&quot;{tamano} bytes&quot;
+        )
+</code></pre>
+<p>Podemos obtener algo parecido a:</p>
+<pre><code class="language-text">informe.txt - 245 bytes
+usuarios.csv - 520 bytes
+servidor.log - 1240 bytes
+notas.txt - 185 bytes
+</code></pre>
+<p>Los valores dependerán del contenido real de los archivos.</p>
+<hr />
+<h2 id="51-practica-propuesta-organizador-automatico">51. Práctica propuesta: organizador automático<a class="headerlink" href="#51-practica-propuesta-organizador-automatico" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">organizador.py
+</code></pre>
+<p>El programa debe analizar todos los archivos contenidos en:</p>
+<pre><code class="language-text">archivos/
+</code></pre>
+<p>y clasificarlos automáticamente en:</p>
+<pre><code class="language-text">clasificados/
+</code></pre>
+<p>según su extensión.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">.txt → clasificados/txt/
+.csv → clasificados/csv/
+.log → clasificados/log/
+</code></pre>
+<div class="admonition example">
+<p class="admonition-title">Requisitos</p>
+<p>El programa debe:</p>
+<ul>
+<li>Utilizar <code>pathlib</code>.</li>
+<li>Recorrer automáticamente los archivos.</li>
+<li>Ignorar directorios.</li>
+<li>Detectar la extensión.</li>
+<li>Crear las carpetas necesarias.</li>
+<li>Copiar los archivos mediante <code>shutil.copy2()</code>.</li>
+<li>Contar los archivos procesados.</li>
+<li>Generar un informe.</li>
+</ul>
+</div>
+<p>El resultado final debe mostrar:</p>
+<pre><code class="language-text">ORGANIZADOR DE ARCHIVOS
+=======================
+
+informe.txt -&gt; txt/
+usuarios.csv -&gt; csv/
+servidor.log -&gt; log/
+notas.txt -&gt; txt/
+equipos.csv -&gt; csv/
+errores.log -&gt; log/
+
+RESUMEN
+=======
+
+Archivos procesados: 6
+</code></pre>
+<p>Además debe generar:</p>
+<pre><code class="language-text">resultados/informe_organizacion.txt
+</code></pre>
+<hr />
+<h2 id="52-ampliacion-clasificador-generico">52. Ampliación: clasificador genérico<a class="headerlink" href="#52-ampliacion-clasificador-generico" title="Permanent link">&para;</a></h2>
+<p>En lugar de limitar nuestro programa a:</p>
+<pre><code class="language-text">txt
+csv
+log
+</code></pre>
+<p>podemos hacer que cree automáticamente una carpeta para cualquier extensión encontrada.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">documento.pdf
+foto.png
+datos.csv
+informe.txt
+programa.py
+</code></pre>
+<p>podrían generar:</p>
+<pre><code class="language-text">clasificados/
+├── pdf/
+├── png/
+├── csv/
+├── txt/
+└── py/
+</code></pre>
+<p>La clave está en obtener:</p>
+<pre><code class="language-python">extension = (
+    archivo.suffix
+    .lower()
+    .replace(&quot;.&quot;, &quot;&quot;)
+)
+</code></pre>
+<p>y utilizarla para construir:</p>
+<pre><code class="language-python">carpeta_destino = (
+    DESTINO
+    / extension
+)
+</code></pre>
+<div class="admonition example">
+<p class="admonition-title">Reto</p>
+<p>Modifica <code>organizador.py</code> para que funcione con cualquier extensión sin tener que indicar previamente los tipos de archivo.</p>
+<p>Decide también qué debe hacer el programa con los archivos que no tengan extensión.</p>
+</div>
+<hr />
+<h2 id="53-automatizacion-y-seguridad">53. Automatización y seguridad<a class="headerlink" href="#53-automatizacion-y-seguridad" title="Permanent link">&para;</a></h2>
+<p>La automatización tiene una característica muy importante:</p>
+<blockquote>
+<p>Un programa puede realizar cientos de operaciones en pocos segundos.</p>
+</blockquote>
+<p>Esto es una ventaja, pero también implica un riesgo.</p>
+<p>Un error en:</p>
+<pre><code class="language-python">shutil.copy2()
+</code></pre>
+<p>puede copiar archivos al lugar equivocado.</p>
+<p>Un error utilizando:</p>
+<pre><code class="language-python">shutil.move()
+</code></pre>
+<p>puede mover muchos archivos.</p>
+<p>Y operaciones de eliminación pueden provocar pérdidas de información.</p>
+<p>Por ello, antes de ejecutar una automatización sobre información real conviene:</p>
+<ol>
+<li>Probarla con archivos de prueba.</li>
+<li>Comprobar las rutas.</li>
+<li>Mostrar previamente las operaciones.</li>
+<li>Mantener copias de seguridad cuando sea necesario.</li>
+<li>Revisar los resultados.</li>
+</ol>
+<p>Una técnica útil consiste en probar primero:</p>
+<pre><code class="language-python">print(
+    f&quot;Movería {archivo} &quot;
+    f&quot;a {archivo_destino}&quot;
+)
+</code></pre>
+<p>en lugar de ejecutar directamente:</p>
+<pre><code class="language-python">shutil.move(
+    archivo,
+    archivo_destino
+)
+</code></pre>
+<p>Primero comprobamos qué <strong>haría</strong> el programa y, cuando estemos seguros, activamos la operación real.</p>
+<div class="admonition tip">
+<p class="admonition-title">Primero mostrar, después modificar</p>
+<p>Cuando desarrolles scripts que modifican muchos archivos, una buena estrategia es crear primero una versión que únicamente muestre las operaciones previstas.</p>
+<p><code>text
+ANALIZAR
+    ↓
+MOSTRAR
+    ↓
+VERIFICAR
+    ↓
+EJECUTAR</code></p>
+</div>
+<hr />
+<h2 id="resumen_3">Resumen<a class="headerlink" href="#resumen_3" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos comprobado que los principios de automatización no se aplican únicamente a las redes.</p>
+<p>También podemos automatizar tareas sobre archivos y directorios.</p>
+<p>Hemos utilizado:</p>
+<ul>
+<li><code>Path.iterdir()</code></li>
+<li><code>Path.glob()</code></li>
+<li><code>Path.rglob()</code></li>
+<li><code>is_file()</code></li>
+<li><code>suffix</code></li>
+<li><code>stat().st_size</code></li>
+<li><code>mkdir()</code></li>
+<li><code>shutil.copy2()</code></li>
+<li><code>shutil.move()</code></li>
+<li>listas</li>
+<li>bucles</li>
+<li>condiciones</li>
+<li>contadores</li>
+</ul>
+<p>El patrón continúa siendo el mismo:</p>
+<pre><code class="language-text">        DIRECTORIO
+            │
+            ▼
+      LOCALIZAR ARCHIVOS
+            │
+            ▼
+         FILTRAR
+            │
+            ▼
+        PROCESAR
+            │
+            ▼
+     COPIAR / MOVER
+            │
+            ▼
+      REGISTRAR ACCIÓN
+            │
+            ▼
+         INFORME
+</code></pre>
+<p>Ahora somos capaces de automatizar tanto operaciones de red como operaciones sobre el sistema de archivos.</p>
+<p>En la siguiente parte utilizaremos estas técnicas para crear <strong>copias de seguridad automáticas</strong>, combinando directorios, fechas, nombres de archivos y <code>shutil</code>.</p>
+<hr />
+<h2 id="54-automatizar-copias-de-seguridad">54. Automatizar copias de seguridad<a class="headerlink" href="#54-automatizar-copias-de-seguridad" title="Permanent link">&para;</a></h2>
+<p>Una de las tareas más habituales en administración de sistemas consiste en realizar copias de seguridad.</p>
+<p>Imaginemos que tenemos un directorio:</p>
+<pre><code class="language-text">datos_empresa/
+</code></pre>
+<p>que contiene:</p>
+<pre><code class="language-text">datos_empresa/
+├── clientes.csv
+├── equipos.csv
+├── configuracion.txt
+└── informes/
+    ├── enero.txt
+    └── febrero.txt
+</code></pre>
+<p>Podríamos copiar manualmente este directorio cada vez que queremos realizar una copia de seguridad.</p>
+<p>Pero Python puede automatizar el proceso:</p>
+<pre><code class="language-text">DIRECTORIO ORIGINAL
+        │
+        ▼
+      Python
+        │
+        ▼
+crear nombre de copia
+        │
+        ▼
+ copiar directorio
+        │
+        ▼
+COPIA DE SEGURIDAD
+</code></pre>
+<p>Además, podemos incluir automáticamente la fecha y la hora en el nombre de cada copia.</p>
+<hr />
+<h2 id="55-preparar-los-archivos-de-prueba">55. Preparar los archivos de prueba<a class="headerlink" href="#55-preparar-los-archivos-de-prueba" title="Permanent link">&para;</a></h2>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">datos_empresa/
+</code></pre>
+<p>Dentro crea algunos archivos de prueba:</p>
+<pre><code class="language-text">datos_empresa/
+├── clientes.csv
+├── equipos.csv
+├── configuracion.txt
+└── informes/
+    ├── enero.txt
+    └── febrero.txt
+</code></pre>
+<p>También utilizaremos un directorio:</p>
+<pre><code class="language-text">backups/
+</code></pre>
+<p>No es necesario crearlo manualmente. Nuestro programa podrá hacerlo.</p>
+<p>La estructura será:</p>
+<pre><code class="language-text">capitulo3/
+├── archivos/
+├── backups/
+├── clasificados/
+├── datos/
+├── datos_empresa/
+│   ├── clientes.csv
+│   ├── equipos.csv
+│   ├── configuracion.txt
+│   └── informes/
+│       ├── enero.txt
+│       └── febrero.txt
+├── programas/
+└── resultados/
+</code></pre>
+<hr />
+<h2 id="56-copiar-un-directorio-completo">56. Copiar un directorio completo<a class="headerlink" href="#56-copiar-un-directorio-completo" title="Permanent link">&para;</a></h2>
+<p>Anteriormente utilizamos:</p>
+<pre><code class="language-python">shutil.copy2()
+</code></pre>
+<p>para copiar archivos individuales.</p>
+<p>Para copiar un directorio completo podemos utilizar:</p>
+<pre><code class="language-python">shutil.copytree()
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">copia_directorio.py
+</code></pre>
+<p>dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/programas/
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos_empresa&quot;
+)
+
+DESTINO = (
+    DIRECTORIO_CAPITULO
+    / &quot;backups&quot;
+    / &quot;copia_datos&quot;
+)
+
+
+DESTINO.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+shutil.copytree(
+    ORIGEN,
+    DESTINO
+)
+
+
+print(&quot;Copia realizada correctamente.&quot;)
+
+print(f&quot;Origen: {ORIGEN}&quot;)
+print(f&quot;Destino: {DESTINO}&quot;)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python copia_directorio.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">backups/
+└── copia_datos/
+    ├── clientes.csv
+    ├── equipos.csv
+    ├── configuracion.txt
+    └── informes/
+        ├── enero.txt
+        └── febrero.txt
+</code></pre>
+<p><code>copytree()</code> ha copiado automáticamente toda la estructura.</p>
+<hr />
+<h3 id="un-problema-al-ejecutar-el-programa-otra-vez">Un problema al ejecutar el programa otra vez<a class="headerlink" href="#un-problema-al-ejecutar-el-programa-otra-vez" title="Permanent link">&para;</a></h3>
+<p>Ejecuta nuevamente:</p>
+<pre><code class="language-powershell">python copia_directorio.py
+</code></pre>
+<p>Dependiendo de cómo utilicemos <code>copytree()</code>, encontraremos un problema:</p>
+<pre><code class="language-text">copia_datos
+</code></pre>
+<p>ya existe.</p>
+<p>Una solución consiste en permitir que el destino exista:</p>
+<pre><code class="language-python">shutil.copytree(
+    ORIGEN,
+    DESTINO,
+    dirs_exist_ok=True
+)
+</code></pre>
+<p>Sin embargo, en una copia de seguridad normalmente nos interesa conservar diferentes versiones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">copia_2026-09-16
+copia_2026-09-17
+copia_2026-09-18
+</code></pre>
+<p>Para conseguirlo necesitamos generar nombres automáticamente.</p>
+<hr />
+<h2 id="57-trabajar-con-la-fecha-y-la-hora">57. Trabajar con la fecha y la hora<a class="headerlink" href="#57-trabajar-con-la-fecha-y-la-hora" title="Permanent link">&para;</a></h2>
+<p>Python dispone del módulo:</p>
+<pre><code class="language-python">datetime
+</code></pre>
+<p>Podemos obtener la fecha y hora actual mediante:</p>
+<pre><code class="language-python">from datetime import datetime
+
+
+ahora = datetime.now()
+
+print(ahora)
+</code></pre>
+<p>Obtendremos algo parecido a:</p>
+<pre><code class="language-text">2026-09-16 15:32:18.123456
+</code></pre>
+<p>El valor exacto dependerá del momento de ejecución.</p>
+<p>Normalmente no queremos utilizar directamente todo este texto en el nombre de un archivo o directorio.</p>
+<p>Podemos darle formato mediante:</p>
+<pre><code class="language-python">strftime()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">from datetime import datetime
+
+
+ahora = datetime.now()
+
+fecha = ahora.strftime(
+    &quot;%Y-%m-%d&quot;
+)
+
+print(fecha)
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">2026-09-16
+</code></pre>
+<hr />
+<h3 id="formatos-de-fecha">Formatos de fecha<a class="headerlink" href="#formatos-de-fecha" title="Permanent link">&para;</a></h3>
+<p>Algunos códigos habituales son:</p>
+<pre><code class="language-text">%Y → año con cuatro cifras
+%m → mes
+%d → día
+%H → hora
+%M → minutos
+%S → segundos
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">fecha = datetime.now().strftime(
+    &quot;%Y-%m-%d_%H-%M-%S&quot;
+)
+</code></pre>
+<p>puede generar:</p>
+<pre><code class="language-text">2026-09-16_15-32-18
+</code></pre>
+<p>Este formato resulta especialmente útil para nombres de copias de seguridad.</p>
+<div class="admonition note">
+<p class="admonition-title">Evitar los dos puntos</p>
+<p>En Windows no podemos utilizar <code>:</code> dentro de un nombre de archivo.</p>
+<p>Por ello utilizaremos:</p>
+<p><code>text
+15-32-18</code></p>
+<p>en lugar de:</p>
+<p><code>text
+15:32:18</code></p>
+</div>
+<hr />
+<h2 id="58-crear-una-copia-con-fecha-y-hora">58. Crear una copia con fecha y hora<a class="headerlink" href="#58-crear-una-copia-con-fecha-y-hora" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">backup_con_fecha.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from datetime import datetime
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos_empresa&quot;
+)
+
+DIRECTORIO_BACKUPS = (
+    DIRECTORIO_CAPITULO
+    / &quot;backups&quot;
+)
+
+
+DIRECTORIO_BACKUPS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+fecha = datetime.now().strftime(
+    &quot;%Y-%m-%d_%H-%M-%S&quot;
+)
+
+
+DESTINO = (
+    DIRECTORIO_BACKUPS
+    / f&quot;backup_{fecha}&quot;
+)
+
+
+shutil.copytree(
+    ORIGEN,
+    DESTINO
+)
+
+
+print()
+print(&quot;COPIA DE SEGURIDAD&quot;)
+print(&quot;==================&quot;)
+print()
+
+print(&quot;Copia realizada correctamente.&quot;)
+
+print()
+print(f&quot;Origen: {ORIGEN}&quot;)
+print(f&quot;Destino: {DESTINO}&quot;)
+</code></pre>
+<p>Cada vez que ejecutemos el programa se creará un directorio diferente.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">backups/
+├── backup_2026-09-16_15-32-18/
+├── backup_2026-09-16_16-05-42/
+└── backup_2026-09-17_08-15-10/
+</code></pre>
+<p>Ya tenemos un pequeño sistema de <strong>versionado temporal de copias</strong>.</p>
+<hr />
+<h2 id="59-comprobar-que-el-origen-existe">59. Comprobar que el origen existe<a class="headerlink" href="#59-comprobar-que-el-origen-existe" title="Permanent link">&para;</a></h2>
+<p>Nuestro programa supone que:</p>
+<pre><code class="language-text">datos_empresa/
+</code></pre>
+<p>existe.</p>
+<p>Pero podría haberse eliminado o cambiado de ubicación.</p>
+<p>Podemos comprobarlo mediante:</p>
+<pre><code class="language-python">ORIGEN.exists()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">if not ORIGEN.exists():
+
+    print(
+        &quot;ERROR: el directorio &quot;
+        &quot;de origen no existe.&quot;
+    )
+</code></pre>
+<p>También podemos comprobar que realmente sea un directorio:</p>
+<pre><code class="language-python">if not ORIGEN.is_dir():
+
+    print(
+        &quot;ERROR: el origen &quot;
+        &quot;no es un directorio.&quot;
+    )
+</code></pre>
+<p>Podemos combinar ambas comprobaciones:</p>
+<pre><code class="language-python">if not ORIGEN.exists():
+
+    print(
+        &quot;ERROR: el directorio &quot;
+        &quot;de origen no existe.&quot;
+    )
+
+elif not ORIGEN.is_dir():
+
+    print(
+        &quot;ERROR: el origen &quot;
+        &quot;no es un directorio.&quot;
+    )
+
+else:
+
+    print(
+        &quot;El directorio &quot;
+        &quot;de origen es correcto.&quot;
+    )
+</code></pre>
+<p>Una automatización debe comprobar sus condiciones antes de realizar operaciones importantes.</p>
+<hr />
+<h2 id="60-controlar-errores-durante-la-copia">60. Controlar errores durante la copia<a class="headerlink" href="#60-controlar-errores-durante-la-copia" title="Permanent link">&para;</a></h2>
+<p><code>shutil.copytree()</code> también puede producir excepciones.</p>
+<p>Por ejemplo:</p>
+<ul>
+<li>El origen puede no existir.</li>
+<li>Puede faltar permiso para acceder a un archivo.</li>
+<li>Puede producirse un problema durante la copia.</li>
+</ul>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">try
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">except
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">backup_seguro.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from datetime import datetime
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos_empresa&quot;
+)
+
+DIRECTORIO_BACKUPS = (
+    DIRECTORIO_CAPITULO
+    / &quot;backups&quot;
+)
+
+
+def realizar_backup():
+
+    if not ORIGEN.exists():
+
+        print(
+            &quot;ERROR: el directorio &quot;
+            &quot;de origen no existe.&quot;
+        )
+
+        return False
+
+    if not ORIGEN.is_dir():
+
+        print(
+            &quot;ERROR: el origen &quot;
+            &quot;no es un directorio.&quot;
+        )
+
+        return False
+
+
+    DIRECTORIO_BACKUPS.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+
+    destino = (
+        DIRECTORIO_BACKUPS
+        / f&quot;backup_{fecha}&quot;
+    )
+
+
+    try:
+
+        shutil.copytree(
+            ORIGEN,
+            destino
+        )
+
+        print(
+            &quot;Copia realizada &quot;
+            &quot;correctamente.&quot;
+        )
+
+        print(
+            f&quot;Destino: {destino}&quot;
+        )
+
+        return True
+
+    except OSError as error:
+
+        print(
+            &quot;ERROR durante &quot;
+            &quot;la copia.&quot;
+        )
+
+        print(error)
+
+        return False
+
+
+realizar_backup()
+</code></pre>
+<p>Ahora el programa devuelve:</p>
+<pre><code class="language-python">True
+</code></pre>
+<p>si la copia se realiza correctamente y:</p>
+<pre><code class="language-python">False
+</code></pre>
+<p>si falla.</p>
+<hr />
+<h2 id="61-registrar-las-copias-realizadas">61. Registrar las copias realizadas<a class="headerlink" href="#61-registrar-las-copias-realizadas" title="Permanent link">&para;</a></h2>
+<p>Un administrador puede necesitar saber:</p>
+<pre><code class="language-text">cuándo se realizó una copia
+si terminó correctamente
+dónde se almacenó
+</code></pre>
+<p>Podemos crear un archivo:</p>
+<pre><code class="language-text">resultados/historial_backups.txt
+</code></pre>
+<p>Cada ejecución añadirá una nueva línea.</p>
+<p>Para abrir un archivo sin borrar el contenido anterior utilizamos:</p>
+<pre><code class="language-python">&quot;a&quot;
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">with open(
+    ARCHIVO_HISTORIAL,
+    &quot;a&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    archivo.write(
+        &quot;Backup realizado\n&quot;
+    )
+</code></pre>
+<p>El modo:</p>
+<pre><code class="language-text">a
+</code></pre>
+<p>significa:</p>
+<pre><code class="language-text">append
+</code></pre>
+<p>es decir, <strong>añadir al final</strong>.</p>
+<hr />
+<h3 id="anadir-fecha-al-historial">Añadir fecha al historial<a class="headerlink" href="#anadir-fecha-al-historial" title="Permanent link">&para;</a></h3>
+<p>Podemos registrar:</p>
+<pre><code class="language-python">fecha_registro = datetime.now().strftime(
+    &quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">with open(
+    ARCHIVO_HISTORIAL,
+    &quot;a&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    archivo.write(
+        f&quot;{fecha_registro} - &quot;
+        f&quot;Backup correcto\n&quot;
+    )
+</code></pre>
+<p>El archivo podría contener:</p>
+<pre><code class="language-text">2026-09-16 15:32:18 - Backup correcto
+2026-09-16 17:10:42 - Backup correcto
+2026-09-17 08:15:10 - Backup correcto
+</code></pre>
+<p>Ahora disponemos de un pequeño <strong>registro histórico</strong>.</p>
+<hr />
+<h2 id="62-crear-una-funcion-de-registro">62. Crear una función de registro<a class="headerlink" href="#62-crear-una-funcion-de-registro" title="Permanent link">&para;</a></h2>
+<p>Podemos separar esta tarea en una función:</p>
+<pre><code class="language-python">def registrar(mensaje):
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d %H:%M:%S&quot;
+    )
+
+    with open(
+        ARCHIVO_HISTORIAL,
+        &quot;a&quot;,
+        encoding=&quot;utf-8&quot;
+    ) as archivo:
+
+        archivo.write(
+            f&quot;{fecha} - {mensaje}\n&quot;
+        )
+</code></pre>
+<p>Después podemos utilizar:</p>
+<pre><code class="language-python">registrar(
+    &quot;Backup realizado correctamente&quot;
+)
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">registrar(
+    &quot;ERROR durante el backup&quot;
+)
+</code></pre>
+<p>Estamos introduciendo una idea muy utilizada en administración:</p>
+<pre><code class="language-text">OPERACIÓN
+    │
+    ▼
+RESULTADO
+    │
+    ▼
+REGISTRO
+</code></pre>
+<p>A estos registros se les suele denominar:</p>
+<pre><code class="language-text">logs
+</code></pre>
+<hr />
+<h2 id="63-programa-completo-de-backup">63. Programa completo de backup<a class="headerlink" href="#63-programa-completo-de-backup" title="Permanent link">&para;</a></h2>
+<p>Vamos a reunir los elementos anteriores.</p>
+<p>Crea:</p>
+<pre><code class="language-text">backup_automatico.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import shutil
+from datetime import datetime
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ORIGEN = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos_empresa&quot;
+)
+
+DIRECTORIO_BACKUPS = (
+    DIRECTORIO_CAPITULO
+    / &quot;backups&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+ARCHIVO_HISTORIAL = (
+    DIRECTORIO_RESULTADOS
+    / &quot;historial_backups.txt&quot;
+)
+
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+def registrar(mensaje):
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d %H:%M:%S&quot;
+    )
+
+    with open(
+        ARCHIVO_HISTORIAL,
+        &quot;a&quot;,
+        encoding=&quot;utf-8&quot;
+    ) as archivo:
+
+        archivo.write(
+            f&quot;{fecha} - {mensaje}\n&quot;
+        )
+
+
+def realizar_backup():
+
+    if not ORIGEN.exists():
+
+        mensaje = (
+            &quot;ERROR: directorio &quot;
+            &quot;de origen inexistente&quot;
+        )
+
+        print(mensaje)
+        registrar(mensaje)
+
+        return False
+
+
+    DIRECTORIO_BACKUPS.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+
+    fecha_backup = (
+        datetime.now().strftime(
+            &quot;%Y-%m-%d_%H-%M-%S&quot;
+        )
+    )
+
+    destino = (
+        DIRECTORIO_BACKUPS
+        / f&quot;backup_{fecha_backup}&quot;
+    )
+
+
+    try:
+
+        shutil.copytree(
+            ORIGEN,
+            destino
+        )
+
+        mensaje = (
+            f&quot;Backup correcto -&gt; &quot;
+            f&quot;{destino.name}&quot;
+        )
+
+        print(mensaje)
+
+        registrar(mensaje)
+
+        return True
+
+    except OSError as error:
+
+        mensaje = (
+            f&quot;ERROR durante backup: &quot;
+            f&quot;{error}&quot;
+        )
+
+        print(mensaje)
+
+        registrar(mensaje)
+
+        return False
+
+
+realizar_backup()
+</code></pre>
+<p>Después de varias ejecuciones podemos tener:</p>
+<pre><code class="language-text">backups/
+├── backup_2026-09-16_15-32-18/
+├── backup_2026-09-16_17-10-42/
+└── backup_2026-09-17_08-15-10/
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">resultados/
+└── historial_backups.txt
+</code></pre>
+<hr />
+<h2 id="64-contar-las-copias-existentes">64. Contar las copias existentes<a class="headerlink" href="#64-contar-las-copias-existentes" title="Permanent link">&para;</a></h2>
+<p>También podemos obtener información sobre las copias almacenadas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">backups = list(
+    DIRECTORIO_BACKUPS.glob(
+        &quot;backup_*&quot;
+    )
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">print(
+    f&quot;Número de copias: &quot;
+    f&quot;{len(backups)}&quot;
+)
+</code></pre>
+<p>Si tenemos:</p>
+<pre><code class="language-text">backup_2026-09-16_15-32-18
+backup_2026-09-16_17-10-42
+backup_2026-09-17_08-15-10
+</code></pre>
+<p>obtendremos:</p>
+<pre><code class="language-text">Número de copias: 3
+</code></pre>
+<p>Podemos también recorrerlas:</p>
+<pre><code class="language-python">for backup in backups:
+    print(backup.name)
+</code></pre>
+<hr />
+<h2 id="65-practica-propuesta-gestor-de-copias">65. Práctica propuesta: gestor de copias<a class="headerlink" href="#65-practica-propuesta-gestor-de-copias" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">gestor_backups.py
+</code></pre>
+<p>El programa deberá mostrar:</p>
+<pre><code class="language-text">================================
+       GESTOR DE BACKUPS
+================================
+
+1. Realizar copia de seguridad
+2. Mostrar copias existentes
+3. Mostrar historial
+4. Salir
+
+Selecciona una opción:
+</code></pre>
+<h3 id="opcion-1">Opción 1<a class="headerlink" href="#opcion-1" title="Permanent link">&para;</a></h3>
+<p>Debe crear una copia completa de:</p>
+<pre><code class="language-text">datos_empresa/
+</code></pre>
+<p>en:</p>
+<pre><code class="language-text">backups/
+</code></pre>
+<p>utilizando un nombre con:</p>
+<pre><code class="language-text">fecha + hora
+</code></pre>
+<h3 id="opcion-2">Opción 2<a class="headerlink" href="#opcion-2" title="Permanent link">&para;</a></h3>
+<p>Debe mostrar las copias existentes:</p>
+<pre><code class="language-text">COPIAS DISPONIBLES
+==================
+
+backup_2026-09-16_15-32-18
+backup_2026-09-16_17-10-42
+backup_2026-09-17_08-15-10
+</code></pre>
+<h3 id="opcion-3">Opción 3<a class="headerlink" href="#opcion-3" title="Permanent link">&para;</a></h3>
+<p>Debe mostrar el contenido de:</p>
+<pre><code class="language-text">resultados/historial_backups.txt
+</code></pre>
+<h3 id="opcion-4">Opción 4<a class="headerlink" href="#opcion-4" title="Permanent link">&para;</a></h3>
+<p>Debe finalizar el programa.</p>
+<div class="admonition example">
+<p class="admonition-title">Requisitos</p>
+<p>El programa debe utilizar:</p>
+<ul>
+<li><code>pathlib</code></li>
+<li><code>shutil</code></li>
+<li><code>datetime</code></li>
+<li>funciones</li>
+<li><code>try</code> y <code>except</code></li>
+<li>bucles</li>
+<li>archivos de texto</li>
+<li>modo <code>a</code></li>
+<li>un menú mediante <code>while</code></li>
+</ul>
+</div>
+<hr />
+<h2 id="66-reto-controlar-el-numero-de-copias">66. Reto: controlar el número de copias<a class="headerlink" href="#66-reto-controlar-el-numero-de-copias" title="Permanent link">&para;</a></h2>
+<p>Si realizamos una copia todos los días, el directorio:</p>
+<pre><code class="language-text">backups/
+</code></pre>
+<p>crecerá continuamente.</p>
+<p>Podemos establecer, por ejemplo:</p>
+<pre><code class="language-python">MAX_BACKUPS = 5
+</code></pre>
+<p>El objetivo será conservar únicamente las cinco copias más recientes.</p>
+<p>Podemos obtener las copias:</p>
+<pre><code class="language-python">backups = list(
+    DIRECTORIO_BACKUPS.glob(
+        &quot;backup_*&quot;
+    )
+)
+</code></pre>
+<p>Como nuestros nombres comienzan por una fecha en formato:</p>
+<pre><code class="language-text">YYYY-MM-DD_HH-MM-SS
+</code></pre>
+<p>podemos ordenarlos:</p>
+<pre><code class="language-python">backups.sort()
+</code></pre>
+<p>Si existen más de:</p>
+<pre><code class="language-python">MAX_BACKUPS
+</code></pre>
+<p>podemos identificar las más antiguas.</p>
+<div class="admonition warning">
+<p class="admonition-title">No elimines todavía automáticamente</p>
+<p>En este ejercicio identifica y muestra primero qué copias deberían eliminarse:</p>
+<p><code>text
+Se eliminaría: backup_2026-09-10_08-00-00
+Se eliminaría: backup_2026-09-11_08-00-00</code></p>
+<p>No utilices todavía código de eliminación.</p>
+<p>Antes de automatizar operaciones destructivas debemos verificar cuidadosamente qué elementos van a verse afectados.</p>
+</div>
+<hr />
+<h2 id="67-automatizar-no-significa-programar-la-ejecucion">67. Automatizar no significa programar la ejecución<a class="headerlink" href="#67-automatizar-no-significa-programar-la-ejecucion" title="Permanent link">&para;</a></h2>
+<p>Nuestro script ya realiza automáticamente una copia completa cuando lo ejecutamos:</p>
+<pre><code class="language-powershell">python backup_automatico.py
+</code></pre>
+<p>Pero existe una diferencia importante entre:</p>
+<pre><code class="language-text">automatizar una tarea
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">programar cuándo se ejecuta
+</code></pre>
+<p>Nuestro programa automatiza <strong>qué hay que hacer</strong>:</p>
+<pre><code class="language-text">comprobar origen
+      ↓
+crear nombre
+      ↓
+copiar archivos
+      ↓
+registrar resultado
+</code></pre>
+<p>Pero todavía alguien debe iniciar:</p>
+<pre><code class="language-text">backup_automatico.py
+</code></pre>
+<p>Para ejecutar automáticamente un script todos los días, por ejemplo a las 22:00, podemos utilizar herramientas del propio sistema operativo, como el <strong>Programador de tareas de Windows</strong>.</p>
+<p>La idea sería:</p>
+<pre><code class="language-text">Programador de tareas
+         │
+         │ 22:00
+         ▼
+      Python
+         │
+         ▼
+backup_automatico.py
+         │
+         ▼
+      backups/
+</code></pre>
+<p>En este capítulo nos centraremos principalmente en desarrollar correctamente los scripts. La programación periódica de su ejecución puede realizarse posteriormente con las herramientas de administración del sistema.</p>
+<hr />
+<h2 id="68-buenas-practicas-en-copias-automatizadas">68. Buenas prácticas en copias automatizadas<a class="headerlink" href="#68-buenas-practicas-en-copias-automatizadas" title="Permanent link">&para;</a></h2>
+<p>Antes de considerar que un sistema de copias funciona correctamente debemos tener en cuenta varios aspectos.</p>
+<h3 id="comprobar-el-origen">Comprobar el origen<a class="headerlink" href="#comprobar-el-origen" title="Permanent link">&para;</a></h3>
+<p>Antes de copiar:</p>
+<pre><code class="language-python">ORIGEN.exists()
+</code></pre>
+<h3 id="comprobar-los-resultados">Comprobar los resultados<a class="headerlink" href="#comprobar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>No debemos asumir que una copia ha funcionado únicamente porque el programa ha terminado.</p>
+<h3 id="registrar-las-operaciones">Registrar las operaciones<a class="headerlink" href="#registrar-las-operaciones" title="Permanent link">&para;</a></h3>
+<p>Mantener:</p>
+<pre><code class="language-text">historial_backups.txt
+</code></pre>
+<p>nos permite conocer cuándo se realizaron las operaciones.</p>
+<h3 id="utilizar-nombres-unicos">Utilizar nombres únicos<a class="headerlink" href="#utilizar-nombres-unicos" title="Permanent link">&para;</a></h3>
+<p>Incluir:</p>
+<pre><code class="language-text">fecha + hora
+</code></pre>
+<p>evita sobrescribir copias anteriores.</p>
+<h3 id="probar-con-datos-no-importantes">Probar con datos no importantes<a class="headerlink" href="#probar-con-datos-no-importantes" title="Permanent link">&para;</a></h3>
+<p>Durante el desarrollo debemos trabajar con archivos de prueba.</p>
+<h3 id="verificar-la-recuperacion">Verificar la recuperación<a class="headerlink" href="#verificar-la-recuperacion" title="Permanent link">&para;</a></h3>
+<p>Una copia de seguridad solo resulta realmente útil si posteriormente podemos recuperar los datos que contiene.</p>
+<div class="admonition tip">
+<p class="admonition-title">Copia y recuperación</p>
+<p>El objetivo de una copia de seguridad no es simplemente crear archivos duplicados.</p>
+<p>Debemos poder localizar la copia adecuada y recuperar la información cuando sea necesario.</p>
+</div>
+<hr />
+<h2 id="resumen_4">Resumen<a class="headerlink" href="#resumen_4" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos aplicado la automatización a una tarea real de administración: las copias de seguridad.</p>
+<p>Hemos aprendido a utilizar:</p>
+<ul>
+<li><code>shutil.copytree()</code></li>
+<li><code>datetime</code></li>
+<li><code>datetime.now()</code></li>
+<li><code>strftime()</code></li>
+<li><code>Path.exists()</code></li>
+<li><code>Path.is_dir()</code></li>
+<li><code>glob()</code></li>
+<li>el modo de apertura <code>a</code></li>
+<li>registros históricos</li>
+<li>control de errores</li>
+</ul>
+<p>Nuestro proceso de backup es:</p>
+<pre><code class="language-text">       ORIGEN
+          │
+          ▼
+      COMPROBAR
+          │
+          ▼
+   GENERAR FECHA/HORA
+          │
+          ▼
+    CREAR DESTINO
+          │
+          ▼
+     copytree()
+          │
+          ▼
+   COPIA DE SEGURIDAD
+          │
+          ▼
+      REGISTRAR
+          │
+          ▼
+       HISTORIAL
+</code></pre>
+<p>A estas alturas ya somos capaces de combinar archivos, directorios, comandos, bucles, funciones y control de errores para construir pequeñas herramientas de administración.</p>
+<p>En la siguiente parte integraremos los principales conocimientos del capítulo en una <strong>práctica final de automatización</strong>, antes de cerrar el capítulo 3.</p>
+<hr />
+<h2 id="69-practica-final-herramienta-de-automatizacion">69. Práctica final: herramienta de automatización<a class="headerlink" href="#69-practica-final-herramienta-de-automatizacion" title="Permanent link">&para;</a></h2>
+<p>Para finalizar el capítulo vamos a desarrollar una pequeña herramienta que integre las técnicas de automatización estudiadas.</p>
+<p>Nuestra aplicación permitirá:</p>
+<pre><code class="language-text">GESTOR DE ADMINISTRACIÓN
+        │
+        ├── comprobar equipos
+        ├── generar informe de red
+        ├── realizar backup
+        ├── consultar backups
+        └── consultar historial
+</code></pre>
+<p>Utilizaremos como entrada el inventario:</p>
+<pre><code class="language-text">datos/inventario.csv
+</code></pre>
+<p>y almacenaremos los resultados en:</p>
+<pre><code class="language-text">resultados/
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">backups/
+</code></pre>
+<hr />
+<h2 id="70-preparar-el-proyecto">70. Preparar el proyecto<a class="headerlink" href="#70-preparar-el-proyecto" title="Permanent link">&para;</a></h2>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo3/
+</code></pre>
+<p>debemos tener una estructura similar a:</p>
+<pre><code class="language-text">capitulo3/
+├── datos/
+│   └── inventario.csv
+│
+├── datos_empresa/
+│   ├── clientes.csv
+│   ├── equipos.csv
+│   ├── configuracion.txt
+│   └── informes/
+│       ├── enero.txt
+│       └── febrero.txt
+│
+├── programas/
+│   └── gestor_administracion.py
+│
+├── resultados/
+│
+└── backups/
+</code></pre>
+<p>El archivo:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<p>puede contener:</p>
+<pre><code class="language-csv">nombre,ip,sistema,ubicacion
+PC-AULA-01,192.168.1.101,Windows 11,Aula 1
+PC-AULA-02,192.168.1.102,Windows 11,Aula 1
+PC-AULA-03,192.168.1.103,Windows 11,Aula 1
+SERVIDOR-01,192.168.1.10,Ubuntu Server,CPD
+ROUTER-01,192.168.1.1,Cisco IOS,Armario comunicaciones
+</code></pre>
+<p>Adapta las direcciones IP a la red utilizada durante la práctica.</p>
+<hr />
+<h2 id="71-definir-las-rutas">71. Definir las rutas<a class="headerlink" href="#71-definir-las-rutas" title="Permanent link">&para;</a></h2>
+<p>Crea:</p>
+<pre><code class="language-text">gestor_administracion.py
+</code></pre>
+<p>Comenzaremos importando los módulos necesarios:</p>
+<pre><code class="language-python">import csv
+import shutil
+import subprocess
+
+from datetime import datetime
+from pathlib import Path
+</code></pre>
+<p>Ahora definimos las rutas:</p>
+<pre><code class="language-python">DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+DIRECTORIO_DATOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos_empresa&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+DIRECTORIO_BACKUPS = (
+    DIRECTORIO_CAPITULO
+    / &quot;backups&quot;
+)
+
+ARCHIVO_HISTORIAL = (
+    DIRECTORIO_RESULTADOS
+    / &quot;historial.txt&quot;
+)
+</code></pre>
+<p>Preparamos los directorios:</p>
+<pre><code class="language-python">DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_BACKUPS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+</code></pre>
+<hr />
+<h2 id="72-crear-el-registro-de-operaciones">72. Crear el registro de operaciones<a class="headerlink" href="#72-crear-el-registro-de-operaciones" title="Permanent link">&para;</a></h2>
+<p>Vamos a registrar las principales acciones realizadas por nuestra herramienta.</p>
+<pre><code class="language-python">def registrar(mensaje):
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d %H:%M:%S&quot;
+    )
+
+    with open(
+        ARCHIVO_HISTORIAL,
+        &quot;a&quot;,
+        encoding=&quot;utf-8&quot;
+    ) as archivo:
+
+        archivo.write(
+            f&quot;{fecha} - {mensaje}\n&quot;
+        )
+</code></pre>
+<p>Podremos utilizar:</p>
+<pre><code class="language-python">registrar(
+    &quot;Comprobación de equipos realizada&quot;
+)
+</code></pre>
+<p>El archivo:</p>
+<pre><code class="language-text">historial.txt
+</code></pre>
+<p>irá acumulando información:</p>
+<pre><code class="language-text">2026-09-16 10:25:14 - Comprobación de equipos realizada
+2026-09-16 10:30:02 - Informe de red generado
+2026-09-16 10:42:18 - Backup realizado
+</code></pre>
+<hr />
+<h2 id="73-cargar-el-inventario">73. Cargar el inventario<a class="headerlink" href="#73-cargar-el-inventario" title="Permanent link">&para;</a></h2>
+<p>Creamos una función para cargar:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<pre><code class="language-python">def cargar_inventario():
+
+    equipos = []
+
+    try:
+
+        with open(
+            ARCHIVO_INVENTARIO,
+            &quot;r&quot;,
+            encoding=&quot;utf-8&quot;
+        ) as archivo:
+
+            lector = csv.DictReader(
+                archivo
+            )
+
+            for equipo in lector:
+                equipos.append(equipo)
+
+    except FileNotFoundError:
+
+        print(
+            &quot;ERROR: no se encuentra &quot;
+            &quot;el inventario.&quot;
+        )
+
+    return equipos
+</code></pre>
+<p>La función devuelve una lista con los registros del CSV.</p>
+<hr />
+<h2 id="74-comprobar-un-equipo">74. Comprobar un equipo<a class="headerlink" href="#74-comprobar-un-equipo" title="Permanent link">&para;</a></h2>
+<p>Creamos ahora la función encargada de realizar el <code>ping</code>.</p>
+<pre><code class="language-python">def comprobar_equipo(ip):
+
+    try:
+
+        resultado = subprocess.run(
+            [
+                &quot;ping&quot;,
+                &quot;-n&quot;,
+                &quot;1&quot;,
+                ip
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5
+        )
+
+        return (
+            resultado.returncode == 0
+        )
+
+    except FileNotFoundError:
+
+        print(
+            &quot;ERROR: no se encuentra &quot;
+            &quot;el comando ping.&quot;
+        )
+
+        return False
+
+    except subprocess.TimeoutExpired:
+
+        return False
+</code></pre>
+<p>Esta función recibe una dirección:</p>
+<pre><code class="language-python">comprobar_equipo(
+    &quot;192.168.1.101&quot;
+)
+</code></pre>
+<p>y devuelve:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">False
+</code></pre>
+<hr />
+<h2 id="75-comprobar-todo-el-inventario">75. Comprobar todo el inventario<a class="headerlink" href="#75-comprobar-todo-el-inventario" title="Permanent link">&para;</a></h2>
+<p>Ahora podemos utilizar las dos funciones anteriores.</p>
+<pre><code class="language-python">def comprobar_inventario():
+
+    equipos = cargar_inventario()
+
+    if not equipos:
+
+        print(
+            &quot;No hay equipos &quot;
+            &quot;para comprobar.&quot;
+        )
+
+        return
+
+
+    print()
+    print(&quot;ESTADO DE LOS EQUIPOS&quot;)
+    print(&quot;=====================&quot;)
+    print()
+
+
+    activos = 0
+    inactivos = 0
+
+
+    for equipo in equipos:
+
+        nombre = equipo[&quot;nombre&quot;]
+        ip = equipo[&quot;ip&quot;]
+
+        if comprobar_equipo(ip):
+
+            estado = &quot;RESPONDE&quot;
+            activos += 1
+
+        else:
+
+            estado = &quot;NO RESPONDE&quot;
+            inactivos += 1
+
+
+        print(
+            f&quot;{nombre} - &quot;
+            f&quot;{ip} - &quot;
+            f&quot;{estado}&quot;
+        )
+
+
+    print()
+    print(&quot;RESUMEN&quot;)
+    print(&quot;=======&quot;)
+
+    print(
+        f&quot;Equipos comprobados: &quot;
+        f&quot;{len(equipos)}&quot;
+    )
+
+    print(
+        f&quot;Responden: {activos}&quot;
+    )
+
+    print(
+        f&quot;No responden: {inactivos}&quot;
+    )
+
+
+    registrar(
+        &quot;Comprobación de equipos realizada&quot;
+    )
+</code></pre>
+<p>Ya podemos comprobar todo el inventario mediante:</p>
+<pre><code class="language-python">comprobar_inventario()
+</code></pre>
+<hr />
+<h2 id="76-generar-un-informe-de-red">76. Generar un informe de red<a class="headerlink" href="#76-generar-un-informe-de-red" title="Permanent link">&para;</a></h2>
+<p>Ahora queremos guardar los resultados.</p>
+<pre><code class="language-python">def generar_informe_red():
+
+    equipos = cargar_inventario()
+
+    if not equipos:
+
+        print(
+            &quot;No hay equipos &quot;
+            &quot;para comprobar.&quot;
+        )
+
+        return
+
+
+    lineas = []
+
+    activos = 0
+    inactivos = 0
+
+
+    for equipo in equipos:
+
+        nombre = equipo[&quot;nombre&quot;]
+        ip = equipo[&quot;ip&quot;]
+
+        if comprobar_equipo(ip):
+
+            estado = &quot;RESPONDE&quot;
+            activos += 1
+
+        else:
+
+            estado = &quot;NO RESPONDE&quot;
+            inactivos += 1
+
+
+        linea = (
+            f&quot;{nombre} - &quot;
+            f&quot;{ip} - &quot;
+            f&quot;{estado}&quot;
+        )
+
+        lineas.append(linea)
+
+
+    informe = &quot;&quot;
+
+    informe += (
+        &quot;INFORME DE ESTADO DE RED\n&quot;
+    )
+
+    informe += (
+        &quot;=========================\n\n&quot;
+    )
+
+
+    for linea in lineas:
+        informe += linea + &quot;\n&quot;
+
+
+    informe += &quot;\nRESUMEN\n&quot;
+    informe += &quot;=======\n&quot;
+
+    informe += (
+        f&quot;Equipos comprobados: &quot;
+        f&quot;{len(equipos)}\n&quot;
+    )
+
+    informe += (
+        f&quot;Responden: &quot;
+        f&quot;{activos}\n&quot;
+    )
+
+    informe += (
+        f&quot;No responden: &quot;
+        f&quot;{inactivos}\n&quot;
+    )
+
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+
+
+    archivo_informe = (
+        DIRECTORIO_RESULTADOS
+        / f&quot;informe_red_{fecha}.txt&quot;
+    )
+
+
+    archivo_informe.write_text(
+        informe,
+        encoding=&quot;utf-8&quot;
+    )
+
+
+    print()
+    print(
+        &quot;Informe generado correctamente.&quot;
+    )
+
+    print(
+        f&quot;Archivo: {archivo_informe}&quot;
+    )
+
+
+    registrar(
+        f&quot;Informe generado: &quot;
+        f&quot;{archivo_informe.name}&quot;
+    )
+</code></pre>
+<p>Cada ejecución genera un archivo diferente:</p>
+<pre><code class="language-text">resultados/
+├── informe_red_2026-09-16_10-30-02.txt
+├── informe_red_2026-09-16_12-15-25.txt
+└── historial.txt
+</code></pre>
+<hr />
+<h2 id="77-incorporar-las-copias-de-seguridad">77. Incorporar las copias de seguridad<a class="headerlink" href="#77-incorporar-las-copias-de-seguridad" title="Permanent link">&para;</a></h2>
+<p>Añadimos ahora:</p>
+<pre><code class="language-python">def realizar_backup():
+
+    if not DIRECTORIO_DATOS.exists():
+
+        print(
+            &quot;ERROR: no existe &quot;
+            &quot;datos_empresa.&quot;
+        )
+
+        registrar(
+            &quot;ERROR: origen del backup &quot;
+            &quot;inexistente&quot;
+        )
+
+        return
+
+
+    fecha = datetime.now().strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+
+
+    destino = (
+        DIRECTORIO_BACKUPS
+        / f&quot;backup_{fecha}&quot;
+    )
+
+
+    try:
+
+        shutil.copytree(
+            DIRECTORIO_DATOS,
+            destino
+        )
+
+        print()
+        print(
+            &quot;Backup realizado &quot;
+            &quot;correctamente.&quot;
+        )
+
+        print(
+            f&quot;Destino: {destino}&quot;
+        )
+
+
+        registrar(
+            f&quot;Backup realizado: &quot;
+            f&quot;{destino.name}&quot;
+        )
+
+    except OSError as error:
+
+        print(
+            f&quot;ERROR durante &quot;
+            f&quot;el backup: {error}&quot;
+        )
+
+        registrar(
+            f&quot;ERROR durante backup: &quot;
+            f&quot;{error}&quot;
+        )
+</code></pre>
+<p>Ahora nuestra aplicación también puede realizar copias de seguridad.</p>
+<hr />
+<h2 id="78-mostrar-las-copias-existentes">78. Mostrar las copias existentes<a class="headerlink" href="#78-mostrar-las-copias-existentes" title="Permanent link">&para;</a></h2>
+<p>Creamos:</p>
+<pre><code class="language-python">def mostrar_backups():
+
+    backups = sorted(
+        DIRECTORIO_BACKUPS.glob(
+            &quot;backup_*&quot;
+        )
+    )
+
+
+    print()
+    print(&quot;COPIAS DE SEGURIDAD&quot;)
+    print(&quot;===================&quot;)
+    print()
+
+
+    if not backups:
+
+        print(
+            &quot;No existen copias &quot;
+            &quot;de seguridad.&quot;
+        )
+
+        return
+
+
+    for backup in backups:
+
+        print(
+            backup.name
+        )
+
+
+    print()
+
+    print(
+        f&quot;Total: {len(backups)}&quot;
+    )
+</code></pre>
+<p>Esta función permite consultar las copias almacenadas sin acceder manualmente al directorio.</p>
+<hr />
+<h2 id="79-mostrar-el-historial">79. Mostrar el historial<a class="headerlink" href="#79-mostrar-el-historial" title="Permanent link">&para;</a></h2>
+<p>También podemos consultar nuestro registro.</p>
+<pre><code class="language-python">def mostrar_historial():
+
+    print()
+    print(&quot;HISTORIAL&quot;)
+    print(&quot;=========&quot;)
+    print()
+
+
+    if not ARCHIVO_HISTORIAL.exists():
+
+        print(
+            &quot;Todavía no existe &quot;
+            &quot;un historial.&quot;
+        )
+
+        return
+
+
+    contenido = (
+        ARCHIVO_HISTORIAL.read_text(
+            encoding=&quot;utf-8&quot;
+        )
+    )
+
+
+    print(contenido)
+</code></pre>
+<hr />
+<h2 id="80-crear-el-menu-principal">80. Crear el menú principal<a class="headerlink" href="#80-crear-el-menu-principal" title="Permanent link">&para;</a></h2>
+<p>Ahora podemos unir todas las funciones mediante un menú.</p>
+<pre><code class="language-python">def mostrar_menu():
+
+    print()
+    print(
+        &quot;====================================&quot;
+    )
+
+    print(
+        &quot;      GESTOR DE ADMINISTRACIÓN&quot;
+    )
+
+    print(
+        &quot;====================================&quot;
+    )
+
+    print()
+
+    print(
+        &quot;1. Comprobar equipos&quot;
+    )
+
+    print(
+        &quot;2. Generar informe de red&quot;
+    )
+
+    print(
+        &quot;3. Realizar copia de seguridad&quot;
+    )
+
+    print(
+        &quot;4. Mostrar copias de seguridad&quot;
+    )
+
+    print(
+        &quot;5. Mostrar historial&quot;
+    )
+
+    print(
+        &quot;6. Salir&quot;
+    )
+
+    print()
+</code></pre>
+<p>Y finalmente:</p>
+<pre><code class="language-python">while True:
+
+    mostrar_menu()
+
+    opcion = input(
+        &quot;Selecciona una opción: &quot;
+    )
+
+
+    if opcion == &quot;1&quot;:
+
+        comprobar_inventario()
+
+    elif opcion == &quot;2&quot;:
+
+        generar_informe_red()
+
+    elif opcion == &quot;3&quot;:
+
+        realizar_backup()
+
+    elif opcion == &quot;4&quot;:
+
+        mostrar_backups()
+
+    elif opcion == &quot;5&quot;:
+
+        mostrar_historial()
+
+    elif opcion == &quot;6&quot;:
+
+        print()
+        print(
+            &quot;Programa finalizado.&quot;
+        )
+
+        break
+
+    else:
+
+        print()
+        print(
+            &quot;Opción incorrecta.&quot;
+        )
+</code></pre>
+<hr />
+<h2 id="81-funcionamiento-de-la-aplicacion">81. Funcionamiento de la aplicación<a class="headerlink" href="#81-funcionamiento-de-la-aplicacion" title="Permanent link">&para;</a></h2>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python gestor_administracion.py
+</code></pre>
+<p>Debe aparecer:</p>
+<pre><code class="language-text">====================================
+      GESTOR DE ADMINISTRACIÓN
+====================================
+
+1. Comprobar equipos
+2. Generar informe de red
+3. Realizar copia de seguridad
+4. Mostrar copias de seguridad
+5. Mostrar historial
+6. Salir
+
+Selecciona una opción:
+</code></pre>
+<p>Prueba todas las opciones.</p>
+<hr />
+<h3 id="comprobar-equipos">Comprobar equipos<a class="headerlink" href="#comprobar-equipos" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">1
+</code></pre>
+<p>El programa debe leer:</p>
+<pre><code class="language-text">inventario.csv
+</code></pre>
+<p>y comprobar automáticamente todos los equipos.</p>
+<hr />
+<h3 id="generar-informe">Generar informe<a class="headerlink" href="#generar-informe" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">2
+</code></pre>
+<p>Comprueba que aparece un nuevo archivo en:</p>
+<pre><code class="language-text">resultados/
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">informe_red_2026-09-16_10-30-02.txt
+</code></pre>
+<hr />
+<h3 id="realizar-backup">Realizar backup<a class="headerlink" href="#realizar-backup" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">3
+</code></pre>
+<p>Comprueba:</p>
+<pre><code class="language-text">backups/
+</code></pre>
+<p>Debe aparecer un nuevo directorio:</p>
+<pre><code class="language-text">backup_2026-09-16_10-35-12/
+</code></pre>
+<hr />
+<h3 id="consultar-backups">Consultar backups<a class="headerlink" href="#consultar-backups" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">4
+</code></pre>
+<p>El programa debe mostrar las copias existentes.</p>
+<hr />
+<h3 id="consultar-historial">Consultar historial<a class="headerlink" href="#consultar-historial" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">5
+</code></pre>
+<p>Debemos poder consultar las operaciones realizadas.</p>
+<hr />
+<h3 id="salir">Salir<a class="headerlink" href="#salir" title="Permanent link">&para;</a></h3>
+<p>Selecciona:</p>
+<pre><code class="language-text">6
+</code></pre>
+<p>El programa debe finalizar correctamente.</p>
+<hr />
+<h2 id="82-que-estamos-automatizando">82. Qué estamos automatizando<a class="headerlink" href="#82-que-estamos-automatizando" title="Permanent link">&para;</a></h2>
+<p>Nuestra aplicación reúne diferentes procesos:</p>
+<pre><code class="language-text">             INVENTARIO CSV
+                  │
+                  ▼
+           CARGAR EQUIPOS
+                  │
+                  ▼
+            COMPROBAR RED
+                  │
+                  ▼
+              INFORME
+
+
+           DATOS EMPRESA
+                  │
+                  ▼
+             COPYTREE
+                  │
+                  ▼
+               BACKUP
+
+
+             OPERACIONES
+                  │
+                  ▼
+              REGISTRO
+                  │
+                  ▼
+             HISTORIAL
+</code></pre>
+<p>Ya no estamos creando ejemplos independientes.</p>
+<p>Estamos construyendo una pequeña aplicación de administración.</p>
+<hr />
+<h2 id="83-practica-de-ampliacion">83. Práctica de ampliación<a class="headerlink" href="#83-practica-de-ampliacion" title="Permanent link">&para;</a></h2>
+<p>Amplía:</p>
+<pre><code class="language-text">gestor_administracion.py
+</code></pre>
+<p>añadiendo una nueva opción:</p>
+<pre><code class="language-text">6. Información del sistema
+7. Salir
+</code></pre>
+<p>La nueva opción debe ejecutar:</p>
+<pre><code class="language-text">hostname
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">systeminfo
+</code></pre>
+<p>mediante:</p>
+<pre><code class="language-python">subprocess.run()
+</code></pre>
+<p>El resultado debe guardarse en:</p>
+<pre><code class="language-text">resultados/informacion_sistema.txt
+</code></pre>
+<p>También debe registrarse la operación en:</p>
+<pre><code class="language-text">historial.txt
+</code></pre>
+<p>De esta forma estaremos combinando directamente los capítulos 1, 2 y 3.</p>
+<hr />
+<h2 id="84-reto-final">84. Reto final<a class="headerlink" href="#84-reto-final" title="Permanent link">&para;</a></h2>
+<p>Crea una nueva versión:</p>
+<pre><code class="language-text">gestor_administracion_v2.py
+</code></pre>
+<p>con el siguiente menú:</p>
+<pre><code class="language-text">====================================
+      GESTOR DE ADMINISTRACIÓN
+====================================
+
+1. Comprobar inventario
+2. Comprobar rango de IP
+3. Generar informe de red
+4. Organizar archivos
+5. Realizar backup
+6. Mostrar backups
+7. Mostrar historial
+8. Información del sistema
+9. Salir
+</code></pre>
+<div class="admonition example">
+<p class="admonition-title">Condiciones</p>
+<p>La aplicación deberá:</p>
+<ul>
+<li>Estar organizada mediante funciones.</li>
+<li>Utilizar <code>pathlib</code>.</li>
+<li>Leer archivos CSV.</li>
+<li>Ejecutar comandos mediante <code>subprocess</code>.</li>
+<li>Utilizar bucles.</li>
+<li>Controlar errores.</li>
+<li>Generar nombres mediante fecha y hora.</li>
+<li>Crear directorios automáticamente.</li>
+<li>Realizar copias de seguridad.</li>
+<li>Generar informes.</li>
+<li>Registrar las operaciones realizadas.</li>
+</ul>
+</div>
+<p>No es necesario copiar literalmente los programas anteriores.</p>
+<p>El objetivo es reutilizar las técnicas estudiadas y decidir cómo organizar correctamente la aplicación.</p>
+<hr />
+<h2 id="85-que-hemos-aprendido">85. Qué hemos aprendido<a class="headerlink" href="#85-que-hemos-aprendido" title="Permanent link">&para;</a></h2>
+<p>Durante este capítulo hemos partido de una tarea muy sencilla:</p>
+<pre><code class="language-text">repetir una operación
+</code></pre>
+<p>y hemos ido construyendo procesos cada vez más completos.</p>
+<p>Hemos trabajado con:</p>
+<pre><code class="language-text">listas
+   │
+   ▼
+bucles
+   │
+   ▼
+funciones
+   │
+   ▼
+automatización
+</code></pre>
+<p>También hemos utilizado archivos externos:</p>
+<pre><code class="language-text">TXT / CSV
+    │
+    ▼
+  Python
+    │
+    ▼
+procesamiento
+</code></pre>
+<p>Hemos generado automáticamente rangos:</p>
+<pre><code class="language-text">range()
+   │
+   ▼
+direcciones
+   │
+   ▼
+comprobaciones
+</code></pre>
+<p>Hemos automatizado operaciones sobre archivos:</p>
+<pre><code class="language-text">iterdir()
+glob()
+rglob()
+copy2()
+move()
+</code></pre>
+<p>Y hemos creado copias de seguridad utilizando:</p>
+<pre><code class="language-text">datetime
+    +
+copytree()
+    +
+registro
+</code></pre>
+<hr />
+<h2 id="86-integracion-de-los-tres-primeros-capitulos">86. Integración de los tres primeros capítulos<a class="headerlink" href="#86-integracion-de-los-tres-primeros-capitulos" title="Permanent link">&para;</a></h2>
+<p>Los tres capítulos de esta parte forman ahora un conjunto.</p>
+<pre><code class="language-text">CAPÍTULO 1
+Gestión de archivos
+       │
+       ▼
+pathlib + CSV
+       │
+       │
+       ▼
+CAPÍTULO 2
+Comandos del sistema
+       │
+       ▼
+subprocess
+       │
+       │
+       ▼
+CAPÍTULO 3
+Automatización
+       │
+       ▼
+bucles + funciones
+       │
+       ▼
+HERRAMIENTAS DE ADMINISTRACIÓN
+</code></pre>
+<p>Esto nos permite pasar de scripts muy sencillos a programas capaces de realizar tareas reales de forma automática.</p>
+<hr />
+<h2 id="87-buenas-practicas">87. Buenas prácticas<a class="headerlink" href="#87-buenas-practicas" title="Permanent link">&para;</a></h2>
+<p>Antes de finalizar debemos recordar algunas reglas importantes.</p>
+<h3 id="separar-los-datos-del-codigo">Separar los datos del código<a class="headerlink" href="#separar-los-datos-del-codigo" title="Permanent link">&para;</a></h3>
+<p>Siempre que sea posible:</p>
+<pre><code class="language-text">datos
+  ↓
+TXT / CSV
+</code></pre>
+<p>en lugar de introducir grandes cantidades de información directamente en el programa.</p>
+<h3 id="utilizar-funciones">Utilizar funciones<a class="headerlink" href="#utilizar-funciones" title="Permanent link">&para;</a></h3>
+<p>Una función debe realizar una tarea concreta.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">cargar_inventario()
+comprobar_equipo()
+realizar_backup()
+registrar()
+</code></pre>
+<h3 id="controlar-los-errores">Controlar los errores<a class="headerlink" href="#controlar-los-errores" title="Permanent link">&para;</a></h3>
+<p>Una automatización debe estar preparada para situaciones como:</p>
+<pre><code class="language-text">archivo inexistente
+directorio inexistente
+comando no disponible
+timeout
+error durante una copia
+</code></pre>
+<h3 id="registrar-operaciones">Registrar operaciones<a class="headerlink" href="#registrar-operaciones" title="Permanent link">&para;</a></h3>
+<p>Cuando una tarea se realiza automáticamente es importante saber posteriormente qué ocurrió.</p>
+<h3 id="probar-antes-de-modificar">Probar antes de modificar<a class="headerlink" href="#probar-antes-de-modificar" title="Permanent link">&para;</a></h3>
+<p>Especialmente cuando trabajamos con:</p>
+<pre><code class="language-text">mover
+renombrar
+sobrescribir
+eliminar
+</code></pre>
+<p>primero debemos comprobar qué hará el programa.</p>
+<hr />
+<h2 id="88-conclusion">88. Conclusión<a class="headerlink" href="#88-conclusion" title="Permanent link">&para;</a></h2>
+<p>Automatizar no consiste simplemente en utilizar un bucle.</p>
+<p>Una automatización completa normalmente sigue un proceso:</p>
+<pre><code class="language-text">      ENTRADA
+         │
+         ▼
+      VALIDAR
+         │
+         ▼
+      PROCESAR
+         │
+         ▼
+       ACTUAR
+         │
+         ▼
+     COMPROBAR
+         │
+         ▼
+     REGISTRAR
+         │
+         ▼
+      INFORMAR
+</code></pre>
+<p>Python nos permite combinar estas etapas utilizando herramientas relativamente sencillas.</p>
+<p>En este capítulo hemos utilizado estas técnicas para:</p>
+<pre><code class="language-text">comprobar equipos
+procesar inventarios
+generar rangos
+clasificar archivos
+crear informes
+realizar backups
+mantener historiales
+</code></pre>
+<p>Con ello hemos construido la base necesaria para desarrollar scripts de administración más completos.</p>
+<div class="admonition success">
+<p class="admonition-title">Capítulo completado</p>
+<p>Al finalizar este capítulo debemos ser capaces de identificar una tarea repetitiva, dividirla en operaciones sencillas y crear un programa Python que la ejecute automáticamente de forma controlada.</p>
+<p>Ya disponemos de una base formada por:</p>
+<p><code>text
+ARCHIVOS
+    +
+COMANDOS
+    +
+AUTOMATIZACIÓN
+    =
+SCRIPT DE ADMINISTRACIÓN</code></p>
+</div></div>
 
 <div class="monlau-page-navigation">
 
