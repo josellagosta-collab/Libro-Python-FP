@@ -11,18 +11,19 @@ theme:
 nav:
   - Inicio: index.md
 
-  - Parte I — Scripting para Sistemas:
+  - Parte I — Scripting:
       - Gestión del sistema de archivos: parte1/capitulo1.md
       - Comandos del sistema: parte1/capitulo2.md
       - Automatización: parte1/capitulo3.md
+      - Scripting avanzado: parte1/capitulo4.md
 
   - Parte II — Redes y APIs:
-      - HTTP y APIs: parte2/capitulo4.md
-      - Diagnóstico de red: parte2/capitulo5.md
+      - HTTP y APIs: parte2/capitulo5.md
+      - Diagnóstico de red: parte2/capitulo6.md
 
-  - Parte III — Proyecto e Integración:
-      - Depuración en VS Code: parte3/capitulo6.md
-      - Proyecto final: parte3/capitulo7.md
+  - Parte III — Proyecto final:
+      - Depuración en VS Code: parte3/capitulo7.md
+      - Proyecto final: parte3/capitulo8.md
 
 markdown_extensions:
   - admonition
@@ -32,4 +33,5 @@ markdown_extensions:
   - attr_list
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.cs
+
