@@ -7185,12 +7185,12 @@ Con ello hemos construido la base necesaria para desarrollar scripts de administ
 
     Ya disponemos de una base formada por:
 
-    ```text
-    ARCHIVOS
-        +
-    COMANDOS
-        +
-    AUTOMATIZACIÓN
-        =
-    SCRIPT DE ADMINISTRACIÓN
-    ```
+```text
+ARCHIVOS
+    +
+COMANDOS
+    +
+AUTOMATIZACIÓN
+    =
+SCRIPT DE ADMINISTRACIÓN
+```
