@@ -119,8 +119,20 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#desarrollo-del-proyecto-final" class="nav-link">Desarrollo del proyecto final</a>
+            <li class="nav-item" data-bs-level="1"><a href="#capitulo-7-depuracion-profesional-en-vs-code" class="nav-link">Capítulo 7. Depuración profesional en VS Code</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-introduccion-a-la-depuracion-de-programas" class="nav-link">1. Introducción a la depuración de programas</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#61-inspeccion-avanzada-durante-la-depuracion" class="nav-link">61. Inspección avanzada durante la depuración</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#128-practica-integradora-depuracion-de-una-aplicacion-completa" class="nav-link">128. Práctica integradora: depuración de una aplicación completa</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -128,7 +140,5879 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="desarrollo-del-proyecto-final">Desarrollo del proyecto final<a class="headerlink" href="#desarrollo-del-proyecto-final" title="Permanent link">&para;</a></h1></div>
+<h1 id="capitulo-7-depuracion-profesional-en-vs-code">Capítulo 7. Depuración profesional en VS Code<a class="headerlink" href="#capitulo-7-depuracion-profesional-en-vs-code" title="Permanent link">&para;</a></h1>
+<p>Hasta ahora hemos desarrollado programas cada vez más completos.</p>
+<p>Hemos trabajado con:</p>
+<pre><code class="language-text">archivos
+CSV
+comandos del sistema
+automatización
+argparse
+excepciones
+logging
+HTTP
+APIs
+JSON
+socket
+DNS
+TCP
+</code></pre>
+<p>A medida que un programa aumenta de tamaño también aumenta la dificultad para localizar los errores.</p>
+<p>Hasta ahora hemos utilizado frecuentemente:</p>
+<pre><code class="language-python">print()
+</code></pre>
+<p>para comprobar el valor de una variable o averiguar por qué una parte del programa no funciona como esperábamos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    resultado
+)
+</code></pre>
+<p>Esta técnica puede ser útil en programas pequeños, pero Visual Studio Code dispone de una herramienta mucho más potente:</p>
+<pre><code class="language-text">DEPURADOR
+</code></pre>
+<p>El depurador nos permite detener temporalmente un programa durante su ejecución y observar exactamente qué está ocurriendo.</p>
+<p>En este capítulo aprenderemos a utilizarlo.</p>
+<hr />
+<h2 id="1-introduccion-a-la-depuracion-de-programas">1. Introducción a la depuración de programas<a class="headerlink" href="#1-introduccion-a-la-depuracion-de-programas" title="Permanent link">&para;</a></h2>
+<p>Cuando escribimos un programa podemos encontrar diferentes tipos de problemas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">el programa no arranca
+</code></pre>
+<pre><code class="language-text">aparece una excepción
+</code></pre>
+<pre><code class="language-text">el programa funciona,
+pero el resultado es incorrecto
+</code></pre>
+<pre><code class="language-text">una condición se ejecuta
+cuando no debería
+</code></pre>
+<pre><code class="language-text">una variable contiene
+un valor inesperado
+</code></pre>
+<p>Encontrar la causa de estos problemas forma parte del proceso de:</p>
+<pre><code class="language-text">depuración
+</code></pre>
+<hr />
+<h3 id="2-que-significa-depurar">2. ¿Qué significa depurar?<a class="headerlink" href="#2-que-significa-depurar" title="Permanent link">&para;</a></h3>
+<p>Depurar un programa consiste en analizar su ejecución para localizar y corregir errores.</p>
+<p>En inglés se utiliza el término:</p>
+<pre><code class="language-text">debugging
+</code></pre>
+<p>y la herramienta utilizada para hacerlo se denomina:</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">depurador
+</code></pre>
+<p>Podemos representar el proceso:</p>
+<pre><code class="language-text">PROGRAMA
+   │
+   ▼
+ejecución
+   │
+   ▼
+resultado incorrecto
+   │
+   ▼
+depuración
+   │
+   ▼
+localizar el problema
+   │
+   ▼
+corregir código
+   │
+   ▼
+volver a probar
+</code></pre>
+<p>La depuración es una parte normal del desarrollo de software.</p>
+<hr />
+<h3 id="3-un-error-no-siempre-produce-una-excepcion">3. Un error no siempre produce una excepción<a class="headerlink" href="#3-un-error-no-siempre-produce-una-excepcion" title="Permanent link">&para;</a></h3>
+<p>Consideremos:</p>
+<pre><code class="language-python">precio = 100
+iva = 21
+
+total = precio + iva
+
+print(
+    total
+)
+</code></pre>
+<p>El programa funciona y no produce ninguna excepción.</p>
+<p>Sin embargo, si nuestra intención era calcular un precio con un IVA del 21 %, el cálculo es incorrecto.</p>
+<p>El problema es:</p>
+<pre><code class="language-python">total = precio + iva
+</code></pre>
+<p>La operación correcta podría ser:</p>
+<pre><code class="language-python">total = precio + (
+    precio * iva / 100
+)
+</code></pre>
+<p>Este tipo de problema se denomina habitualmente:</p>
+<pre><code class="language-text">error lógico
+</code></pre>
+<p>Python puede ejecutar perfectamente el programa, pero el resultado no es el esperado.</p>
+<hr />
+<h3 id="4-tipos-de-errores">4. Tipos de errores<a class="headerlink" href="#4-tipos-de-errores" title="Permanent link">&para;</a></h3>
+<p>Podemos distinguir inicialmente tres situaciones.</p>
+<h4 id="error-de-sintaxis">Error de sintaxis<a class="headerlink" href="#error-de-sintaxis" title="Permanent link">&para;</a></h4>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">if edad &gt;= 18
+    print(&quot;Mayor de edad&quot;)
+</code></pre>
+<p>Falta:</p>
+<pre><code class="language-text">:
+</code></pre>
+<p>Python no puede interpretar correctamente el programa.</p>
+<hr />
+<h4 id="error-durante-la-ejecucion">Error durante la ejecución<a class="headerlink" href="#error-durante-la-ejecucion" title="Permanent link">&para;</a></h4>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">numero = int(
+    &quot;hola&quot;
+)
+</code></pre>
+<p>Python puede interpretar el código, pero durante la ejecución aparece:</p>
+<pre><code class="language-text">ValueError
+</code></pre>
+<hr />
+<h4 id="error-logico">Error lógico<a class="headerlink" href="#error-logico" title="Permanent link">&para;</a></h4>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">base = 100
+iva = 21
+
+total = base + iva
+</code></pre>
+<p>El programa termina normalmente, pero el cálculo no representa un incremento del 21 %.</p>
+<div class="admonition note">
+<p class="admonition-title">Depuración</p>
+<p>El depurador resulta especialmente útil cuando el programa puede ejecutarse pero necesitamos comprender por qué se comporta de una determinada manera.</p>
+</div>
+<hr />
+<h3 id="5-utilizar-print-para-investigar">5. Utilizar <code>print()</code> para investigar<a class="headerlink" href="#5-utilizar-print-para-investigar" title="Permanent link">&para;</a></h3>
+<p>Una técnica sencilla consiste en introducir temporalmente:</p>
+<pre><code class="language-python">print()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">precio = 100
+iva = 21
+
+print(
+    f&quot;precio = {precio}&quot;
+)
+
+print(
+    f&quot;iva = {iva}&quot;
+)
+
+total = precio + iva
+
+print(
+    f&quot;total = {total}&quot;
+)
+</code></pre>
+<p>Esto nos permite observar determinados valores.</p>
+<p>Esta técnica recibe informalmente nombres como:</p>
+<pre><code class="language-text">depuración con print
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">print debugging
+</code></pre>
+<p>Puede ser útil, pero tiene algunas limitaciones.</p>
+<hr />
+<h3 id="6-limitaciones-de-utilizar-print">6. Limitaciones de utilizar <code>print()</code><a class="headerlink" href="#6-limitaciones-de-utilizar-print" title="Permanent link">&para;</a></h3>
+<p>Imaginemos un programa con:</p>
+<pre><code class="language-text">300 líneas
+</code></pre>
+<p>y muchos:</p>
+<pre><code class="language-text">if
+for
+funciones
+variables
+</code></pre>
+<p>Podríamos terminar añadiendo:</p>
+<pre><code class="language-python">print(variable1)
+print(variable2)
+print(variable3)
+print(&quot;he llegado aquí&quot;)
+print(&quot;entro en el if&quot;)
+print(&quot;salgo del bucle&quot;)
+</code></pre>
+<p>Después tendríamos que eliminar todas estas instrucciones.</p>
+<p>Además, modificar el código únicamente para observarlo no siempre es la mejor solución.</p>
+<p>El depurador nos permitirá inspeccionar el programa sin llenar nuestro código de instrucciones <code>print()</code> temporales.</p>
+<hr />
+<h3 id="7-que-puede-hacer-un-depurador">7. ¿Qué puede hacer un depurador?<a class="headerlink" href="#7-que-puede-hacer-un-depurador" title="Permanent link">&para;</a></h3>
+<p>Un depurador permite, entre otras cosas:</p>
+<pre><code class="language-text">detener el programa
+</code></pre>
+<pre><code class="language-text">ejecutar línea a línea
+</code></pre>
+<pre><code class="language-text">observar variables
+</code></pre>
+<pre><code class="language-text">entrar dentro de funciones
+</code></pre>
+<pre><code class="language-text">salir de funciones
+</code></pre>
+<pre><code class="language-text">continuar la ejecución
+</code></pre>
+<pre><code class="language-text">examinar expresiones
+</code></pre>
+<pre><code class="language-text">observar la pila de llamadas
+</code></pre>
+<p>Visual Studio Code proporciona estas herramientas mediante su sistema de depuración.</p>
+<hr />
+<h3 id="8-preparar-nuestra-primera-practica">8. Preparar nuestra primera práctica<a class="headerlink" href="#8-preparar-nuestra-primera-practica" title="Permanent link">&para;</a></h3>
+<p>Vamos a crear:</p>
+<pre><code class="language-text">practicas/
+└── capitulo7/
+    └── programas/
+        └── primera_depuracion.py
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo7/programas/
+primera_depuracion.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">precio = 100
+iva = 21
+
+importe_iva = (
+    precio * iva / 100
+)
+
+total = (
+    precio + importe_iva
+)
+
+print(
+    f&quot;Precio: {precio}&quot;
+)
+
+print(
+    f&quot;IVA: {importe_iva}&quot;
+)
+
+print(
+    f&quot;Total: {total}&quot;
+)
+</code></pre>
+<p>Antes de utilizar el depurador comprobaremos que el programa funciona normalmente.</p>
+<hr />
+<h3 id="9-ejecutar-normalmente-el-programa">9. Ejecutar normalmente el programa<a class="headerlink" href="#9-ejecutar-normalmente-el-programa" title="Permanent link">&para;</a></h3>
+<p>Desde el terminal integrado de VS Code podemos ejecutar:</p>
+<pre><code class="language-powershell">python primera_depuracion.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">Precio: 100
+IVA: 21.0
+Total: 121.0
+</code></pre>
+<p>Hasta aquí no estamos utilizando el depurador.</p>
+<p>Estamos realizando una:</p>
+<pre><code class="language-text">ejecución normal
+</code></pre>
+<p>El programa comienza:</p>
+<pre><code class="language-text">inicio
+</code></pre>
+<p>ejecuta todas sus instrucciones y termina:</p>
+<pre><code class="language-text">inicio
+  │
+  ▼
+línea 1
+  │
+  ▼
+línea 2
+  │
+  ▼
+línea 3
+  │
+  ▼
+...
+  │
+  ▼
+fin
+</code></pre>
+<p>Ahora cambiaremos esta forma de ejecutar el programa.</p>
+<hr />
+<h3 id="10-abrir-la-herramienta-de-depuracion">10. Abrir la herramienta de depuración<a class="headerlink" href="#10-abrir-la-herramienta-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>En Visual Studio Code localiza en la barra lateral izquierda el apartado:</p>
+<pre><code class="language-text">Run and Debug
+</code></pre>
+<p>En una instalación en castellano puede aparecer relacionado con:</p>
+<pre><code class="language-text">Ejecutar y depurar
+</code></pre>
+<p>También podemos utilizar:</p>
+<pre><code class="language-text">Ctrl + Shift + D
+</code></pre>
+<p>Esto abre la vista dedicada a la ejecución y depuración.</p>
+<div class="admonition tip">
+<p class="admonition-title">VS Code</p>
+<p>Los nombres exactos de algunos botones pueden variar ligeramente según el idioma o la versión instalada de Visual Studio Code.</p>
+<p>Los conceptos y el funcionamiento general son los mismos.</p>
+</div>
+<hr />
+<h3 id="11-que-es-un-breakpoint">11. ¿Qué es un breakpoint?<a class="headerlink" href="#11-que-es-un-breakpoint" title="Permanent link">&para;</a></h3>
+<p>Uno de los elementos fundamentales del depurador es el:</p>
+<pre><code class="language-text">breakpoint
+</code></pre>
+<p>En castellano:</p>
+<pre><code class="language-text">punto de interrupción
+</code></pre>
+<p>Un breakpoint indica al depurador:</p>
+<pre><code class="language-text">cuando llegues aquí,
+detén temporalmente
+la ejecución
+</code></pre>
+<p>Podemos representarlo:</p>
+<pre><code class="language-text">línea 1
+   │
+   ▼
+línea 2
+   │
+   ▼
+● línea 3
+   │
+   └── DETENER
+</code></pre>
+<p>El programa no termina.</p>
+<p>Simplemente queda:</p>
+<pre><code class="language-text">pausado
+</code></pre>
+<p>en ese punto.</p>
+<hr />
+<h3 id="12-crear-nuestro-primer-breakpoint">12. Crear nuestro primer breakpoint<a class="headerlink" href="#12-crear-nuestro-primer-breakpoint" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<pre><code class="language-text">primera_depuracion.py
+</code></pre>
+<p>Busca:</p>
+<pre><code class="language-python">importe_iva = (
+    precio * iva / 100
+)
+</code></pre>
+<p>Haz clic en el margen izquierdo del editor, junto al número de la primera línea de esa instrucción.</p>
+<p>Aparecerá un indicador del breakpoint.</p>
+<p>También puedes colocar el cursor en la línea y utilizar:</p>
+<pre><code class="language-text">F9
+</code></pre>
+<p>En este momento todavía no hemos ejecutado el programa.</p>
+<p>Únicamente hemos indicado:</p>
+<pre><code class="language-text">detente aquí
+cuando ejecutes
+con el depurador
+</code></pre>
+<hr />
+<h3 id="13-iniciar-la-depuracion">13. Iniciar la depuración<a class="headerlink" href="#13-iniciar-la-depuracion" title="Permanent link">&para;</a></h3>
+<p>Con:</p>
+<pre><code class="language-text">primera_depuracion.py
+</code></pre>
+<p>abierto, inicia la depuración.</p>
+<p>Una forma habitual es utilizar:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>VS Code puede pedir inicialmente qué depurador queremos utilizar.</p>
+<p>Seleccionaremos:</p>
+<pre><code class="language-text">Python
+</code></pre>
+<p>y, cuando corresponda:</p>
+<pre><code class="language-text">Python File
+</code></pre>
+<p>o la opción equivalente para depurar el archivo Python actual.</p>
+<p>El programa comenzará a ejecutarse.</p>
+<p>Cuando llegue al breakpoint:</p>
+<pre><code class="language-text">se detendrá
+</code></pre>
+<hr />
+<h3 id="14-ejecucion-pausada">14. Ejecución pausada<a class="headerlink" href="#14-ejecucion-pausada" title="Permanent link">&para;</a></h3>
+<p>Cuando el programa se detiene podemos imaginar:</p>
+<pre><code class="language-text">precio = 100
+     │
+     ▼
+iva = 21
+     │
+     ▼
+● importe_iva = ...
+     │
+     ▼
+total = ...
+</code></pre>
+<p>Las instrucciones anteriores ya se han ejecutado.</p>
+<p>La línea marcada es la siguiente instrucción relevante que el depurador está preparado para ejecutar.</p>
+<p>Esto es muy importante.</p>
+<div class="admonition note">
+<p class="admonition-title">Programa pausado</p>
+<p>El programa no ha finalizado.</p>
+<p>Su ejecución está temporalmente detenida para permitirnos examinar su estado.</p>
+</div>
+<hr />
+<h3 id="15-el-estado-de-un-programa">15. El estado de un programa<a class="headerlink" href="#15-el-estado-de-un-programa" title="Permanent link">&para;</a></h3>
+<p>Cuando hablamos del:</p>
+<pre><code class="language-text">estado del programa
+</code></pre>
+<p>nos referimos a la información existente en un determinado momento de la ejecución.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">precio = 100
+iva = 21
+</code></pre>
+<p>El depurador nos permite observar estos valores mientras el programa está detenido.</p>
+<p>Esto es mucho más potente que analizar únicamente el código escrito.</p>
+<p>Podemos observar:</p>
+<pre><code class="language-text">qué está ocurriendo realmente
+</code></pre>
+<p>durante la ejecución.</p>
+<hr />
+<h3 id="16-panel-de-variables">16. Panel de variables<a class="headerlink" href="#16-panel-de-variables" title="Permanent link">&para;</a></h3>
+<p>Con el programa detenido observa el panel:</p>
+<pre><code class="language-text">VARIABLES
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>VS Code mostrará las variables disponibles en ese momento.</p>
+<p>Deberías poder observar valores como:</p>
+<pre><code class="language-text">precio    100
+iva       21
+</code></pre>
+<p>Dependiendo del punto exacto en el que se haya detenido el programa, algunas variables posteriores todavía no existirán.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">importe_iva
+</code></pre>
+<p>puede no tener todavía un valor si su instrucción aún no se ha ejecutado.</p>
+<hr />
+<h3 id="17-el-momento-de-creacion-de-una-variable">17. El momento de creación de una variable<a class="headerlink" href="#17-el-momento-de-creacion-de-una-variable" title="Permanent link">&para;</a></h3>
+<p>Consideremos:</p>
+<pre><code class="language-python">precio = 100
+
+iva = 21
+
+importe_iva = (
+    precio * iva / 100
+)
+</code></pre>
+<p>Después de ejecutar:</p>
+<pre><code class="language-python">precio = 100
+</code></pre>
+<p>existe:</p>
+<pre><code class="language-text">precio
+</code></pre>
+<p>Después de:</p>
+<pre><code class="language-python">iva = 21
+</code></pre>
+<p>existen:</p>
+<pre><code class="language-text">precio
+iva
+</code></pre>
+<p>Después de calcular:</p>
+<pre><code class="language-python">importe_iva
+</code></pre>
+<p>existirán:</p>
+<pre><code class="language-text">precio
+iva
+importe_iva
+</code></pre>
+<p>El depurador nos permite observar esta evolución.</p>
+<hr />
+<h3 id="18-ejecutar-una-linea-cada-vez">18. Ejecutar una línea cada vez<a class="headerlink" href="#18-ejecutar-una-linea-cada-vez" title="Permanent link">&para;</a></h3>
+<p>Cuando el programa está detenido podemos ejecutar la siguiente instrucción utilizando:</p>
+<pre><code class="language-text">Step Over
+</code></pre>
+<p>Habitualmente su atajo es:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Pulsa:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>una vez.</p>
+<p>La línea actual se ejecutará y el programa se detendrá en la siguiente instrucción.</p>
+<p>Podemos representar:</p>
+<pre><code class="language-text">ANTES
+
+● importe_iva = precio * iva / 100
+
+  total = precio + importe_iva
+</code></pre>
+<p>Después de pulsar <code>F10</code>:</p>
+<pre><code class="language-text">importe_iva = precio * iva / 100
+
+● total = precio + importe_iva
+</code></pre>
+<p>Ahora:</p>
+<pre><code class="language-text">importe_iva
+</code></pre>
+<p>ya tendrá un valor.</p>
+<hr />
+<h3 id="19-observar-como-cambian-las-variables">19. Observar cómo cambian las variables<a class="headerlink" href="#19-observar-como-cambian-las-variables" title="Permanent link">&para;</a></h3>
+<p>Después de ejecutar el cálculo:</p>
+<pre><code class="language-python">importe_iva = (
+    precio * iva / 100
+)
+</code></pre>
+<p>observa nuevamente:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>Ahora tendremos aproximadamente:</p>
+<pre><code class="language-text">precio        100
+iva           21
+importe_iva   21.0
+</code></pre>
+<p>Pulsa otra vez:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Después de ejecutar:</p>
+<pre><code class="language-python">total = (
+    precio + importe_iva
+)
+</code></pre>
+<p>aparecerá:</p>
+<pre><code class="language-text">total   121.0
+</code></pre>
+<p>Estamos viendo cómo cambia el estado del programa línea a línea.</p>
+<hr />
+<h3 id="20-step-over">20. Step Over<a class="headerlink" href="#20-step-over" title="Permanent link">&para;</a></h3>
+<p>La operación:</p>
+<pre><code class="language-text">Step Over
+</code></pre>
+<p>significa:</p>
+<pre><code class="language-text">ejecutar la instrucción actual
+y detenerse en la siguiente
+</code></pre>
+<p>Su atajo habitual es:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Durante nuestras primeras prácticas será una de las operaciones que más utilizaremos.</p>
+<hr />
+<h3 id="21-continuar-la-ejecucion">21. Continuar la ejecución<a class="headerlink" href="#21-continuar-la-ejecucion" title="Permanent link">&para;</a></h3>
+<p>No siempre queremos avanzar línea por línea hasta terminar.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-text">Continue
+</code></pre>
+<p>Su atajo habitual es:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Si no existe ningún otro breakpoint, el programa continuará hasta finalizar.</p>
+<p>Si existe otro breakpoint:</p>
+<pre><code class="language-text">breakpoint 1
+      │
+      ▼
+   Continue
+      │
+      ▼
+ejecución normal
+      │
+      ▼
+breakpoint 2
+      │
+      ▼
+    pausa
+</code></pre>
+<hr />
+<h3 id="22-anadir-un-segundo-breakpoint">22. Añadir un segundo breakpoint<a class="headerlink" href="#22-anadir-un-segundo-breakpoint" title="Permanent link">&para;</a></h3>
+<p>En:</p>
+<pre><code class="language-text">primera_depuracion.py
+</code></pre>
+<p>mantén el primer breakpoint y añade otro junto a:</p>
+<pre><code class="language-python">print(
+    f&quot;Total: {total}&quot;
+)
+</code></pre>
+<p>Ahora tenemos:</p>
+<pre><code class="language-text">breakpoint 1
+     │
+     ▼
+cálculos
+     │
+     ▼
+breakpoint 2
+</code></pre>
+<p>Inicia nuevamente la depuración con:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>El programa se detendrá en el primero.</p>
+<p>Pulsa otra vez:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>El programa continuará hasta el segundo.</p>
+<hr />
+<h3 id="23-diferencia-entre-f5-y-f10">23. Diferencia entre <code>F5</code> y <code>F10</code><a class="headerlink" href="#23-diferencia-entre-f5-y-f10" title="Permanent link">&para;</a></h3>
+<p>Durante una sesión de depuración:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>se utiliza normalmente para:</p>
+<pre><code class="language-text">continuar
+</code></pre>
+<p>hasta el siguiente breakpoint.</p>
+<p>Mientras que:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>permite:</p>
+<pre><code class="language-text">ejecutar la siguiente instrucción
+</code></pre>
+<p>y volver a detenerse.</p>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">F5
+│
+└── continuar
+
+
+F10
+│
+└── avanzar paso a paso
+</code></pre>
+<hr />
+<h3 id="24-detener-la-depuracion">24. Detener la depuración<a class="headerlink" href="#24-detener-la-depuracion" title="Permanent link">&para;</a></h3>
+<p>Podemos finalizar manualmente una sesión mediante:</p>
+<pre><code class="language-text">Stop
+</code></pre>
+<p>Habitualmente también podemos utilizar:</p>
+<pre><code class="language-text">Shift + F5
+</code></pre>
+<p>Esto termina la sesión de depuración.</p>
+<p>No debemos confundir:</p>
+<pre><code class="language-text">pausar
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">detener
+</code></pre>
+<p>Pausar:</p>
+<pre><code class="language-text">el programa sigue activo
+pero temporalmente detenido
+</code></pre>
+<p>Detener:</p>
+<pre><code class="language-text">finaliza la sesión
+de depuración
+</code></pre>
+<hr />
+<h3 id="25-activar-y-desactivar-breakpoints">25. Activar y desactivar breakpoints<a class="headerlink" href="#25-activar-y-desactivar-breakpoints" title="Permanent link">&para;</a></h3>
+<p>No es necesario eliminar un breakpoint cada vez que no queramos utilizarlo.</p>
+<p>VS Code permite:</p>
+<pre><code class="language-text">activar
+desactivar
+eliminar
+</code></pre>
+<p>breakpoints.</p>
+<p>Esto resulta especialmente útil cuando tenemos varios puntos de interés en un programa grande.</p>
+<p>Podemos preparar:</p>
+<pre><code class="language-text">breakpoint A
+breakpoint B
+breakpoint C
+</code></pre>
+<p>y activar únicamente los que necesitemos para una prueba determinada.</p>
+<hr />
+<h3 id="26-panel-breakpoints">26. Panel Breakpoints<a class="headerlink" href="#26-panel-breakpoints" title="Permanent link">&para;</a></h3>
+<p>En la vista de depuración encontraremos un apartado relacionado con:</p>
+<pre><code class="language-text">BREAKPOINTS
+</code></pre>
+<p>Desde él podemos gestionar los puntos de interrupción existentes.</p>
+<p>Esto resulta especialmente útil cuando el proyecto contiene:</p>
+<pre><code class="language-text">varios archivos
+</code></pre>
+<p>y tenemos breakpoints repartidos por diferentes programas.</p>
+<hr />
+<h3 id="27-primera-practica-con-un-error-logico">27. Primera práctica con un error lógico<a class="headerlink" href="#27-primera-practica-con-un-error-logico" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo7/programas/
+calcular_media.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">nota1 = 7
+nota2 = 8
+nota3 = 9
+
+suma = (
+    nota1
+    + nota2
+    + nota3
+)
+
+media = (
+    suma / 2
+)
+
+print(
+    f&quot;Media: {media}&quot;
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python calcular_media.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">Media: 12.0
+</code></pre>
+<p>El programa:</p>
+<pre><code class="language-text">no produce una excepción
+</code></pre>
+<p>pero el resultado es incorrecto.</p>
+<hr />
+<h3 id="28-depurar-calcular_mediapy">28. Depurar <code>calcular_media.py</code><a class="headerlink" href="#28-depurar-calcular_mediapy" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">suma = (
+    nota1
+    + nota2
+    + nota3
+)
+</code></pre>
+<p>Inicia la depuración:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-text">nota1
+nota2
+nota3
+</code></pre>
+<p>Avanza con:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Después observa:</p>
+<pre><code class="language-text">suma
+</code></pre>
+<p>Deberá contener:</p>
+<pre><code class="language-text">24
+</code></pre>
+<p>Avanza nuevamente.</p>
+<p>Ahora observa:</p>
+<pre><code class="language-text">media
+</code></pre>
+<p>Contendrá:</p>
+<pre><code class="language-text">12.0
+</code></pre>
+<p>Podemos deducir que:</p>
+<pre><code class="language-text">suma
+</code></pre>
+<p>es correcta.</p>
+<p>El problema aparece en:</p>
+<pre><code class="language-python">media = (
+    suma / 2
+)
+</code></pre>
+<hr />
+<h3 id="29-localizar-el-error">29. Localizar el error<a class="headerlink" href="#29-localizar-el-error" title="Permanent link">&para;</a></h3>
+<p>Tenemos tres notas:</p>
+<pre><code class="language-text">7
+8
+9
+</code></pre>
+<p>La suma es:</p>
+<pre><code class="language-text">24
+</code></pre>
+<p>Pero el programa realiza:</p>
+<pre><code class="language-text">24 / 2
+</code></pre>
+<p>cuando debería realizar:</p>
+<pre><code class="language-text">24 / 3
+</code></pre>
+<p>Corregimos:</p>
+<pre><code class="language-python">media = (
+    suma / 3
+)
+</code></pre>
+<p>Volvemos a ejecutar.</p>
+<p>Obtendremos:</p>
+<pre><code class="language-text">Media: 8.0
+</code></pre>
+<p>Este ejemplo muestra una idea fundamental:</p>
+<pre><code class="language-text">el depurador no corrige
+automáticamente el programa
+</code></pre>
+<p>El depurador nos proporciona información para que podamos localizar la causa del problema.</p>
+<hr />
+<h3 id="30-observar-el-flujo-de-un-if">30. Observar el flujo de un <code>if</code><a class="headerlink" href="#30-observar-el-flujo-de-un-if" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_nota.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">nota = 4.5
+
+
+if nota &gt;= 5:
+
+    resultado = &quot;Aprobado&quot;
+
+else:
+
+    resultado = &quot;Suspendido&quot;
+
+
+print(
+    resultado
+)
+</code></pre>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">if nota &gt;= 5:
+</code></pre>
+<p>Ejecuta mediante:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Después avanza utilizando:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Observa qué bloque ejecuta Python.</p>
+<hr />
+<h3 id="31-seguir-una-condicion">31. Seguir una condición<a class="headerlink" href="#31-seguir-una-condicion" title="Permanent link">&para;</a></h3>
+<p>Tenemos:</p>
+<pre><code class="language-python">nota = 4.5
+</code></pre>
+<p>La condición:</p>
+<pre><code class="language-python">nota &gt;= 5
+</code></pre>
+<p>produce:</p>
+<pre><code class="language-text">False
+</code></pre>
+<p>Por tanto, Python continúa por:</p>
+<pre><code class="language-python">else:
+</code></pre>
+<p>y ejecuta:</p>
+<pre><code class="language-python">resultado = &quot;Suspendido&quot;
+</code></pre>
+<p>El depurador nos permite observar directamente el camino seguido por el programa.</p>
+<hr />
+<h3 id="32-cambiar-el-valor">32. Cambiar el valor<a class="headerlink" href="#32-cambiar-el-valor" title="Permanent link">&para;</a></h3>
+<p>Modifica:</p>
+<pre><code class="language-python">nota = 7
+</code></pre>
+<p>Vuelve a iniciar la depuración.</p>
+<p>Ahora:</p>
+<pre><code class="language-python">nota &gt;= 5
+</code></pre>
+<p>será:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>y el flujo cambiará:</p>
+<pre><code class="language-text">if
+ │
+ ▼
+True
+ │
+ ▼
+resultado = &quot;Aprobado&quot;
+</code></pre>
+<p>Este tipo de análisis será muy útil cuando tengamos condiciones más complejas.</p>
+<hr />
+<h3 id="33-depurar-un-bucle">33. Depurar un bucle<a class="headerlink" href="#33-depurar-un-bucle" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">depurar_bucle.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">numeros = [
+    10,
+    20,
+    30,
+    40
+]
+
+
+total = 0
+
+
+for numero in numeros:
+
+    total = (
+        total + numero
+    )
+
+
+print(
+    f&quot;Total: {total}&quot;
+)
+</code></pre>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">total = (
+    total + numero
+)
+</code></pre>
+<p>Inicia la depuración.</p>
+<hr />
+<h3 id="34-primera-iteracion">34. Primera iteración<a class="headerlink" href="#34-primera-iteracion" title="Permanent link">&para;</a></h3>
+<p>En la primera iteración:</p>
+<pre><code class="language-text">numero = 10
+total = 0
+</code></pre>
+<p>Después de ejecutar:</p>
+<pre><code class="language-python">total = (
+    total + numero
+)
+</code></pre>
+<p>tendremos:</p>
+<pre><code class="language-text">total = 10
+</code></pre>
+<p>El bucle volverá a comenzar.</p>
+<hr />
+<h3 id="35-segunda-iteracion">35. Segunda iteración<a class="headerlink" href="#35-segunda-iteracion" title="Permanent link">&para;</a></h3>
+<p>Ahora:</p>
+<pre><code class="language-text">numero = 20
+total = 10
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-text">total = 30
+</code></pre>
+<p>En las siguientes iteraciones observaremos:</p>
+<pre><code class="language-text">numero = 30
+total = 60
+</code></pre>
+<p>y finalmente:</p>
+<pre><code class="language-text">numero = 40
+total = 100
+</code></pre>
+<p>El depurador nos permite observar cómo una variable cambia durante las diferentes iteraciones.</p>
+<hr />
+<h3 id="36-depurar-bucles">36. Depurar bucles<a class="headerlink" href="#36-depurar-bucles" title="Permanent link">&para;</a></h3>
+<p>Los bucles son uno de los lugares donde la depuración resulta especialmente útil.</p>
+<p>Podemos investigar problemas como:</p>
+<pre><code class="language-text">el bucle se ejecuta
+demasiadas veces
+</code></pre>
+<pre><code class="language-text">el bucle no se ejecuta
+</code></pre>
+<pre><code class="language-text">una variable acumuladora
+tiene un valor incorrecto
+</code></pre>
+<pre><code class="language-text">un elemento concreto
+produce un error
+</code></pre>
+<p>Más adelante veremos cómo utilizar breakpoints condicionales para detenernos únicamente cuando se cumpla una determinada condición.</p>
+<hr />
+<h3 id="37-introduccion-a-las-funciones">37. Introducción a las funciones<a class="headerlink" href="#37-introduccion-a-las-funciones" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos avanzado línea por línea dentro del mismo bloque.</p>
+<p>Pero nuestros programas utilizan muchas funciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">def calcular_total(
+    precio,
+    iva
+):
+
+    importe_iva = (
+        precio * iva / 100
+    )
+
+    return (
+        precio + importe_iva
+    )
+
+
+resultado = calcular_total(
+    100,
+    21
+)
+
+
+print(
+    resultado
+)
+</code></pre>
+<p>Cuando llegamos a:</p>
+<pre><code class="language-python">resultado = calcular_total(
+    100,
+    21
+)
+</code></pre>
+<p>tenemos dos posibilidades:</p>
+<pre><code class="language-text">ejecutar la función completa
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">entrar dentro de la función
+</code></pre>
+<p>Aquí aparece otra herramienta fundamental del depurador.</p>
+<hr />
+<h3 id="38-step-into">38. Step Into<a class="headerlink" href="#38-step-into" title="Permanent link">&para;</a></h3>
+<p>La operación:</p>
+<pre><code class="language-text">Step Into
+</code></pre>
+<p>permite entrar dentro de una función que estamos llamando.</p>
+<p>Su atajo habitual es:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>Podemos representar:</p>
+<pre><code class="language-text">resultado = calcular_total(...)
+             │
+             │ F11
+             ▼
+def calcular_total(...)
+             │
+             ▼
+    importe_iva = ...
+</code></pre>
+<p>Esto nos permite depurar el interior de la función.</p>
+<hr />
+<h3 id="39-preparar-una-practica-con-funciones">39. Preparar una práctica con funciones<a class="headerlink" href="#39-preparar-una-practica-con-funciones" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">depurar_funcion.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def calcular_total(
+    precio,
+    iva
+):
+
+    importe_iva = (
+        precio * iva / 100
+    )
+
+    total = (
+        precio + importe_iva
+    )
+
+    return total
+
+
+precio = 150
+iva = 21
+
+
+resultado = calcular_total(
+    precio,
+    iva
+)
+
+
+print(
+    f&quot;Total: {resultado}&quot;
+)
+</code></pre>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">resultado = calcular_total(
+    precio,
+    iva
+)
+</code></pre>
+<hr />
+<h3 id="40-entrar-dentro-de-la-funcion">40. Entrar dentro de la función<a class="headerlink" href="#40-entrar-dentro-de-la-funcion" title="Permanent link">&para;</a></h3>
+<p>Inicia:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Cuando el programa se detenga en la llamada:</p>
+<pre><code class="language-python">calcular_total()
+</code></pre>
+<p>utiliza:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>En lugar de ejecutar toda la función de una vez, el depurador entrará en ella.</p>
+<p>Ahora podremos observar:</p>
+<pre><code class="language-text">precio
+iva
+</code></pre>
+<p>dentro de:</p>
+<pre><code class="language-python">calcular_total()
+</code></pre>
+<hr />
+<h3 id="41-observar-parametros">41. Observar parámetros<a class="headerlink" href="#41-observar-parametros" title="Permanent link">&para;</a></h3>
+<p>Dentro de la función tendremos:</p>
+<pre><code class="language-text">precio = 150
+iva = 21
+</code></pre>
+<p>Estos valores proceden de:</p>
+<pre><code class="language-python">calcular_total(
+    precio,
+    iva
+)
+</code></pre>
+<p>Podemos avanzar mediante:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>y observar la aparición de:</p>
+<pre><code class="language-text">importe_iva
+</code></pre>
+<p>y posteriormente:</p>
+<pre><code class="language-text">total
+</code></pre>
+<p>Esto nos permite comprobar no solamente las variables globales del programa, sino también los parámetros y variables locales de una función.</p>
+<hr />
+<h3 id="42-step-over-frente-a-step-into">42. Step Over frente a Step Into<a class="headerlink" href="#42-step-over-frente-a-step-into" title="Permanent link">&para;</a></h3>
+<p>Supongamos que estamos en:</p>
+<pre><code class="language-python">resultado = calcular_total(
+    precio,
+    iva
+)
+</code></pre>
+<p>Si utilizamos:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p><code>Step Over</code>:</p>
+<pre><code class="language-text">ejecuta la función
+sin detenerse dentro
+</code></pre>
+<p>Después apareceremos en la siguiente instrucción.</p>
+<p>Si utilizamos:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p><code>Step Into</code>:</p>
+<pre><code class="language-text">entra dentro de la función
+</code></pre>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">          llamada a función
+                 │
+        ┌────────┴────────┐
+        │                 │
+        ▼                 ▼
+      F10               F11
+        │                 │
+        ▼                 ▼
+  Step Over          Step Into
+        │                 │
+        ▼                 ▼
+ejecutar función      entrar en
+   completa           la función
+</code></pre>
+<hr />
+<h3 id="43-cuando-utilizar-cada-uno">43. ¿Cuándo utilizar cada uno?<a class="headerlink" href="#43-cuando-utilizar-cada-uno" title="Permanent link">&para;</a></h3>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">Step Over
+</code></pre>
+<p>cuando confiemos en la función y simplemente queramos continuar.</p>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">Step Into
+</code></pre>
+<p>cuando sospechemos que el problema puede encontrarse dentro de la función.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">resultado incorrecto
+        │
+        ▼
+¿la función recibe
+los datos correctos?
+        │
+        ▼
+    Step Into
+        │
+        ▼
+examinar parámetros
+        │
+        ▼
+seguir cálculos
+</code></pre>
+<hr />
+<h3 id="44-step-out">44. Step Out<a class="headerlink" href="#44-step-out" title="Permanent link">&para;</a></h3>
+<p>Existe otra operación:</p>
+<pre><code class="language-text">Step Out
+</code></pre>
+<p>que permite terminar la ejecución de la función actual y regresar al lugar desde el que fue llamada.</p>
+<p>Su atajo habitual es:</p>
+<pre><code class="language-text">Shift + F11
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">programa principal
+       │
+       ▼
+calcular_total()
+       │
+       ▼
+estamos aquí
+       │
+       │ Step Out
+       ▼
+terminar función
+       │
+       ▼
+programa principal
+</code></pre>
+<p>Esto resulta útil cuando hemos entrado en una función, hemos comprobado lo necesario y ya no queremos recorrer todas sus instrucciones.</p>
+<hr />
+<h3 id="45-controles-fundamentales-del-depurador">45. Controles fundamentales del depurador<a class="headerlink" href="#45-controles-fundamentales-del-depurador" title="Permanent link">&para;</a></h3>
+<p>Por ahora debemos recordar:</p>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Atajo habitual</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Continue</td>
+<td><code>F5</code></td>
+<td>Continúa hasta el siguiente breakpoint</td>
+</tr>
+<tr>
+<td>Step Over</td>
+<td><code>F10</code></td>
+<td>Ejecuta la línea sin entrar en funciones</td>
+</tr>
+<tr>
+<td>Step Into</td>
+<td><code>F11</code></td>
+<td>Entra dentro de una función</td>
+</tr>
+<tr>
+<td>Step Out</td>
+<td><code>Shift + F11</code></td>
+<td>Sale de la función actual</td>
+</tr>
+<tr>
+<td>Stop</td>
+<td><code>Shift + F5</code></td>
+<td>Finaliza la depuración</td>
+</tr>
+<tr>
+<td>Breakpoint</td>
+<td><code>F9</code></td>
+<td>Añade o elimina un breakpoint</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Atajos</p>
+<p>No es necesario memorizar todos los atajos inmediatamente.</p>
+<p>VS Code muestra también los controles de depuración en su interfaz.</p>
+<p>Con la práctica acabarán resultando familiares.</p>
+</div>
+<hr />
+<h3 id="46-practica-guiada-localizar-un-error-en-una-funcion">46. Práctica guiada: localizar un error en una función<a class="headerlink" href="#46-practica-guiada-localizar-un-error-en-una-funcion" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">calcular_descuento.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def aplicar_descuento(
+    precio,
+    porcentaje
+):
+
+    descuento = (
+        precio * porcentaje
+    )
+
+    precio_final = (
+        precio - descuento
+    )
+
+    return precio_final
+
+
+precio = 200
+descuento = 10
+
+
+resultado = aplicar_descuento(
+    precio,
+    descuento
+)
+
+
+print(
+    f&quot;Precio inicial: {precio}&quot;
+)
+
+print(
+    f&quot;Descuento: {descuento}%&quot;
+)
+
+print(
+    f&quot;Precio final: {resultado}&quot;
+)
+</code></pre>
+<p>El resultado será incorrecto.</p>
+<p>No corrijas todavía el programa.</p>
+<p>Vamos a utilizar el depurador para encontrar el problema.</p>
+<hr />
+<h3 id="47-primera-hipotesis">47. Primera hipótesis<a class="headerlink" href="#47-primera-hipotesis" title="Permanent link">&para;</a></h3>
+<p>Sabemos:</p>
+<pre><code class="language-text">precio = 200
+descuento = 10 %
+</code></pre>
+<p>Por tanto, esperamos:</p>
+<pre><code class="language-text">descuento aplicado = 20
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">precio final = 180
+</code></pre>
+<p>Ejecuta primero el programa normalmente.</p>
+<p>Después iniciaremos la investigación.</p>
+<hr />
+<h3 id="48-colocar-el-breakpoint">48. Colocar el breakpoint<a class="headerlink" href="#48-colocar-el-breakpoint" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">resultado = aplicar_descuento(
+    precio,
+    descuento
+)
+</code></pre>
+<p>Inicia la depuración:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Comprueba:</p>
+<pre><code class="language-text">precio = 200
+descuento = 10
+</code></pre>
+<p>Los argumentos parecen correctos.</p>
+<p>Ahora utiliza:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-python">aplicar_descuento()
+</code></pre>
+<hr />
+<h3 id="49-examinar-el-calculo">49. Examinar el cálculo<a class="headerlink" href="#49-examinar-el-calculo" title="Permanent link">&para;</a></h3>
+<p>Dentro de la función tenemos:</p>
+<pre><code class="language-python">descuento = (
+    precio * porcentaje
+)
+</code></pre>
+<p>Avanza con:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>Observa el valor de:</p>
+<pre><code class="language-text">descuento
+</code></pre>
+<p>El resultado será:</p>
+<pre><code class="language-text">2000
+</code></pre>
+<p>Ya hemos localizado el punto donde aparece un valor inesperado.</p>
+<hr />
+<h3 id="50-corregir-el-error">50. Corregir el error<a class="headerlink" href="#50-corregir-el-error" title="Permanent link">&para;</a></h3>
+<p>La expresión:</p>
+<pre><code class="language-python">precio * porcentaje
+</code></pre>
+<p>no calcula un porcentaje.</p>
+<p>Debemos utilizar:</p>
+<pre><code class="language-python">precio * porcentaje / 100
+</code></pre>
+<p>Por tanto:</p>
+<pre><code class="language-python">descuento = (
+    precio * porcentaje / 100
+)
+</code></pre>
+<p>Ahora:</p>
+<pre><code class="language-text">200 × 10 / 100 = 20
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">200 - 20 = 180
+</code></pre>
+<p>Vuelve a iniciar la depuración para comprobarlo.</p>
+<hr />
+<h3 id="51-depurar-antes-de-modificar">51. Depurar antes de modificar<a class="headerlink" href="#51-depurar-antes-de-modificar" title="Permanent link">&para;</a></h3>
+<p>Durante una incidencia conviene evitar cambiar muchas líneas simultáneamente sin conocer la causa.</p>
+<p>Una estrategia mejor es:</p>
+<pre><code class="language-text">reproducir problema
+        │
+        ▼
+colocar breakpoint
+        │
+        ▼
+observar variables
+        │
+        ▼
+seguir ejecución
+        │
+        ▼
+localizar punto incorrecto
+        │
+        ▼
+formular causa
+        │
+        ▼
+modificar código
+        │
+        ▼
+volver a probar
+</code></pre>
+<p>Esto convierte la depuración en un proceso sistemático.</p>
+<hr />
+<h3 id="52-practica-propuesta-contador-incorrecto">52. Práctica propuesta: contador incorrecto<a class="headerlink" href="#52-practica-propuesta-contador-incorrecto" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">contador.py
+</code></pre>
+<p>con:</p>
+<pre><code class="language-python">equipos = [
+    &quot;PC01&quot;,
+    &quot;PC02&quot;,
+    &quot;PC03&quot;,
+    &quot;PC04&quot;
+]
+
+
+contador = 1
+
+
+for equipo in equipos:
+
+    contador += 1
+
+
+print(
+    f&quot;Equipos: {contador}&quot;
+)
+</code></pre>
+<p>El resultado no coincide con el número de equipos.</p>
+<p>Utiliza únicamente el depurador para investigar inicialmente el problema.</p>
+<p>Debes:</p>
+<ol>
+<li>Colocar un breakpoint dentro del <code>for</code>.</li>
+<li>Observar <code>equipo</code>.</li>
+<li>Observar <code>contador</code>.</li>
+<li>Avanzar iteración por iteración.</li>
+<li>Determinar cuándo aparece el valor incorrecto.</li>
+<li>Corregir el programa.</li>
+<li>Volver a depurarlo.</li>
+</ol>
+<hr />
+<h3 id="53-practica-propuesta-buscar-un-error-en-una-condicion">53. Práctica propuesta: buscar un error en una condición<a class="headerlink" href="#53-practica-propuesta-buscar-un-error-en-una-condicion" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">estado_servicio.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">codigo = 404
+
+
+if codigo &gt;= 200 or codigo &lt; 300:
+
+    estado = &quot;Correcto&quot;
+
+else:
+
+    estado = &quot;Error&quot;
+
+
+print(
+    f&quot;Estado: {estado}&quot;
+)
+</code></pre>
+<p>Ejecuta el programa.</p>
+<p>Después utiliza el depurador para analizar:</p>
+<pre><code class="language-python">codigo &gt;= 200
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">codigo &lt; 300
+</code></pre>
+<p>Estudia por qué la condición completa produce un resultado incorrecto.</p>
+<div class="admonition tip">
+<p class="admonition-title">Pista</p>
+<p>Piensa si queremos que se cumpla:</p>
+<p><code>text
+una condición O la otra</code></p>
+<p>o:</p>
+<p><code>text
+una condición Y la otra</code></p>
+</div>
+<hr />
+<h3 id="54-practica-propuesta-depurar-una-lista">54. Práctica propuesta: depurar una lista<a class="headerlink" href="#54-practica-propuesta-depurar-una-lista" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">inventario.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;ram&quot;: 32
+    }
+]
+
+
+total_ram = 0
+
+
+for equipo in equipos:
+
+    total_ram = (
+        equipo[&quot;ram&quot;]
+    )
+
+
+print(
+    f&quot;RAM total: &quot;
+    f&quot;{total_ram} GB&quot;
+)
+</code></pre>
+<p>El programa debería sumar toda la memoria RAM del inventario.</p>
+<p>Sin embargo, no lo hace.</p>
+<p>Utiliza el depurador para observar:</p>
+<pre><code class="language-text">equipo
+total_ram
+</code></pre>
+<p>en cada iteración.</p>
+<p>No corrijas el programa hasta haber identificado qué ocurre con:</p>
+<pre><code class="language-text">total_ram
+</code></pre>
+<p>durante el bucle.</p>
+<hr />
+<h3 id="55-lo-que-debemos-dominar-hasta-ahora">55. Lo que debemos dominar hasta ahora<a class="headerlink" href="#55-lo-que-debemos-dominar-hasta-ahora" title="Permanent link">&para;</a></h3>
+<p>Después de estas prácticas debemos saber:</p>
+<pre><code class="language-text">iniciar una sesión de depuración
+</code></pre>
+<pre><code class="language-text">crear un breakpoint
+</code></pre>
+<pre><code class="language-text">detenernos en una línea
+</code></pre>
+<pre><code class="language-text">observar variables
+</code></pre>
+<pre><code class="language-text">continuar la ejecución
+</code></pre>
+<pre><code class="language-text">avanzar línea a línea
+</code></pre>
+<pre><code class="language-text">entrar en una función
+</code></pre>
+<pre><code class="language-text">salir de una función
+</code></pre>
+<pre><code class="language-text">seguir un if
+</code></pre>
+<pre><code class="language-text">seguir las iteraciones de un for
+</code></pre>
+<hr />
+<h3 id="56-depuracion-frente-a-logging">56. Depuración frente a <code>logging</code><a class="headerlink" href="#56-depuracion-frente-a-logging" title="Permanent link">&para;</a></h3>
+<p>No debemos confundir:</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<p>con:</p>
+<pre><code class="language-python">logging
+</code></pre>
+<p>El depurador permite analizar interactivamente una ejecución:</p>
+<pre><code class="language-text">ejecutar
+   │
+   ▼
+pausar
+   │
+   ▼
+examinar
+   │
+   ▼
+continuar
+</code></pre>
+<p><code>logging</code> registra información para consultarla durante o después de la ejecución:</p>
+<pre><code class="language-text">ejecutar
+   │
+   ▼
+registrar eventos
+   │
+   ▼
+archivo log
+   │
+   ▼
+analizar posteriormente
+</code></pre>
+<p>Ambas herramientas son complementarias.</p>
+<hr />
+<h3 id="57-depuracion-frente-a-excepciones">57. Depuración frente a excepciones<a class="headerlink" href="#57-depuracion-frente-a-excepciones" title="Permanent link">&para;</a></h3>
+<p>Tampoco debemos confundir el depurador con:</p>
+<pre><code class="language-python">try
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">except
+</code></pre>
+<p>Las excepciones forman parte del diseño del programa.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">try:
+
+    numero = int(
+        texto
+    )
+
+except ValueError:
+
+    print(
+        &quot;Valor incorrecto.&quot;
+    )
+</code></pre>
+<p>El depurador es una herramienta que utilizamos durante el desarrollo y diagnóstico del programa.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">try / except
+     │
+     └── gestión de errores
+         dentro del programa
+
+
+debugger
+     │
+     └── herramienta para analizar
+         la ejecución del programa
+</code></pre>
+<hr />
+<h3 id="58-tres-herramientas-diferentes">58. Tres herramientas diferentes<a class="headerlink" href="#58-tres-herramientas-diferentes" title="Permanent link">&para;</a></h3>
+<p>A estas alturas conocemos tres herramientas importantes:</p>
+<pre><code class="language-text">EXCEPCIONES
+     │
+     ▼
+controlar errores
+esperados
+
+
+LOGGING
+     │
+     ▼
+registrar
+ejecuciones
+
+
+DEBUGGER
+     │
+     ▼
+investigar
+la ejecución
+</code></pre>
+<p>No compiten entre ellas.</p>
+<p>Se complementan.</p>
+<p>Un programa profesional puede utilizar:</p>
+<pre><code class="language-text">try / except
++
+logging
++
+depuración durante el desarrollo
+</code></pre>
+<hr />
+<h3 id="59-practica-de-consolidacion">59. Práctica de consolidación<a class="headerlink" href="#59-practica-de-consolidacion" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">analizar_inventario.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def calcular_memoria(
+    equipos
+):
+
+    total = 0
+
+    for equipo in equipos:
+
+        total += (
+            equipo[&quot;ram&quot;]
+        )
+
+    return total
+
+
+def contar_equipos_activos(
+    equipos
+):
+
+    activos = 0
+
+    for equipo in equipos:
+
+        if equipo[&quot;estado&quot;] == &quot;activo&quot;:
+
+            activos += 1
+
+    return activos
+
+
+equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8,
+        &quot;estado&quot;: &quot;activo&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16,
+        &quot;estado&quot;: &quot;inactivo&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;ram&quot;: 32,
+        &quot;estado&quot;: &quot;activo&quot;
+    }
+]
+
+
+memoria = calcular_memoria(
+    equipos
+)
+
+
+activos = contar_equipos_activos(
+    equipos
+)
+
+
+print(
+    f&quot;RAM total: &quot;
+    f&quot;{memoria} GB&quot;
+)
+
+print(
+    f&quot;Equipos activos: &quot;
+    f&quot;{activos}&quot;
+)
+</code></pre>
+<p>Utiliza el depurador aunque el programa funcione correctamente.</p>
+<p>El objetivo de esta práctica no es corregir un error.</p>
+<p>Debes utilizar:</p>
+<ol>
+<li>Un breakpoint antes de llamar a <code>calcular_memoria()</code>.</li>
+<li><code>Step Into</code> para entrar en la función.</li>
+<li><code>Step Over</code> para recorrer el <code>for</code>.</li>
+<li>Observar <code>equipo</code>.</li>
+<li>Observar <code>total</code>.</li>
+<li><code>Step Out</code> para regresar al programa principal.</li>
+<li>Entrar en <code>contar_equipos_activos()</code>.</li>
+<li>Observar <code>activos</code>.</li>
+<li>Seguir las condiciones del <code>if</code>.</li>
+<li>Continuar hasta finalizar.</li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">Depurar programas correctos</p>
+<p>Es recomendable aprender a utilizar el depurador con programas que funcionan correctamente.</p>
+<p>Así podemos comprender cómo se comporta una ejecución normal antes de utilizar la herramienta para investigar errores más complejos.</p>
+</div>
+<hr />
+<h3 id="60-resumen-de-esta-primera-parte">60. Resumen de esta primera parte<a class="headerlink" href="#60-resumen-de-esta-primera-parte" title="Permanent link">&para;</a></h3>
+<p>En esta primera parte hemos introducido la depuración profesional de programas Python desde Visual Studio Code.</p>
+<p>Hemos aprendido qué es:</p>
+<pre><code class="language-text">debugging
+</code></pre>
+<p>y qué función realiza un:</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<p>Hemos creado nuestros primeros:</p>
+<pre><code class="language-text">breakpoints
+</code></pre>
+<p>y hemos utilizado:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>para continuar la ejecución.</p>
+<p>También hemos utilizado:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>para:</p>
+<pre><code class="language-text">Step Over
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para:</p>
+<pre><code class="language-text">Step Into
+</code></pre>
+<p>Además hemos introducido:</p>
+<pre><code class="language-text">Shift + F11
+</code></pre>
+<p>para:</p>
+<pre><code class="language-text">Step Out
+</code></pre>
+<p>Hemos observado:</p>
+<pre><code class="language-text">variables
+parámetros
+condiciones
+bucles
+funciones
+</code></pre>
+<p>mientras el programa se encontraba detenido.</p>
+<p>El flujo básico aprendido es:</p>
+<pre><code class="language-text">ejecutar con depurador
+        │
+        ▼
+    breakpoint
+        │
+        ▼
+      pausa
+        │
+        ▼
+observar variables
+        │
+        ▼
+F10 / F11
+        │
+        ▼
+seguir ejecución
+        │
+        ▼
+localizar problema
+</code></pre>
+<p>En la siguiente parte profundizaremos en las herramientas de inspección de VS Code.</p>
+<p>Trabajaremos con:</p>
+<pre><code class="language-text">Variables
+Watch
+Call Stack
+Debug Console
+</code></pre>
+<p>y aprenderemos a utilizar:</p>
+<pre><code class="language-text">breakpoints condicionales
+</code></pre>
+<p>para detener un programa únicamente cuando se produzca una situación concreta.</p>
+<p>Estas herramientas nos permitirán depurar programas más grandes y nos prepararán para analizar posteriormente el <strong>proyecto final del curso</strong>.</p>
+<hr />
+<h2 id="61-inspeccion-avanzada-durante-la-depuracion">61. Inspección avanzada durante la depuración<a class="headerlink" href="#61-inspeccion-avanzada-durante-la-depuracion" title="Permanent link">&para;</a></h2>
+<p>En la primera parte hemos aprendido el funcionamiento básico del depurador:</p>
+<pre><code class="language-text">breakpoint
+    │
+    ▼
+programa detenido
+    │
+    ▼
+observar variables
+    │
+    ▼
+F10 / F11
+    │
+    ▼
+continuar ejecución
+</code></pre>
+<p>Sin embargo, cuando un programa aumenta de tamaño necesitamos herramientas que nos permitan responder preguntas más concretas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">¿Qué valor tiene esta expresión?
+</code></pre>
+<pre><code class="language-text">¿Desde qué función hemos llegado hasta aquí?
+</code></pre>
+<pre><code class="language-text">¿Cuántas funciones están activas?
+</code></pre>
+<pre><code class="language-text">¿Podemos detener el programa únicamente
+cuando una variable tenga cierto valor?
+</code></pre>
+<pre><code class="language-text">¿Podemos probar expresiones mientras
+el programa está detenido?
+</code></pre>
+<p>Visual Studio Code proporciona diferentes herramientas para hacerlo.</p>
+<p>En esta parte trabajaremos principalmente con:</p>
+<pre><code class="language-text">Variables
+Watch
+Call Stack
+Debug Console
+Breakpoints condicionales
+</code></pre>
+<hr />
+<h3 id="62-preparar-el-programa-de-trabajo">62. Preparar el programa de trabajo<a class="headerlink" href="#62-preparar-el-programa-de-trabajo" title="Permanent link">&para;</a></h3>
+<p>Crearemos un programa con varias funciones para poder analizarlo.</p>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo7/programas/
+analizar_pedido.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def calcular_subtotal(
+    precio,
+    unidades
+):
+
+    subtotal = (
+        precio * unidades
+    )
+
+    return subtotal
+
+
+def calcular_descuento(
+    subtotal,
+    porcentaje
+):
+
+    descuento = (
+        subtotal
+        * porcentaje
+        / 100
+    )
+
+    return descuento
+
+
+def calcular_total(
+    subtotal,
+    descuento
+):
+
+    total = (
+        subtotal - descuento
+    )
+
+    return total
+
+
+precio = 25
+unidades = 4
+porcentaje_descuento = 10
+
+
+subtotal = calcular_subtotal(
+    precio,
+    unidades
+)
+
+
+descuento = calcular_descuento(
+    subtotal,
+    porcentaje_descuento
+)
+
+
+total = calcular_total(
+    subtotal,
+    descuento
+)
+
+
+print(
+    f&quot;Subtotal: {subtotal}&quot;
+)
+
+print(
+    f&quot;Descuento: {descuento}&quot;
+)
+
+print(
+    f&quot;Total: {total}&quot;
+)
+</code></pre>
+<p>Ejecuta primero normalmente:</p>
+<pre><code class="language-powershell">python analizar_pedido.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">Subtotal: 100
+Descuento: 10.0
+Total: 90.0
+</code></pre>
+<p>El programa funciona correctamente.</p>
+<p>Lo utilizaremos para aprender a inspeccionar su ejecución.</p>
+<hr />
+<h3 id="63-colocar-el-primer-breakpoint">63. Colocar el primer breakpoint<a class="headerlink" href="#63-colocar-el-primer-breakpoint" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">subtotal = calcular_subtotal(
+    precio,
+    unidades
+)
+</code></pre>
+<p>Inicia la depuración:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>El programa se detendrá antes de realizar la llamada.</p>
+<p>En este momento podremos observar:</p>
+<pre><code class="language-text">precio = 25
+unidades = 4
+porcentaje_descuento = 10
+</code></pre>
+<p>en el panel:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<hr />
+<h3 id="64-recordatorio-del-panel-variables">64. Recordatorio del panel Variables<a class="headerlink" href="#64-recordatorio-del-panel-variables" title="Permanent link">&para;</a></h3>
+<p>El panel:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>muestra las variables disponibles en el contexto actual.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">precio                  25
+unidades                 4
+porcentaje_descuento    10
+</code></pre>
+<p>Todavía no tendremos:</p>
+<pre><code class="language-text">subtotal
+descuento
+total
+</code></pre>
+<p>porque estas variables todavía no han recibido ningún valor.</p>
+<p>Utiliza:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-python">calcular_subtotal()
+</code></pre>
+<p>Ahora el contexto cambia.</p>
+<hr />
+<h3 id="65-variables-locales">65. Variables locales<a class="headerlink" href="#65-variables-locales" title="Permanent link">&para;</a></h3>
+<p>Dentro de:</p>
+<pre><code class="language-python">calcular_subtotal()
+</code></pre>
+<p>tenemos:</p>
+<pre><code class="language-python">precio
+unidades
+subtotal
+</code></pre>
+<p>Las variables:</p>
+<pre><code class="language-text">precio
+unidades
+</code></pre>
+<p>son parámetros de la función.</p>
+<p>La variable:</p>
+<pre><code class="language-text">subtotal
+</code></pre>
+<p>será una variable local.</p>
+<p>Esto significa que pertenece al contexto de ejecución de esa función.</p>
+<p>Podemos representarlo:</p>
+<pre><code class="language-text">calcular_subtotal()
+│
+├── precio
+├── unidades
+└── subtotal
+</code></pre>
+<p>Cuando estamos dentro de la función, el depurador nos permite inspeccionar este contexto.</p>
+<hr />
+<h3 id="66-el-contexto-de-ejecucion">66. El contexto de ejecución<a class="headerlink" href="#66-el-contexto-de-ejecucion" title="Permanent link">&para;</a></h3>
+<p>Imaginemos:</p>
+<pre><code class="language-python">def funcion_a():
+
+    x = 10
+
+
+def funcion_b():
+
+    y = 20
+</code></pre>
+<p>La variable:</p>
+<pre><code class="language-text">x
+</code></pre>
+<p>pertenece al contexto de:</p>
+<pre><code class="language-text">funcion_a()
+</code></pre>
+<p>mientras:</p>
+<pre><code class="language-text">y
+</code></pre>
+<p>pertenece a:</p>
+<pre><code class="language-text">funcion_b()
+</code></pre>
+<p>Cuando depuramos un programa debemos tener presente:</p>
+<pre><code class="language-text">¿en qué función estamos?
+</code></pre>
+<p>porque las variables disponibles pueden cambiar según el contexto.</p>
+<hr />
+<h3 id="67-introduccion-a-watch">67. Introducción a Watch<a class="headerlink" href="#67-introduccion-a-watch" title="Permanent link">&para;</a></h3>
+<p>El panel:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>muestra muchas variables automáticamente.</p>
+<p>Pero en ocasiones queremos seguir específicamente:</p>
+<pre><code class="language-text">una variable
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">una expresión
+</code></pre>
+<p>Para ello podemos utilizar:</p>
+<pre><code class="language-text">Watch
+</code></pre>
+<p>Podemos traducirlo conceptualmente como:</p>
+<pre><code class="language-text">expresiones a observar
+</code></pre>
+<hr />
+<h3 id="68-anadir-una-expresion-a-watch">68. Añadir una expresión a Watch<a class="headerlink" href="#68-anadir-una-expresion-a-watch" title="Permanent link">&para;</a></h3>
+<p>Con el programa detenido busca en la vista de depuración:</p>
+<pre><code class="language-text">WATCH
+</code></pre>
+<p>Pulsa:</p>
+<pre><code class="language-text">+
+</code></pre>
+<p>para añadir una expresión.</p>
+<p>Escribe:</p>
+<pre><code class="language-python">precio
+</code></pre>
+<p>Añade también:</p>
+<pre><code class="language-python">unidades
+</code></pre>
+<p>Ahora Watch mostrará sus valores.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">precio      25
+unidades     4
+</code></pre>
+<hr />
+<h3 id="69-watch-puede-contener-expresiones">69. Watch puede contener expresiones<a class="headerlink" href="#69-watch-puede-contener-expresiones" title="Permanent link">&para;</a></h3>
+<p>Watch no está limitado a nombres de variables.</p>
+<p>Podemos añadir:</p>
+<pre><code class="language-python">precio * unidades
+</code></pre>
+<p>El depurador evaluará la expresión.</p>
+<p>Obtendremos:</p>
+<pre><code class="language-text">100
+</code></pre>
+<p>También podemos observar:</p>
+<pre><code class="language-python">precio * unidades / 2
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">unidades &gt; 3
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">unidades &gt; 3
+</code></pre>
+<p>producirá:</p>
+<pre><code class="language-text">True
+</code></pre>
+<hr />
+<h3 id="70-ventaja-de-watch">70. Ventaja de Watch<a class="headerlink" href="#70-ventaja-de-watch" title="Permanent link">&para;</a></h3>
+<p>Supongamos que queremos investigar constantemente:</p>
+<pre><code class="language-python">precio * unidades
+</code></pre>
+<p>Sin Watch tendríamos que realizar mentalmente el cálculo o añadir temporalmente:</p>
+<pre><code class="language-python">print(
+    precio * unidades
+)
+</code></pre>
+<p>Con Watch podemos observar:</p>
+<pre><code class="language-text">precio * unidades    100
+</code></pre>
+<p>sin modificar el programa.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">Watch
+  │
+  ▼
+observar expresiones
+durante la depuración
+</code></pre>
+<hr />
+<h3 id="71-watch-y-el-contexto">71. Watch y el contexto<a class="headerlink" href="#71-watch-y-el-contexto" title="Permanent link">&para;</a></h3>
+<p>Una expresión de Watch solamente puede evaluarse si las variables necesarias existen en el contexto actual.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">subtotal
+</code></pre>
+<p>puede no existir antes de ejecutar:</p>
+<pre><code class="language-python">subtotal = calcular_subtotal(...)
+</code></pre>
+<p>En ese momento VS Code puede indicar que la expresión no está disponible o no puede evaluarse.</p>
+<p>Después de crear la variable:</p>
+<pre><code class="language-text">subtotal
+</code></pre>
+<p>Watch podrá mostrar su valor.</p>
+<div class="admonition note">
+<p class="admonition-title">Contexto</p>
+<p>Que una expresión de Watch no pueda evaluarse no significa necesariamente que exista un error en el programa.</p>
+<p>Puede significar simplemente que esa variable todavía no existe en el punto actual de ejecución.</p>
+</div>
+<hr />
+<h3 id="72-practica-con-watch">72. Práctica con Watch<a class="headerlink" href="#72-practica-con-watch" title="Permanent link">&para;</a></h3>
+<p>Añade a Watch:</p>
+<pre><code class="language-python">precio
+</code></pre>
+<pre><code class="language-python">unidades
+</code></pre>
+<pre><code class="language-python">precio * unidades
+</code></pre>
+<pre><code class="language-python">precio &gt; 20
+</code></pre>
+<p>Avanza mediante:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>y observa los resultados.</p>
+<p>Después utiliza:</p>
+<pre><code class="language-text">Shift + F11
+</code></pre>
+<p>para salir de la función.</p>
+<p>Comprueba cómo cambia el contexto.</p>
+<hr />
+<h3 id="73-introduccion-a-call-stack">73. Introducción a Call Stack<a class="headerlink" href="#73-introduccion-a-call-stack" title="Permanent link">&para;</a></h3>
+<p>Otra herramienta fundamental es:</p>
+<pre><code class="language-text">CALL STACK
+</code></pre>
+<p>En castellano hablamos de:</p>
+<pre><code class="language-text">pila de llamadas
+</code></pre>
+<p>La pila de llamadas permite conocer:</p>
+<pre><code class="language-text">qué funciones se están ejecutando
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">cómo hemos llegado
+hasta el punto actual
+</code></pre>
+<hr />
+<h3 id="74-comprender-la-pila-de-llamadas">74. Comprender la pila de llamadas<a class="headerlink" href="#74-comprender-la-pila-de-llamadas" title="Permanent link">&para;</a></h3>
+<p>Supongamos:</p>
+<pre><code class="language-python">def funcion_c():
+
+    print(
+        &quot;Función C&quot;
+    )
+
+
+def funcion_b():
+
+    funcion_c()
+
+
+def funcion_a():
+
+    funcion_b()
+
+
+funcion_a()
+</code></pre>
+<p>El flujo será:</p>
+<pre><code class="language-text">programa principal
+       │
+       ▼
+  funcion_a()
+       │
+       ▼
+  funcion_b()
+       │
+       ▼
+  funcion_c()
+</code></pre>
+<p>Si detenemos el programa dentro de:</p>
+<pre><code class="language-python">funcion_c()
+</code></pre>
+<p>la pila representa aproximadamente:</p>
+<pre><code class="language-text">funcion_c
+funcion_b
+funcion_a
+programa principal
+</code></pre>
+<hr />
+<h3 id="75-por-que-se-llama-pila">75. ¿Por qué se llama pila?<a class="headerlink" href="#75-por-que-se-llama-pila" title="Permanent link">&para;</a></h3>
+<p>Una pila funciona según el principio:</p>
+<pre><code class="language-text">último en entrar
+primero en salir
+</code></pre>
+<p>Podemos imaginar:</p>
+<pre><code class="language-text">┌───────────────┐
+│  funcion_c()  │ ← actual
+├───────────────┤
+│  funcion_b()  │
+├───────────────┤
+│  funcion_a()  │
+├───────────────┤
+│   programa    │
+└───────────────┘
+</code></pre>
+<p>Cuando termina:</p>
+<pre><code class="language-text">funcion_c()
+</code></pre>
+<p>se elimina de la parte superior.</p>
+<p>Después continúa:</p>
+<pre><code class="language-text">funcion_b()
+</code></pre>
+<hr />
+<h3 id="76-crear-una-practica-para-call-stack">76. Crear una práctica para Call Stack<a class="headerlink" href="#76-crear-una-practica-para-call-stack" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">pila_llamadas.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def calcular_iva(
+    precio,
+    porcentaje
+):
+
+    importe = (
+        precio
+        * porcentaje
+        / 100
+    )
+
+    return importe
+
+
+def calcular_factura(
+    precio,
+    porcentaje
+):
+
+    iva = calcular_iva(
+        precio,
+        porcentaje
+    )
+
+    total = (
+        precio + iva
+    )
+
+    return total
+
+
+def procesar_pedido(
+    precio
+):
+
+    resultado = calcular_factura(
+        precio,
+        21
+    )
+
+    return resultado
+
+
+total = procesar_pedido(
+    100
+)
+
+
+print(
+    f&quot;Total: {total}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="77-entrar-en-las-funciones">77. Entrar en las funciones<a class="headerlink" href="#77-entrar-en-las-funciones" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">total = procesar_pedido(
+    100
+)
+</code></pre>
+<p>Inicia:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Utiliza:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-text">procesar_pedido()
+</code></pre>
+<p>Después vuelve a utilizar:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-text">calcular_factura()
+</code></pre>
+<p>Y nuevamente:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-text">calcular_iva()
+</code></pre>
+<p>Ahora observa:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<hr />
+<h3 id="78-interpretar-call-stack">78. Interpretar Call Stack<a class="headerlink" href="#78-interpretar-call-stack" title="Permanent link">&para;</a></h3>
+<p>Cuando estamos dentro de:</p>
+<pre><code class="language-python">calcular_iva()
+</code></pre>
+<p>la pila mostrará conceptualmente:</p>
+<pre><code class="language-text">calcular_iva()
+       │
+calcular_factura()
+       │
+procesar_pedido()
+       │
+programa principal
+</code></pre>
+<p>Esto responde a una pregunta muy importante:</p>
+<pre><code class="language-text">¿Cómo hemos llegado hasta aquí?
+</code></pre>
+<p>En programas grandes una función puede ser llamada desde muchos lugares diferentes.</p>
+<p>Call Stack permite saber cuál ha sido el recorrido concreto.</p>
+<hr />
+<h3 id="79-cambiar-de-contexto-desde-call-stack">79. Cambiar de contexto desde Call Stack<a class="headerlink" href="#79-cambiar-de-contexto-desde-call-stack" title="Permanent link">&para;</a></h3>
+<p>Durante la depuración podemos seleccionar diferentes elementos de la pila.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">calcular_iva()
+calcular_factura()
+procesar_pedido()
+</code></pre>
+<p>Si seleccionamos:</p>
+<pre><code class="language-text">calcular_factura()
+</code></pre>
+<p>podemos inspeccionar las variables correspondientes a ese contexto.</p>
+<p>Si seleccionamos:</p>
+<pre><code class="language-text">procesar_pedido()
+</code></pre>
+<p>podemos observar sus variables.</p>
+<div class="admonition important">
+<p class="admonition-title">No cambia la ejecución</p>
+<p>Seleccionar otro elemento de Call Stack permite inspeccionar otro contexto.</p>
+<p>No significa que el programa retroceda en el tiempo ni vuelva a ejecutar esa función.</p>
+</div>
+<hr />
+<h3 id="80-utilidad-de-call-stack">80. Utilidad de Call Stack<a class="headerlink" href="#80-utilidad-de-call-stack" title="Permanent link">&para;</a></h3>
+<p>Call Stack es especialmente útil cuando aparece un error dentro de una función utilizada por otras funciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">ERROR
+  │
+  ▼
+guardar_resultado()
+  │
+  ▼
+generar_informe()
+  │
+  ▼
+procesar_equipo()
+  │
+  ▼
+programa principal
+</code></pre>
+<p>Podemos investigar:</p>
+<pre><code class="language-text">quién llamó a la función
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">con qué valores
+</code></pre>
+<hr />
+<h3 id="81-introduccion-a-debug-console">81. Introducción a Debug Console<a class="headerlink" href="#81-introduccion-a-debug-console" title="Permanent link">&para;</a></h3>
+<p>VS Code también dispone de:</p>
+<pre><code class="language-text">Debug Console
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">Consola de depuración
+</code></pre>
+<p>Esta herramienta permite evaluar expresiones mientras el programa está detenido.</p>
+<p>Por ejemplo, si tenemos:</p>
+<pre><code class="language-python">precio = 100
+iva = 21
+</code></pre>
+<p>podemos escribir en Debug Console:</p>
+<pre><code class="language-python">precio
+</code></pre>
+<p>y obtener:</p>
+<pre><code class="language-text">100
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">precio * iva / 100
+</code></pre>
+<p>y obtener:</p>
+<pre><code class="language-text">21.0
+</code></pre>
+<hr />
+<h3 id="82-abrir-debug-console">82. Abrir Debug Console<a class="headerlink" href="#82-abrir-debug-console" title="Permanent link">&para;</a></h3>
+<p>Durante una sesión de depuración podemos acceder a:</p>
+<pre><code class="language-text">Debug Console
+</code></pre>
+<p>desde la zona inferior de VS Code.</p>
+<p>También podemos utilizar la paleta de comandos de VS Code si no aparece visible.</p>
+<p>El programa debe encontrarse detenido en un punto donde existan las variables que queremos consultar.</p>
+<hr />
+<h3 id="83-evaluar-expresiones">83. Evaluar expresiones<a class="headerlink" href="#83-evaluar-expresiones" title="Permanent link">&para;</a></h3>
+<p>Vuelve a:</p>
+<pre><code class="language-text">analizar_pedido.py
+</code></pre>
+<p>Detén el programa cuando existan:</p>
+<pre><code class="language-text">precio
+unidades
+porcentaje_descuento
+</code></pre>
+<p>En Debug Console escribe:</p>
+<pre><code class="language-python">precio
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">unidades
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">precio * unidades
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">porcentaje_descuento / 100
+</code></pre>
+<p>Podemos probar expresiones sin modificar el archivo <code>.py</code>.</p>
+<hr />
+<h3 id="84-probar-condiciones">84. Probar condiciones<a class="headerlink" href="#84-probar-condiciones" title="Permanent link">&para;</a></h3>
+<p>También podemos escribir:</p>
+<pre><code class="language-python">precio &gt; 20
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>O:</p>
+<pre><code class="language-python">unidades == 10
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">False
+</code></pre>
+<p>Esto es muy útil cuando investigamos una condición compleja.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">precio &gt; 20 and unidades &gt;= 4
+</code></pre>
+<p>podemos evaluarla directamente.</p>
+<hr />
+<h3 id="85-debug-console-frente-a-terminal">85. Debug Console frente a terminal<a class="headerlink" href="#85-debug-console-frente-a-terminal" title="Permanent link">&para;</a></h3>
+<p>No debemos confundir:</p>
+<pre><code class="language-text">Terminal
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">Debug Console
+</code></pre>
+<p>El terminal permite ejecutar comandos:</p>
+<pre><code class="language-powershell">python programa.py
+</code></pre>
+<pre><code class="language-powershell">pip list
+</code></pre>
+<pre><code class="language-powershell">dir
+</code></pre>
+<p>Debug Console trabaja con el programa que está siendo depurado.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">precio
+</code></pre>
+<pre><code class="language-python">len(equipos)
+</code></pre>
+<pre><code class="language-python">resultado[&quot;estado&quot;]
+</code></pre>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">TERMINAL
+   │
+   └── comandos del sistema
+
+
+DEBUG CONSOLE
+   │
+   └── expresiones del programa
+       durante la depuración
+</code></pre>
+<hr />
+<h3 id="86-watch-frente-a-debug-console">86. Watch frente a Debug Console<a class="headerlink" href="#86-watch-frente-a-debug-console" title="Permanent link">&para;</a></h3>
+<p>Las dos herramientas permiten evaluar expresiones, pero tienen usos diferentes.</p>
+<pre><code class="language-text">WATCH
+  │
+  └── seguir automáticamente
+      determinadas expresiones
+</code></pre>
+<pre><code class="language-text">DEBUG CONSOLE
+  │
+  └── realizar consultas
+      interactivas
+</code></pre>
+<p>Por ejemplo, si queremos observar durante toda la depuración:</p>
+<pre><code class="language-python">total
+</code></pre>
+<p>podemos utilizar Watch.</p>
+<p>Si queremos probar puntualmente:</p>
+<pre><code class="language-python">total * 1.21
+</code></pre>
+<p>podemos utilizar Debug Console.</p>
+<hr />
+<h3 id="87-precaucion-al-evaluar-expresiones">87. Precaución al evaluar expresiones<a class="headerlink" href="#87-precaucion-al-evaluar-expresiones" title="Permanent link">&para;</a></h3>
+<p>Durante la depuración conviene utilizar principalmente expresiones que permitan:</p>
+<pre><code class="language-text">consultar
+</code></pre>
+<p>el estado del programa.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">len(equipos)
+</code></pre>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">total &gt; 100
+</code></pre>
+<p>Debemos tener más cuidado con expresiones que puedan modificar datos o producir efectos secundarios.</p>
+<div class="admonition warning">
+<p class="admonition-title">Depuración</p>
+<p>Durante estas prácticas utilizaremos Debug Console principalmente para consultar valores y evaluar expresiones.</p>
+<p>Evitaremos utilizarla para modificar deliberadamente el estado del programa.</p>
+</div>
+<hr />
+<h3 id="88-el-problema-de-los-breakpoints-dentro-de-bucles">88. El problema de los breakpoints dentro de bucles<a class="headerlink" href="#88-el-problema-de-los-breakpoints-dentro-de-bucles" title="Permanent link">&para;</a></h3>
+<p>Consideremos:</p>
+<pre><code class="language-python">for numero in range(
+    1,
+    101
+):
+
+    resultado = (
+        numero * 2
+    )
+</code></pre>
+<p>Si colocamos un breakpoint en:</p>
+<pre><code class="language-python">resultado = (
+    numero * 2
+)
+</code></pre>
+<p>el programa se detendrá:</p>
+<pre><code class="language-text">100 veces
+</code></pre>
+<p>Pero quizá solamente nos interese:</p>
+<pre><code class="language-text">numero == 75
+</code></pre>
+<p>Para resolver este problema podemos utilizar:</p>
+<pre><code class="language-text">breakpoints condicionales
+</code></pre>
+<hr />
+<h3 id="89-que-es-un-breakpoint-condicional">89. ¿Qué es un breakpoint condicional?<a class="headerlink" href="#89-que-es-un-breakpoint-condicional" title="Permanent link">&para;</a></h3>
+<p>Un breakpoint normal significa:</p>
+<pre><code class="language-text">detener siempre
+</code></pre>
+<p>Un breakpoint condicional significa:</p>
+<pre><code class="language-text">detener solamente
+si se cumple una condición
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">numero == 75
+</code></pre>
+<p>El flujo será:</p>
+<pre><code class="language-text">numero = 1
+   │
+   └── continuar
+
+numero = 2
+   │
+   └── continuar
+
+...
+
+numero = 75
+   │
+   ▼
+condición verdadera
+   │
+   ▼
+DETENER
+</code></pre>
+<hr />
+<h3 id="90-crear-una-practica">90. Crear una práctica<a class="headerlink" href="#90-crear-una-practica" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">breakpoint_condicional.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">for numero in range(
+    1,
+    101
+):
+
+    resultado = (
+        numero * 2
+    )
+
+    print(
+        numero,
+        resultado
+    )
+</code></pre>
+<p>Ejecuta normalmente para comprobar que funciona.</p>
+<hr />
+<h3 id="91-crear-el-breakpoint">91. Crear el breakpoint<a class="headerlink" href="#91-crear-el-breakpoint" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">resultado = (
+    numero * 2
+)
+</code></pre>
+<p>Si ejecutamos ahora:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>se detendrá desde la primera iteración.</p>
+<p>Esto no es lo que queremos.</p>
+<p>Queremos detenernos únicamente cuando:</p>
+<pre><code class="language-python">numero == 75
+</code></pre>
+<hr />
+<h3 id="92-convertirlo-en-breakpoint-condicional">92. Convertirlo en breakpoint condicional<a class="headerlink" href="#92-convertirlo-en-breakpoint-condicional" title="Permanent link">&para;</a></h3>
+<p>Sobre el breakpoint utiliza las opciones disponibles en VS Code para editarlo.</p>
+<p>Una forma habitual es:</p>
+<pre><code class="language-text">clic derecho sobre el breakpoint
+</code></pre>
+<p>y seleccionar una opción similar a:</p>
+<pre><code class="language-text">Edit Breakpoint
+</code></pre>
+<p>Después seleccionamos:</p>
+<pre><code class="language-text">Expression
+</code></pre>
+<p>o la opción equivalente para una condición.</p>
+<p>Escribimos:</p>
+<pre><code class="language-python">numero == 75
+</code></pre>
+<p>Inicia nuevamente la depuración.</p>
+<hr />
+<h3 id="93-resultado-del-breakpoint-condicional">93. Resultado del breakpoint condicional<a class="headerlink" href="#93-resultado-del-breakpoint-condicional" title="Permanent link">&para;</a></h3>
+<p>El programa ejecutará automáticamente:</p>
+<pre><code class="language-text">numero = 1
+numero = 2
+numero = 3
+...
+</code></pre>
+<p>sin detenerse.</p>
+<p>Cuando:</p>
+<pre><code class="language-text">numero = 75
+</code></pre>
+<p>la expresión:</p>
+<pre><code class="language-python">numero == 75
+</code></pre>
+<p>será:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>y el depurador se detendrá.</p>
+<p>Ahora podemos observar:</p>
+<pre><code class="language-text">numero
+resultado
+</code></pre>
+<p>y el resto de variables disponibles.</p>
+<hr />
+<h3 id="94-condiciones-mas-complejas">94. Condiciones más complejas<a class="headerlink" href="#94-condiciones-mas-complejas" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar condiciones como:</p>
+<pre><code class="language-python">numero &gt; 90
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">numero % 10 == 0
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">numero &gt;= 50 and numero &lt;= 60
+</code></pre>
+<p>El breakpoint se activará cuando la expresión produzca:</p>
+<pre><code class="language-text">True
+</code></pre>
+<hr />
+<h3 id="95-breakpoint-condicional-con-una-lista">95. Breakpoint condicional con una lista<a class="headerlink" href="#95-breakpoint-condicional-con-una-lista" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">equipos_breakpoint.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;estado&quot;: &quot;activo&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;estado&quot;: &quot;activo&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;estado&quot;: &quot;error&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;PC04&quot;,
+        &quot;estado&quot;: &quot;activo&quot;
+    }
+]
+
+
+for equipo in equipos:
+
+    nombre = equipo[&quot;nombre&quot;]
+    estado = equipo[&quot;estado&quot;]
+
+    print(
+        nombre,
+        estado
+    )
+</code></pre>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">nombre = equipo[&quot;nombre&quot;]
+</code></pre>
+<hr />
+<h3 id="96-detenerse-solamente-ante-un-error">96. Detenerse solamente ante un error<a class="headerlink" href="#96-detenerse-solamente-ante-un-error" title="Permanent link">&para;</a></h3>
+<p>Convierte el breakpoint en condicional.</p>
+<p>Utiliza:</p>
+<pre><code class="language-python">equipo[&quot;estado&quot;] == &quot;error&quot;
+</code></pre>
+<p>Inicia la depuración.</p>
+<p>El programa ignorará:</p>
+<pre><code class="language-text">PC01
+PC02
+</code></pre>
+<p>y se detendrá cuando:</p>
+<pre><code class="language-text">equipo = {
+    &quot;nombre&quot;: &quot;PC03&quot;,
+    &quot;estado&quot;: &quot;error&quot;
+}
+</code></pre>
+<p>Este tipo de breakpoint resulta extremadamente útil cuando procesamos:</p>
+<pre><code class="language-text">listas
+CSV
+inventarios
+respuestas de APIs
+equipos de red
+</code></pre>
+<p>y solamente un elemento concreto produce un problema.</p>
+<hr />
+<h3 id="97-otro-ejemplo-con-direcciones-ip">97. Otro ejemplo con direcciones IP<a class="headerlink" href="#97-otro-ejemplo-con-direcciones-ip" title="Permanent link">&para;</a></h3>
+<p>Supongamos:</p>
+<pre><code class="language-python">equipos = [
+    &quot;192.168.1.10&quot;,
+    &quot;192.168.1.20&quot;,
+    &quot;192.168.1.30&quot;,
+    &quot;192.168.1.40&quot;
+]
+
+
+for ip in equipos:
+
+    print(
+        f&quot;Comprobando {ip}&quot;
+    )
+</code></pre>
+<p>Podemos establecer un breakpoint condicional:</p>
+<pre><code class="language-python">ip == &quot;192.168.1.30&quot;
+</code></pre>
+<p>El programa se detendrá únicamente cuando procese esa dirección.</p>
+<hr />
+<h3 id="98-breakpoints-condicionales-y-diagnostico-de-red">98. Breakpoints condicionales y diagnóstico de red<a class="headerlink" href="#98-breakpoints-condicionales-y-diagnostico-de-red" title="Permanent link">&para;</a></h3>
+<p>Esta técnica será especialmente útil con programas como los desarrollados en el capítulo 6.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">for servicio in servicios:
+
+    resultado = diagnosticar_servicio(
+        servicio,
+        timeout
+    )
+</code></pre>
+<p>Podríamos detenernos únicamente cuando:</p>
+<pre><code class="language-python">servicio[&quot;host&quot;] == &quot;servidor.local&quot;
+</code></pre>
+<p>o cuando:</p>
+<pre><code class="language-python">servicio[&quot;puerto&quot;] == 443
+</code></pre>
+<p>Así podemos investigar un elemento concreto sin detenernos en todos los demás.</p>
+<hr />
+<h3 id="99-crear-un-programa-con-un-error-dificil-de-localizar">99. Crear un programa con un error difícil de localizar<a class="headerlink" href="#99-crear-un-programa-con-un-error-dificil-de-localizar" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">buscar_error.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;ram&quot;: 32
+    },
+    {
+        &quot;nombre&quot;: &quot;PC04&quot;,
+        &quot;ram&quot;: -8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC05&quot;,
+        &quot;ram&quot;: 16
+    }
+]
+
+
+total = 0
+
+
+for equipo in equipos:
+
+    total += equipo[&quot;ram&quot;]
+
+
+print(
+    f&quot;RAM total: {total} GB&quot;
+)
+</code></pre>
+<p>El programa no produce ninguna excepción.</p>
+<p>Sin embargo:</p>
+<pre><code class="language-text">PC04
+</code></pre>
+<p>contiene un valor imposible:</p>
+<pre><code class="language-text">RAM = -8
+</code></pre>
+<hr />
+<h3 id="100-buscar-el-dato-incorrecto">100. Buscar el dato incorrecto<a class="headerlink" href="#100-buscar-el-dato-incorrecto" title="Permanent link">&para;</a></h3>
+<p>Podríamos detenernos en cada iteración y observar:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<p>Pero podemos utilizar un breakpoint condicional.</p>
+<p>Colócalo en:</p>
+<pre><code class="language-python">total += equipo[&quot;ram&quot;]
+</code></pre>
+<p>Utiliza como condición:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>El programa se detendrá directamente en:</p>
+<pre><code class="language-text">PC04
+</code></pre>
+<hr />
+<h3 id="101-analizar-el-problema">101. Analizar el problema<a class="headerlink" href="#101-analizar-el-problema" title="Permanent link">&para;</a></h3>
+<p>Ahora podemos observar en Variables:</p>
+<pre><code class="language-text">equipo
+</code></pre>
+<p>y expandir el diccionario.</p>
+<p>Encontraremos:</p>
+<pre><code class="language-text">nombre    &quot;PC04&quot;
+ram       -8
+</code></pre>
+<p>En Watch podemos añadir:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<p>También podemos utilizar Debug Console:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>Hemos utilizado tres herramientas sobre el mismo problema:</p>
+<pre><code class="language-text">breakpoint condicional
++
+Watch
++
+Debug Console
+</code></pre>
+<hr />
+<h3 id="102-utilizar-call-stack-con-errores">102. Utilizar Call Stack con errores<a class="headerlink" href="#102-utilizar-call-stack-con-errores" title="Permanent link">&para;</a></h3>
+<p>Ahora crearemos una versión con funciones.</p>
+<p>Crea:</p>
+<pre><code class="language-text">buscar_error_funciones.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def validar_ram(
+    equipo
+):
+
+    if equipo[&quot;ram&quot;] &lt; 0:
+
+        return False
+
+    return True
+
+
+def procesar_equipo(
+    equipo
+):
+
+    valido = validar_ram(
+        equipo
+    )
+
+    return valido
+
+
+def procesar_inventario(
+    equipos
+):
+
+    for equipo in equipos:
+
+        valido = procesar_equipo(
+            equipo
+        )
+
+        if not valido:
+
+            print(
+                &quot;Equipo incorrecto:&quot;,
+                equipo[&quot;nombre&quot;]
+            )
+
+
+equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;ram&quot;: -4
+    }
+]
+
+
+procesar_inventario(
+    equipos
+)
+</code></pre>
+<hr />
+<h3 id="103-investigar-la-cadena-de-llamadas">103. Investigar la cadena de llamadas<a class="headerlink" href="#103-investigar-la-cadena-de-llamadas" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">if equipo[&quot;ram&quot;] &lt; 0:
+</code></pre>
+<p>Hazlo condicional:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<p>Cuando el programa se detenga observa:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<p>Conceptualmente tendremos:</p>
+<pre><code class="language-text">validar_ram()
+       │
+       ▼
+procesar_equipo()
+       │
+       ▼
+procesar_inventario()
+       │
+       ▼
+programa principal
+</code></pre>
+<p>Ahora sabemos:</p>
+<pre><code class="language-text">dónde estamos
+</code></pre>
+<p>y también:</p>
+<pre><code class="language-text">cómo hemos llegado hasta allí
+</code></pre>
+<hr />
+<h3 id="104-inspeccionar-cada-nivel">104. Inspeccionar cada nivel<a class="headerlink" href="#104-inspeccionar-cada-nivel" title="Permanent link">&para;</a></h3>
+<p>Selecciona en Call Stack:</p>
+<pre><code class="language-text">validar_ram()
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-text">equipo
+</code></pre>
+<p>Después selecciona:</p>
+<pre><code class="language-text">procesar_equipo()
+</code></pre>
+<p>Observa sus variables.</p>
+<p>Después:</p>
+<pre><code class="language-text">procesar_inventario()
+</code></pre>
+<p>Podremos examinar:</p>
+<pre><code class="language-text">equipos
+equipo
+</code></pre>
+<p>en el contexto correspondiente.</p>
+<p>Esto permite reconstruir el recorrido del programa.</p>
+<hr />
+<h3 id="105-combinar-las-herramientas-del-depurador">105. Combinar las herramientas del depurador<a class="headerlink" href="#105-combinar-las-herramientas-del-depurador" title="Permanent link">&para;</a></h3>
+<p>En una investigación real no utilizaremos necesariamente una única herramienta.</p>
+<p>Podemos combinar:</p>
+<pre><code class="language-text">BREAKPOINT
+    │
+    ▼
+detener ejecución
+    │
+    ▼
+VARIABLES
+    │
+    ▼
+observar estado
+    │
+    ▼
+WATCH
+    │
+    ▼
+seguir expresiones
+    │
+    ▼
+DEBUG CONSOLE
+    │
+    ▼
+probar expresiones
+    │
+    ▼
+CALL STACK
+    │
+    ▼
+analizar llamadas
+</code></pre>
+<p>Cada herramienta responde a una pregunta diferente.</p>
+<hr />
+<h3 id="106-que-herramienta-utilizar">106. Qué herramienta utilizar<a class="headerlink" href="#106-que-herramienta-utilizar" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar esta referencia:</p>
+<table>
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Herramienta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Detener el programa</td>
+<td>Breakpoint</td>
+</tr>
+<tr>
+<td>Ver variables actuales</td>
+<td>Variables</td>
+</tr>
+<tr>
+<td>Seguir una expresión</td>
+<td>Watch</td>
+</tr>
+<tr>
+<td>Probar una expresión</td>
+<td>Debug Console</td>
+</tr>
+<tr>
+<td>Saber cómo llegamos a una función</td>
+<td>Call Stack</td>
+</tr>
+<tr>
+<td>Detenernos ante una condición concreta</td>
+<td>Breakpoint condicional</td>
+</tr>
+<tr>
+<td>Avanzar una línea</td>
+<td>Step Over</td>
+</tr>
+<tr>
+<td>Entrar en una función</td>
+<td>Step Into</td>
+</tr>
+<tr>
+<td>Salir de una función</td>
+<td>Step Out</td>
+</tr>
+</tbody>
+</table>
+<p>No es necesario utilizar todas las herramientas en cada depuración.</p>
+<hr />
+<h3 id="107-practica-guiada-analizar-un-inventario">107. Práctica guiada: analizar un inventario<a class="headerlink" href="#107-practica-guiada-analizar-un-inventario" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">depurar_inventario.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">def calcular_total_ram(
+    equipos
+):
+
+    total = 0
+
+    for equipo in equipos:
+
+        total += equipo[&quot;ram&quot;]
+
+    return total
+
+
+equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16
+    },
+    {
+        &quot;nombre&quot;: &quot;PC03&quot;,
+        &quot;ram&quot;: 32
+    },
+    {
+        &quot;nombre&quot;: &quot;PC04&quot;,
+        &quot;ram&quot;: -16
+    },
+    {
+        &quot;nombre&quot;: &quot;PC05&quot;,
+        &quot;ram&quot;: 8
+    }
+]
+
+
+total_ram = calcular_total_ram(
+    equipos
+)
+
+
+print(
+    f&quot;RAM total: &quot;
+    f&quot;{total_ram} GB&quot;
+)
+</code></pre>
+<p>El programa funciona, pero los datos contienen un error.</p>
+<hr />
+<h3 id="108-objetivos-de-la-practica">108. Objetivos de la práctica<a class="headerlink" href="#108-objetivos-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Realiza los siguientes pasos:</p>
+<ol>
+<li>Coloca un breakpoint en:</li>
+</ol>
+<pre><code class="language-python">total += equipo[&quot;ram&quot;]
+</code></pre>
+<ol>
+<li>Conviértelo en condicional:</li>
+</ol>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<ol>
+<li>
+<p>Inicia la depuración.</p>
+</li>
+<li>
+<p>Observa:</p>
+</li>
+</ol>
+<pre><code class="language-text">Variables
+</code></pre>
+<ol>
+<li>Añade a Watch:</li>
+</ol>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<pre><code class="language-python">total
+</code></pre>
+<ol>
+<li>En Debug Console consulta:</li>
+</ol>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<ol>
+<li>
+<p>Observa Call Stack.</p>
+</li>
+<li>
+<p>Identifica el equipo incorrecto.</p>
+</li>
+<li>
+<p>Corrige el dato.</p>
+</li>
+<li>
+<p>Ejecuta nuevamente el programa.</p>
+</li>
+</ol>
+<hr />
+<h3 id="109-practica-propuesta-localizar-un-codigo-http-incorrecto">109. Práctica propuesta: localizar un código HTTP incorrecto<a class="headerlink" href="#109-practica-propuesta-localizar-un-codigo-http-incorrecto" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">codigos_http.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">respuestas = [
+    {
+        &quot;url&quot;: &quot;servicio1&quot;,
+        &quot;codigo&quot;: 200
+    },
+    {
+        &quot;url&quot;: &quot;servicio2&quot;,
+        &quot;codigo&quot;: 201
+    },
+    {
+        &quot;url&quot;: &quot;servicio3&quot;,
+        &quot;codigo&quot;: 404
+    },
+    {
+        &quot;url&quot;: &quot;servicio4&quot;,
+        &quot;codigo&quot;: 200
+    },
+    {
+        &quot;url&quot;: &quot;servicio5&quot;,
+        &quot;codigo&quot;: 500
+    }
+]
+
+
+for respuesta in respuestas:
+
+    codigo = respuesta[&quot;codigo&quot;]
+
+    print(
+        respuesta[&quot;url&quot;],
+        codigo
+    )
+</code></pre>
+<p>Crea un breakpoint condicional para detener el programa únicamente cuando:</p>
+<pre><code class="language-python">codigo &gt;= 400
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Posición del breakpoint</p>
+<p>La condición solamente puede utilizar una variable que ya exista en el punto donde se evalúa el breakpoint.</p>
+<p>Si colocas el breakpoint antes de asignar:</p>
+<p><code>python
+codigo = respuesta["codigo"]</code></p>
+<p>utiliza directamente:</p>
+<p><code>python
+respuesta["codigo"] &gt;= 400</code></p>
+</div>
+<hr />
+<h3 id="110-practica-propuesta-combinar-varias-condiciones">110. Práctica propuesta: combinar varias condiciones<a class="headerlink" href="#110-practica-propuesta-combinar-varias-condiciones" title="Permanent link">&para;</a></h3>
+<p>Sobre el programa anterior intenta detenerte únicamente cuando:</p>
+<pre><code class="language-text">el código sea 500
+</code></pre>
+<p>Puedes utilizar:</p>
+<pre><code class="language-python">respuesta[&quot;codigo&quot;] == 500
+</code></pre>
+<p>Después intenta una condición que detecte cualquier error:</p>
+<pre><code class="language-python">respuesta[&quot;codigo&quot;] &gt;= 400
+</code></pre>
+<p>Compara ambas ejecuciones.</p>
+<hr />
+<h3 id="111-practica-propuesta-depurar-funciones-encadenadas">111. Práctica propuesta: depurar funciones encadenadas<a class="headerlink" href="#111-practica-propuesta-depurar-funciones-encadenadas" title="Permanent link">&para;</a></h3>
+<p>Crea un programa con estas funciones:</p>
+<pre><code class="language-text">leer_dato()
+    │
+    ▼
+validar_dato()
+    │
+    ▼
+procesar_dato()
+    │
+    ▼
+mostrar_resultado()
+</code></pre>
+<p>Introduce deliberadamente un valor incorrecto.</p>
+<p>Utiliza:</p>
+<pre><code class="language-text">Step Into
+Call Stack
+Variables
+Watch
+Debug Console
+</code></pre>
+<p>para seguir el dato desde que entra en el programa hasta que produce el resultado.</p>
+<p>El objetivo es comprender:</p>
+<pre><code class="language-text">cómo viajan los datos
+entre las funciones
+</code></pre>
+<hr />
+<h3 id="112-estrategia-para-investigar-un-error">112. Estrategia para investigar un error<a class="headerlink" href="#112-estrategia-para-investigar-un-error" title="Permanent link">&para;</a></h3>
+<p>Cuando encontremos un problema podemos utilizar un procedimiento como:</p>
+<pre><code class="language-text">1. Reproducir el problema
+          │
+          ▼
+2. Identificar una zona sospechosa
+          │
+          ▼
+3. Colocar breakpoint
+          │
+          ▼
+4. Ejecutar con el depurador
+          │
+          ▼
+5. Examinar Variables
+          │
+          ▼
+6. Utilizar Watch
+          │
+          ▼
+7. Seguir la ejecución
+          │
+          ▼
+8. Consultar Call Stack
+          │
+          ▼
+9. Probar expresiones
+   en Debug Console
+          │
+          ▼
+10. Localizar la causa
+          │
+          ▼
+11. Corregir
+          │
+          ▼
+12. Volver a probar
+</code></pre>
+<p>Esta metodología evita modificar el programa al azar.</p>
+<hr />
+<h3 id="113-sintoma-y-causa">113. Síntoma y causa<a class="headerlink" href="#113-sintoma-y-causa" title="Permanent link">&para;</a></h3>
+<p>Un concepto importante durante la depuración es diferenciar:</p>
+<pre><code class="language-text">síntoma
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">causa
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">SÍNTOMA
+
+total = 92
+</code></pre>
+<p>pero la causa podría estar varias funciones antes:</p>
+<pre><code class="language-text">precio incorrecto
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">porcentaje incorrecto
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">dato leído incorrectamente
+</code></pre>
+<p>El lugar donde observamos el error no siempre es el lugar donde se originó.</p>
+<hr />
+<h3 id="114-ejemplo-de-propagacion-de-un-error">114. Ejemplo de propagación de un error<a class="headerlink" href="#114-ejemplo-de-propagacion-de-un-error" title="Permanent link">&para;</a></h3>
+<p>Podemos tener:</p>
+<pre><code class="language-text">CSV
+ │
+ ▼
+dato incorrecto
+ │
+ ▼
+leer_inventario()
+ │
+ ▼
+procesar_equipo()
+ │
+ ▼
+calcular_total()
+ │
+ ▼
+informe incorrecto
+</code></pre>
+<p>El informe contiene el:</p>
+<pre><code class="language-text">síntoma
+</code></pre>
+<p>pero la causa puede encontrarse en:</p>
+<pre><code class="language-text">CSV
+</code></pre>
+<p>o durante su procesamiento.</p>
+<p>Herramientas como:</p>
+<pre><code class="language-text">Call Stack
+Watch
+breakpoints
+</code></pre>
+<p>nos ayudan a seguir el recorrido del dato.</p>
+<hr />
+<h3 id="115-no-modificar-varias-cosas-simultaneamente">115. No modificar varias cosas simultáneamente<a class="headerlink" href="#115-no-modificar-varias-cosas-simultaneamente" title="Permanent link">&para;</a></h3>
+<p>Si sospechamos de cinco partes diferentes y modificamos todas a la vez:</p>
+<pre><code class="language-text">cambio A
+cambio B
+cambio C
+cambio D
+cambio E
+</code></pre>
+<p>aunque el programa empiece a funcionar no sabremos necesariamente cuál era la causa.</p>
+<p>Durante una depuración sistemática es preferible:</p>
+<pre><code class="language-text">observar
+   │
+   ▼
+formular hipótesis
+   │
+   ▼
+comprobar
+   │
+   ▼
+realizar cambio
+   │
+   ▼
+volver a comprobar
+</code></pre>
+<hr />
+<h3 id="116-breakpoints-frente-a-print">116. Breakpoints frente a <code>print()</code><a class="headerlink" href="#116-breakpoints-frente-a-print" title="Permanent link">&para;</a></h3>
+<p>Comparemos.</p>
+<p>Con <code>print()</code>:</p>
+<pre><code class="language-python">print(
+    &quot;DEBUG:&quot;,
+    variable
+)
+</code></pre>
+<p>modificamos temporalmente el código.</p>
+<p>Con un breakpoint:</p>
+<pre><code class="language-text">detenemos
+   │
+   ▼
+inspeccionamos
+   │
+   ▼
+continuamos
+</code></pre>
+<p>sin necesidad de añadir instrucciones de diagnóstico al archivo.</p>
+<p>Esto no significa que <code>print()</code> sea inútil.</p>
+<p>Significa que disponemos de herramientas más adecuadas cuando el análisis se vuelve complejo.</p>
+<hr />
+<h3 id="117-breakpoints-frente-a-logging">117. Breakpoints frente a logging<a class="headerlink" href="#117-breakpoints-frente-a-logging" title="Permanent link">&para;</a></h3>
+<p>También debemos recordar:</p>
+<pre><code class="language-text">BREAKPOINT
+    │
+    ▼
+investigación interactiva
+durante el desarrollo
+</code></pre>
+<p>mientras:</p>
+<pre><code class="language-text">LOGGING
+    │
+    ▼
+registro de información
+durante la ejecución
+</code></pre>
+<p>Por ejemplo, un problema que ocurre en un equipo remoto podría detectarse inicialmente mediante:</p>
+<pre><code class="language-text">logs
+</code></pre>
+<p>y después reproducirse en nuestro entorno para analizarlo con:</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<hr />
+<h3 id="118-practica-integradora-de-esta-parte">118. Práctica integradora de esta parte<a class="headerlink" href="#118-practica-integradora-de-esta-parte" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">diagnostico_equipos_debug.py
+</code></pre>
+<p>con:</p>
+<pre><code class="language-python">def validar_equipo(
+    equipo
+):
+
+    if not equipo[&quot;nombre&quot;]:
+
+        return False
+
+    if equipo[&quot;ram&quot;] &lt;= 0:
+
+        return False
+
+    return True
+
+
+def contar_validos(
+    equipos
+):
+
+    contador = 0
+
+    for equipo in equipos:
+
+        if validar_equipo(
+            equipo
+        ):
+
+            contador += 1
+
+    return contador
+
+
+equipos = [
+    {
+        &quot;nombre&quot;: &quot;PC01&quot;,
+        &quot;ram&quot;: 8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC02&quot;,
+        &quot;ram&quot;: 16
+    },
+    {
+        &quot;nombre&quot;: &quot;&quot;,
+        &quot;ram&quot;: 32
+    },
+    {
+        &quot;nombre&quot;: &quot;PC04&quot;,
+        &quot;ram&quot;: -8
+    },
+    {
+        &quot;nombre&quot;: &quot;PC05&quot;,
+        &quot;ram&quot;: 16
+    }
+]
+
+
+validos = contar_validos(
+    equipos
+)
+
+
+print(
+    f&quot;Equipos válidos: &quot;
+    f&quot;{validos}&quot;
+)
+</code></pre>
+<p>No modifiques inicialmente los datos.</p>
+<hr />
+<h3 id="119-primera-investigacion">119. Primera investigación<a class="headerlink" href="#119-primera-investigacion" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint dentro de:</p>
+<pre><code class="language-python">validar_equipo()
+</code></pre>
+<p>en:</p>
+<pre><code class="language-python">if not equipo[&quot;nombre&quot;]:
+</code></pre>
+<p>Ejecuta el programa.</p>
+<p>Observa cómo la función se ejecuta para cada equipo.</p>
+<p>Después detén la depuración.</p>
+<hr />
+<h3 id="120-mejorar-la-investigacion">120. Mejorar la investigación<a class="headerlink" href="#120-mejorar-la-investigacion" title="Permanent link">&para;</a></h3>
+<p>Ahora convierte el breakpoint en condicional.</p>
+<p>Queremos detenernos cuando:</p>
+<pre><code class="language-python">not equipo[&quot;nombre&quot;]
+</code></pre>
+<p>Ejecuta nuevamente.</p>
+<p>El programa se detendrá únicamente en el equipo cuyo nombre está vacío.</p>
+<p>Observa:</p>
+<pre><code class="language-text">Variables
+Watch
+Call Stack
+</code></pre>
+<hr />
+<h3 id="121-segundo-problema">121. Segundo problema<a class="headerlink" href="#121-segundo-problema" title="Permanent link">&para;</a></h3>
+<p>Ahora queremos localizar:</p>
+<pre><code class="language-text">RAM &lt;= 0
+</code></pre>
+<p>Modifica la condición del breakpoint:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt;= 0
+</code></pre>
+<p>Ejecuta de nuevo.</p>
+<p>El programa deberá detenerse en:</p>
+<pre><code class="language-text">PC04
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">ram = -8
+</code></pre>
+<hr />
+<h3 id="122-utilizar-debug-console">122. Utilizar Debug Console<a class="headerlink" href="#122-utilizar-debug-console" title="Permanent link">&para;</a></h3>
+<p>Mientras el programa está detenido prueba:</p>
+<pre><code class="language-python">equipo
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt;= 0
+</code></pre>
+<p>Podemos investigar el problema sin modificar el código.</p>
+<hr />
+<h3 id="123-analizar-call-stack">123. Analizar Call Stack<a class="headerlink" href="#123-analizar-call-stack" title="Permanent link">&para;</a></h3>
+<p>Cuando estamos dentro de:</p>
+<pre><code class="language-python">validar_equipo()
+</code></pre>
+<p>la pila será aproximadamente:</p>
+<pre><code class="language-text">validar_equipo()
+       │
+       ▼
+contar_validos()
+       │
+       ▼
+programa principal
+</code></pre>
+<p>Podemos seleccionar:</p>
+<pre><code class="language-text">contar_validos()
+</code></pre>
+<p>para observar el estado del bucle que llamó a:</p>
+<pre><code class="language-python">validar_equipo()
+</code></pre>
+<p>Esta información resulta especialmente útil cuando una función es utilizada desde diferentes lugares.</p>
+<hr />
+<h3 id="124-reto-de-depuracion">124. Reto de depuración<a class="headerlink" href="#124-reto-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>Sin utilizar inicialmente <code>print()</code> adicionales, crea una copia:</p>
+<pre><code class="language-text">diagnostico_equipos_error.py
+</code></pre>
+<p>e introduce varios problemas deliberadamente:</p>
+<pre><code class="language-text">un nombre vacío
+una RAM negativa
+una RAM igual a cero
+</code></pre>
+<p>Después utiliza exclusivamente:</p>
+<pre><code class="language-text">breakpoints condicionales
+Variables
+Watch
+Debug Console
+Call Stack
+</code></pre>
+<p>para localizar cada elemento incorrecto.</p>
+<p>Registra en una tabla:</p>
+<pre><code class="language-text">Equipo | Problema | Herramienta utilizada
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">PC04 | RAM negativa | Breakpoint condicional
+</code></pre>
+<p>El objetivo no es únicamente encontrar los errores.</p>
+<p>El objetivo es elegir la herramienta de depuración adecuada.</p>
+<hr />
+<h3 id="125-flujo-profesional-de-depuracion">125. Flujo profesional de depuración<a class="headerlink" href="#125-flujo-profesional-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>Podemos resumir el proceso estudiado hasta ahora:</p>
+<pre><code class="language-text">          PROBLEMA
+              │
+              ▼
+        reproducir error
+              │
+              ▼
+      localizar zona probable
+              │
+              ▼
+          breakpoint
+              │
+              ▼
+           Variables
+              │
+       ┌──────┼──────┐
+       │      │      │
+       ▼      ▼      ▼
+     Watch   Stack  Console
+       │      │      │
+       └──────┼──────┘
+              │
+              ▼
+        seguir ejecución
+              │
+              ▼
+       identificar causa
+              │
+              ▼
+           corregir
+              │
+              ▼
+          comprobar
+</code></pre>
+<hr />
+<h3 id="126-que-hemos-anadido-al-depurador">126. Qué hemos añadido al depurador<a class="headerlink" href="#126-que-hemos-anadido-al-depurador" title="Permanent link">&para;</a></h3>
+<p>En la primera parte utilizamos:</p>
+<pre><code class="language-text">Breakpoints
+Variables
+Continue
+Step Over
+Step Into
+Step Out
+</code></pre>
+<p>Ahora añadimos:</p>
+<pre><code class="language-text">Watch
+Call Stack
+Debug Console
+Breakpoints condicionales
+</code></pre>
+<p>Nuestro conjunto de herramientas es ya suficiente para analizar programas considerablemente más complejos.</p>
+<hr />
+<h3 id="127-resumen-de-esta-segunda-parte">127. Resumen de esta segunda parte<a class="headerlink" href="#127-resumen-de-esta-segunda-parte" title="Permanent link">&para;</a></h3>
+<p>En esta parte hemos profundizado en las herramientas de depuración de Visual Studio Code.</p>
+<p>Hemos utilizado:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>para inspeccionar el estado actual del programa.</p>
+<p>Hemos utilizado:</p>
+<pre><code class="language-text">Watch
+</code></pre>
+<p>para seguir variables y expresiones concretas.</p>
+<p>Hemos aprendido a interpretar:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<p>para comprender la cadena de llamadas entre funciones.</p>
+<p>También hemos utilizado:</p>
+<pre><code class="language-text">Debug Console
+</code></pre>
+<p>para evaluar expresiones mientras el programa está detenido.</p>
+<p>Finalmente hemos trabajado con:</p>
+<pre><code class="language-text">breakpoints condicionales
+</code></pre>
+<p>que permiten detener la ejecución solamente cuando se cumple una condición determinada.</p>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">             DEBUGGER
+                 │
+      ┌──────────┼──────────┐
+      │          │          │
+      ▼          ▼          ▼
+  Breakpoint  Variables    Watch
+      │                     │
+      ▼                     ▼
+   detener               observar
+      │
+      └──────────┬──────────┘
+                 │
+          ┌──────┴──────┐
+          │             │
+          ▼             ▼
+     Call Stack    Debug Console
+          │             │
+          ▼             ▼
+       llamadas      expresiones
+</code></pre>
+<p>En la siguiente parte realizaremos la <strong>práctica integradora y cierre del Capítulo 7</strong>.</p>
+<p>Utilizaremos el depurador sobre un programa más próximo a los desarrollados durante el curso, combinando:</p>
+<pre><code class="language-text">CSV
+funciones
+diccionarios
+validación
+excepciones
+logging
+</code></pre>
+<p>e introduciremos deliberadamente varios errores para aplicar un proceso completo de diagnóstico.</p>
+<p>Con esa práctica quedará completada la unidad de <strong>Depuración profesional en VS Code</strong> y estaremos preparados para comenzar el <strong>proyecto final integrador del curso</strong>.</p>
+<hr />
+<h2 id="128-practica-integradora-depuracion-de-una-aplicacion-completa">128. Práctica integradora: depuración de una aplicación completa<a class="headerlink" href="#128-practica-integradora-depuracion-de-una-aplicacion-completa" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora hemos aprendido a utilizar las principales herramientas del depurador de Visual Studio Code:</p>
+<pre><code class="language-text">Breakpoints
+Variables
+Watch
+Call Stack
+Debug Console
+Breakpoints condicionales
+Step Over
+Step Into
+Step Out
+</code></pre>
+<p>En esta práctica utilizaremos estas herramientas sobre un programa más completo.</p>
+<p>El programa gestionará un pequeño inventario de equipos almacenado en un archivo CSV.</p>
+<p>El objetivo no será únicamente conseguir que el programa funcione.</p>
+<p>Nuestro objetivo principal será:</p>
+<pre><code class="language-text">LOCALIZAR
+    │
+    ▼
+COMPRENDER
+    │
+    ▼
+CORREGIR
+    │
+    ▼
+COMPROBAR
+</code></pre>
+<p>los errores mediante el depurador.</p>
+<div class="admonition important">
+<p class="admonition-title">No corregir directamente</p>
+<p>El programa contiene varios errores introducidos deliberadamente.</p>
+<p>No debemos corregirlos simplemente leyendo el código.</p>
+<p>Primero utilizaremos el depurador para obtener evidencias sobre qué está ocurriendo.</p>
+</div>
+<hr />
+<h3 id="129-objetivos-de-la-practica">129. Objetivos de la práctica<a class="headerlink" href="#129-objetivos-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Durante esta práctica tendremos que:</p>
+<ol>
+<li>Ejecutar un programa con errores.</li>
+<li>Analizar los resultados obtenidos.</li>
+<li>Formular hipótesis.</li>
+<li>Colocar breakpoints.</li>
+<li>Inspeccionar variables.</li>
+<li>Utilizar Watch.</li>
+<li>Ejecutar paso a paso.</li>
+<li>Entrar dentro de funciones.</li>
+<li>Consultar Call Stack.</li>
+<li>Utilizar Debug Console.</li>
+<li>Crear breakpoints condicionales.</li>
+<li>Localizar errores lógicos.</li>
+<li>Corregirlos.</li>
+<li>Comprobar nuevamente el programa.</li>
+</ol>
+<p>El proceso será:</p>
+<pre><code class="language-text">problema
+   │
+   ▼
+reproducir
+   │
+   ▼
+investigar
+   │
+   ▼
+localizar
+   │
+   ▼
+corregir
+   │
+   ▼
+volver a probar
+</code></pre>
+<hr />
+<h3 id="130-estructura-de-la-practica">130. Estructura de la práctica<a class="headerlink" href="#130-estructura-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">practicas/
+└── capitulo7/
+    ├── datos/
+    │   └── inventario.csv
+    │
+    ├── logs/
+    │   └── inventario.log
+    │
+    ├── programas/
+    │   └── gestor_inventario_debug.py
+    │
+    └── resultados/
+</code></pre>
+<p>Crea los directorios necesarios antes de continuar.</p>
+<hr />
+<h3 id="131-crear-el-archivo-csv">131. Crear el archivo CSV<a class="headerlink" href="#131-crear-el-archivo-csv" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo7/datos/inventario.csv
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-csv">nombre,ip,ram,estado
+PC01,192.168.1.10,8,activo
+PC02,192.168.1.11,16,activo
+PC03,192.168.1.12,32,inactivo
+PC04,192.168.1.13,-8,activo
+PC05,192.168.1.14,16,activo
+PC06,192.168.1.15,8,inactivo
+</code></pre>
+<p>Observa que uno de los datos es incorrecto.</p>
+<p>Sin embargo, inicialmente no modificaremos el CSV.</p>
+<hr />
+<h3 id="132-que-deberia-hacer-la-aplicacion">132. Qué debería hacer la aplicación<a class="headerlink" href="#132-que-deberia-hacer-la-aplicacion" title="Permanent link">&para;</a></h3>
+<p>Nuestro programa deberá:</p>
+<pre><code class="language-text">leer inventario.csv
+        │
+        ▼
+convertir los datos
+        │
+        ▼
+validar equipos
+        │
+        ▼
+calcular estadísticas
+        │
+        ▼
+mostrar resultados
+        │
+        ▼
+registrar ejecución
+</code></pre>
+<p>Queremos obtener información como:</p>
+<pre><code class="language-text">número total de equipos
+equipos activos
+equipos inactivos
+RAM total
+RAM media
+equipos incorrectos
+</code></pre>
+<hr />
+<h3 id="133-crear-el-programa-con-errores">133. Crear el programa con errores<a class="headerlink" href="#133-crear-el-programa-con-errores" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo7/programas/
+gestor_inventario_debug.py
+</code></pre>
+<p>Escribe exactamente el siguiente programa.</p>
+<p>No corrijas todavía nada.</p>
+<pre><code class="language-python">import csv
+import logging
+
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;inventario.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    encoding=&quot;utf-8&quot;
+)
+
+
+def cargar_inventario(
+    archivo
+):
+
+    equipos = []
+
+    with archivo.open(
+        &quot;r&quot;,
+        encoding=&quot;utf-8&quot;,
+        newline=&quot;&quot;
+    ) as fichero:
+
+        lector = csv.DictReader(
+            fichero
+        )
+
+        for fila in lector:
+
+            equipo = {
+                &quot;nombre&quot;: fila[&quot;nombre&quot;],
+                &quot;ip&quot;: fila[&quot;ip&quot;],
+                &quot;ram&quot;: int(
+                    fila[&quot;ram&quot;]
+                ),
+                &quot;estado&quot;: fila[&quot;estado&quot;]
+            }
+
+            equipos.append(
+                equipo
+            )
+
+    return equipos
+
+
+def equipo_valido(
+    equipo
+):
+
+    if equipo[&quot;ram&quot;] &lt; 0:
+
+        return True
+
+    if not equipo[&quot;nombre&quot;]:
+
+        return False
+
+    return True
+
+
+def contar_activos(
+    equipos
+):
+
+    activos = 0
+
+    for equipo in equipos:
+
+        if equipo[&quot;estado&quot;] == &quot;inactivo&quot;:
+
+            activos += 1
+
+    return activos
+
+
+def calcular_ram_total(
+    equipos
+):
+
+    total = 0
+
+    for equipo in equipos:
+
+        total = equipo[&quot;ram&quot;]
+
+    return total
+
+
+def calcular_ram_media(
+    total,
+    numero_equipos
+):
+
+    return (
+        total / numero_equipos
+    )
+
+
+def obtener_equipos_validos(
+    equipos
+):
+
+    validos = []
+
+    for equipo in equipos:
+
+        if equipo_valido(
+            equipo
+        ):
+
+            validos.append(
+                equipo
+            )
+
+    return validos
+
+
+def mostrar_resumen(
+    equipos
+):
+
+    validos = obtener_equipos_validos(
+        equipos
+    )
+
+    numero_equipos = len(
+        validos
+    )
+
+    activos = contar_activos(
+        validos
+    )
+
+    ram_total = calcular_ram_total(
+        validos
+    )
+
+    ram_media = calcular_ram_media(
+        ram_total,
+        numero_equipos
+    )
+
+    print(
+        f&quot;Equipos válidos: &quot;
+        f&quot;{numero_equipos}&quot;
+    )
+
+    print(
+        f&quot;Equipos activos: &quot;
+        f&quot;{activos}&quot;
+    )
+
+    print(
+        f&quot;RAM total: &quot;
+        f&quot;{ram_total} GB&quot;
+    )
+
+    print(
+        f&quot;RAM media: &quot;
+        f&quot;{ram_media:.2f} GB&quot;
+    )
+
+
+logging.info(
+    &quot;Inicio del programa&quot;
+)
+
+
+equipos = cargar_inventario(
+    ARCHIVO_INVENTARIO
+)
+
+
+mostrar_resumen(
+    equipos
+)
+
+
+logging.info(
+    &quot;Fin del programa&quot;
+)
+</code></pre>
+<hr />
+<h3 id="134-primera-ejecucion">134. Primera ejecución<a class="headerlink" href="#134-primera-ejecucion" title="Permanent link">&para;</a></h3>
+<p>Ejecuta normalmente:</p>
+<pre><code class="language-powershell">python gestor_inventario_debug.py
+</code></pre>
+<p>El programa terminará sin mostrar necesariamente una excepción.</p>
+<p>Sin embargo, los resultados obtenidos no coincidirán con los esperados.</p>
+<p>Esto es precisamente lo que queremos investigar.</p>
+<p>Tenemos:</p>
+<pre><code class="language-text">programa ejecutado
+        │
+        ▼
+sin excepción
+        │
+        ▼
+resultado incorrecto
+        │
+        ▼
+ERROR LÓGICO
+</code></pre>
+<hr />
+<h3 id="135-no-buscar-todos-los-errores-a-la-vez">135. No buscar todos los errores a la vez<a class="headerlink" href="#135-no-buscar-todos-los-errores-a-la-vez" title="Permanent link">&para;</a></h3>
+<p>El programa contiene varios problemas.</p>
+<p>No intentaremos encontrarlos todos simultáneamente.</p>
+<p>Seguiremos este procedimiento:</p>
+<pre><code class="language-text">ERROR 1
+   │
+   ▼
+localizar
+   │
+   ▼
+corregir
+   │
+   ▼
+probar
+
+ERROR 2
+   │
+   ▼
+localizar
+   │
+   ▼
+corregir
+   │
+   ▼
+probar
+
+...
+</code></pre>
+<p>Este método facilita saber qué modificación ha corregido cada problema.</p>
+<hr />
+<h3 id="136-primera-investigacion-validacion-de-equipos">136. Primera investigación: validación de equipos<a class="headerlink" href="#136-primera-investigacion-validacion-de-equipos" title="Permanent link">&para;</a></h3>
+<p>Sabemos que nuestro CSV contiene:</p>
+<pre><code class="language-text">PC04
+RAM = -8
+</code></pre>
+<p>Una cantidad negativa de memoria RAM debe considerarse incorrecta.</p>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">if equipo[&quot;ram&quot;] &lt; 0:
+</code></pre>
+<p>Pero si utilizamos un breakpoint normal se detendrá para todos los equipos.</p>
+<p>Conviértelo en un breakpoint condicional:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<p>Inicia:</p>
+<pre><code class="language-text">F5
+</code></pre>
+<hr />
+<h3 id="137-examinar-pc04">137. Examinar PC04<a class="headerlink" href="#137-examinar-pc04" title="Permanent link">&para;</a></h3>
+<p>Cuando el programa se detenga utiliza el panel:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>Busca:</p>
+<pre><code class="language-text">equipo
+</code></pre>
+<p>Deberíamos encontrar:</p>
+<pre><code class="language-text">nombre = PC04
+ip = 192.168.1.13
+ram = -8
+estado = activo
+</code></pre>
+<p>Añade a Watch:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<hr />
+<h3 id="138-utilizar-debug-console">138. Utilizar Debug Console<a class="headerlink" href="#138-utilizar-debug-console" title="Permanent link">&para;</a></h3>
+<p>En Debug Console prueba:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &lt; 0
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>Ahora utiliza:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>para ejecutar la siguiente instrucción.</p>
+<p>Observa qué devuelve la función.</p>
+<hr />
+<h3 id="139-primer-error-localizado">139. Primer error localizado<a class="headerlink" href="#139-primer-error-localizado" title="Permanent link">&para;</a></h3>
+<p>Tenemos:</p>
+<pre><code class="language-python">if equipo[&quot;ram&quot;] &lt; 0:
+
+    return True
+</code></pre>
+<p>Esto significa:</p>
+<pre><code class="language-text">RAM negativa
+     │
+     ▼
+equipo válido
+</code></pre>
+<p>La lógica es incorrecta.</p>
+<p>Debe ser:</p>
+<pre><code class="language-python">if equipo[&quot;ram&quot;] &lt;= 0:
+
+    return False
+</code></pre>
+<p>Corrige:</p>
+<pre><code class="language-python">def equipo_valido(
+    equipo
+):
+
+    if equipo[&quot;ram&quot;] &lt;= 0:
+
+        return False
+
+    if not equipo[&quot;nombre&quot;]:
+
+        return False
+
+    return True
+</code></pre>
+<p>Ahora vuelve a ejecutar el programa.</p>
+<hr />
+<h3 id="140-registrar-nuestra-investigacion">140. Registrar nuestra investigación<a class="headerlink" href="#140-registrar-nuestra-investigacion" title="Permanent link">&para;</a></h3>
+<p>Podemos llevar una pequeña tabla durante la práctica:</p>
+<table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Evidencia</th>
+<th>Causa</th>
+<th>Corrección</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PC04 aceptado</td>
+<td><code>ram = -8</code></td>
+<td><code>equipo_valido()</code> devuelve <code>True</code></td>
+<td>devolver <code>False</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esta forma de documentar una depuración es muy útil.</p>
+<p>No escribimos simplemente:</p>
+<pre><code class="language-text">estaba mal
+</code></pre>
+<p>sino:</p>
+<pre><code class="language-text">síntoma
++
+evidencia
++
+causa
++
+solución
+</code></pre>
+<hr />
+<h3 id="141-segunda-investigacion-numero-de-equipos-activos">141. Segunda investigación: número de equipos activos<a class="headerlink" href="#141-segunda-investigacion-numero-de-equipos-activos" title="Permanent link">&para;</a></h3>
+<p>Después de corregir la validación, analiza:</p>
+<pre><code class="language-text">Equipos activos
+</code></pre>
+<p>Observa el CSV.</p>
+<p>Entre los equipos válidos tenemos varios estados:</p>
+<pre><code class="language-text">activo
+inactivo
+</code></pre>
+<p>Queremos contar:</p>
+<pre><code class="language-text">activo
+</code></pre>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">if equipo[&quot;estado&quot;] == &quot;inactivo&quot;:
+</code></pre>
+<hr />
+<h3 id="142-observar-el-bucle">142. Observar el bucle<a class="headerlink" href="#142-observar-el-bucle" title="Permanent link">&para;</a></h3>
+<p>Añade a Watch:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;estado&quot;]
+</code></pre>
+<pre><code class="language-python">activos
+</code></pre>
+<p>Utiliza:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>para recorrer varias iteraciones.</p>
+<p>Observa cuándo aumenta:</p>
+<pre><code class="language-text">activos
+</code></pre>
+<hr />
+<h3 id="143-segundo-error-localizado">143. Segundo error localizado<a class="headerlink" href="#143-segundo-error-localizado" title="Permanent link">&para;</a></h3>
+<p>El programa utiliza:</p>
+<pre><code class="language-python">if equipo[&quot;estado&quot;] == &quot;inactivo&quot;:
+
+    activos += 1
+</code></pre>
+<p>Por tanto está contando:</p>
+<pre><code class="language-text">equipos inactivos
+</code></pre>
+<p>aunque la función se llama:</p>
+<pre><code class="language-python">contar_activos()
+</code></pre>
+<p>La condición correcta es:</p>
+<pre><code class="language-python">if equipo[&quot;estado&quot;] == &quot;activo&quot;:
+
+    activos += 1
+</code></pre>
+<p>Corrige el programa.</p>
+<hr />
+<h3 id="144-utilizar-un-breakpoint-condicional">144. Utilizar un breakpoint condicional<a class="headerlink" href="#144-utilizar-un-breakpoint-condicional" title="Permanent link">&para;</a></h3>
+<p>También podríamos haber investigado utilizando:</p>
+<pre><code class="language-python">equipo[&quot;estado&quot;] == &quot;inactivo&quot;
+</code></pre>
+<p>como condición del breakpoint.</p>
+<p>Esto nos habría permitido detenernos solamente cuando apareciera uno de esos equipos.</p>
+<p>Podemos utilizar breakpoints condicionales para comprobar hipótesis concretas.</p>
+<hr />
+<h3 id="145-tercera-investigacion-ram-total">145. Tercera investigación: RAM total<a class="headerlink" href="#145-tercera-investigacion-ram-total" title="Permanent link">&para;</a></h3>
+<p>Ahora observa:</p>
+<pre><code class="language-text">RAM total
+</code></pre>
+<p>La cantidad mostrada sigue sin ser correcta.</p>
+<p>Coloca un breakpoint en:</p>
+<pre><code class="language-python">total = equipo[&quot;ram&quot;]
+</code></pre>
+<p>Añade a Watch:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">equipo[&quot;ram&quot;]
+</code></pre>
+<pre><code class="language-python">total
+</code></pre>
+<p>Inicia nuevamente la depuración.</p>
+<hr />
+<h3 id="146-seguir-el-acumulador">146. Seguir el acumulador<a class="headerlink" href="#146-seguir-el-acumulador" title="Permanent link">&para;</a></h3>
+<p>En la primera iteración tendremos aproximadamente:</p>
+<pre><code class="language-text">equipo = PC01
+ram = 8
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-text">total = 8
+</code></pre>
+<p>En la siguiente:</p>
+<pre><code class="language-text">equipo = PC02
+ram = 16
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-text">total = 16
+</code></pre>
+<p>Pero esperábamos:</p>
+<pre><code class="language-text">8 + 16 = 24
+</code></pre>
+<p>El valor anterior se ha perdido.</p>
+<hr />
+<h3 id="147-tercer-error-localizado">147. Tercer error localizado<a class="headerlink" href="#147-tercer-error-localizado" title="Permanent link">&para;</a></h3>
+<p>La instrucción:</p>
+<pre><code class="language-python">total = equipo[&quot;ram&quot;]
+</code></pre>
+<p>sustituye el valor anterior.</p>
+<p>Necesitamos acumular:</p>
+<pre><code class="language-python">total += equipo[&quot;ram&quot;]
+</code></pre>
+<p>que equivale a:</p>
+<pre><code class="language-python">total = (
+    total
+    + equipo[&quot;ram&quot;]
+)
+</code></pre>
+<p>Corrige:</p>
+<pre><code class="language-python">def calcular_ram_total(
+    equipos
+):
+
+    total = 0
+
+    for equipo in equipos:
+
+        total += equipo[&quot;ram&quot;]
+
+    return total
+</code></pre>
+<hr />
+<h3 id="148-comprobar-la-ram-media">148. Comprobar la RAM media<a class="headerlink" href="#148-comprobar-la-ram-media" title="Permanent link">&para;</a></h3>
+<p>La función:</p>
+<pre><code class="language-python">calcular_ram_media()
+</code></pre>
+<p>utiliza:</p>
+<pre><code class="language-python">return (
+    total / numero_equipos
+)
+</code></pre>
+<p>Una vez corregido:</p>
+<pre><code class="language-text">RAM total
+</code></pre>
+<p>debemos comprobar si:</p>
+<pre><code class="language-text">RAM media
+</code></pre>
+<p>también se corrige.</p>
+<p>Este punto es importante.</p>
+<p>Un resultado incorrecto puede ser consecuencia de un error anterior.</p>
+<p>Podemos tener:</p>
+<pre><code class="language-text">RAM total incorrecta
+        │
+        ▼
+RAM media incorrecta
+</code></pre>
+<p>La RAM media era un:</p>
+<pre><code class="language-text">síntoma
+</code></pre>
+<p>pero no necesariamente contenía un error propio.</p>
+<hr />
+<h3 id="149-dependencia-entre-resultados">149. Dependencia entre resultados<a class="headerlink" href="#149-dependencia-entre-resultados" title="Permanent link">&para;</a></h3>
+<p>Podemos representar:</p>
+<pre><code class="language-text">equipos válidos
+      │
+      ▼
+RAM total
+      │
+      ▼
+RAM media
+</code></pre>
+<p>Si:</p>
+<pre><code class="language-text">equipos válidos
+</code></pre>
+<p>es incorrecto, puede afectar a:</p>
+<pre><code class="language-text">RAM total
+RAM media
+</code></pre>
+<p>Por eso no debemos asumir que cada resultado incorrecto corresponde a un error diferente.</p>
+<hr />
+<h3 id="150-utilizar-call-stack">150. Utilizar Call Stack<a class="headerlink" href="#150-utilizar-call-stack" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint dentro de:</p>
+<pre><code class="language-python">calcular_ram_media()
+</code></pre>
+<p>en:</p>
+<pre><code class="language-python">return (
+    total / numero_equipos
+)
+</code></pre>
+<p>Inicia la depuración.</p>
+<p>Observa:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<p>La cadena será aproximadamente:</p>
+<pre><code class="language-text">calcular_ram_media()
+        │
+        ▼
+mostrar_resumen()
+        │
+        ▼
+programa principal
+</code></pre>
+<hr />
+<h3 id="151-inspeccionar-el-nivel-anterior">151. Inspeccionar el nivel anterior<a class="headerlink" href="#151-inspeccionar-el-nivel-anterior" title="Permanent link">&para;</a></h3>
+<p>Selecciona en Call Stack:</p>
+<pre><code class="language-text">mostrar_resumen()
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-text">validos
+numero_equipos
+activos
+ram_total
+</code></pre>
+<p>Después vuelve a:</p>
+<pre><code class="language-text">calcular_ram_media()
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-text">total
+numero_equipos
+</code></pre>
+<p>Esto nos permite comprobar qué valores ha recibido la función.</p>
+<hr />
+<h3 id="152-una-funcion-puede-ser-correcta-y-recibir-datos-incorrectos">152. Una función puede ser correcta y recibir datos incorrectos<a class="headerlink" href="#152-una-funcion-puede-ser-correcta-y-recibir-datos-incorrectos" title="Permanent link">&para;</a></h3>
+<p>Supongamos:</p>
+<pre><code class="language-python">def dividir(
+    a,
+    b
+):
+
+    return a / b
+</code></pre>
+<p>La función puede ser completamente correcta.</p>
+<p>Pero si recibe:</p>
+<pre><code class="language-text">a = 1000
+</code></pre>
+<p>cuando debería recibir:</p>
+<pre><code class="language-text">a = 100
+</code></pre>
+<p>el resultado será incorrecto.</p>
+<p>El error puede encontrarse:</p>
+<pre><code class="language-text">antes de llamar
+a la función
+</code></pre>
+<p>Por eso Call Stack resulta útil para investigar el origen de los datos.</p>
+<hr />
+<h3 id="153-comprobar-los-resultados-esperados">153. Comprobar los resultados esperados<a class="headerlink" href="#153-comprobar-los-resultados-esperados" title="Permanent link">&para;</a></h3>
+<p>Después de eliminar el equipo con RAM negativa tenemos como equipos válidos:</p>
+<pre><code class="language-text">PC01 → 8 GB
+PC02 → 16 GB
+PC03 → 32 GB
+PC05 → 16 GB
+PC06 → 8 GB
+</code></pre>
+<p>Número de equipos válidos:</p>
+<pre><code class="language-text">5
+</code></pre>
+<p>Equipos activos:</p>
+<pre><code class="language-text">PC01
+PC02
+PC05
+</code></pre>
+<p>Por tanto:</p>
+<pre><code class="language-text">3
+</code></pre>
+<p>RAM total:</p>
+<pre><code class="language-text">8 + 16 + 32 + 16 + 8
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">80 GB
+</code></pre>
+<p>RAM media:</p>
+<pre><code class="language-text">80 / 5
+</code></pre>
+<p>Resultado:</p>
+<pre><code class="language-text">16 GB
+</code></pre>
+<p>La salida correcta debería ser:</p>
+<pre><code class="language-text">Equipos válidos: 5
+Equipos activos: 3
+RAM total: 80 GB
+RAM media: 16.00 GB
+</code></pre>
+<hr />
+<h3 id="154-corregir-tambien-el-dato">154. Corregir también el dato<a class="headerlink" href="#154-corregir-tambien-el-dato" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos corregido el programa para que detecte:</p>
+<pre><code class="language-text">RAM &lt;= 0
+</code></pre>
+<p>Pero el archivo CSV sigue conteniendo:</p>
+<pre><code class="language-text">PC04,192.168.1.13,-8,activo
+</code></pre>
+<p>En una situación real tendríamos que investigar por qué existe ese dato.</p>
+<p>Podría ser:</p>
+<pre><code class="language-text">error de introducción
+</code></pre>
+<pre><code class="language-text">error de importación
+</code></pre>
+<pre><code class="language-text">dato corrupto
+</code></pre>
+<pre><code class="language-text">problema de origen
+</code></pre>
+<p>Nuestro programa debe validar los datos, pero también puede ser necesario corregir el origen.</p>
+<hr />
+<h3 id="155-errores-de-datos-frente-a-errores-de-codigo">155. Errores de datos frente a errores de código<a class="headerlink" href="#155-errores-de-datos-frente-a-errores-de-codigo" title="Permanent link">&para;</a></h3>
+<p>En esta práctica tenemos dos categorías:</p>
+<pre><code class="language-text">ERROR DE DATOS
+</code></pre>
+<p>Ejemplo:</p>
+<pre><code class="language-text">RAM = -8
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">ERROR DE CÓDIGO
+</code></pre>
+<p>Ejemplo:</p>
+<pre><code class="language-python">if equipo[&quot;ram&quot;] &lt; 0:
+    return True
+</code></pre>
+<p>Debemos aprender a diferenciarlos.</p>
+<p>Un programa correctamente diseñado debe ser capaz de detectar muchos datos incorrectos sin fallar.</p>
+<hr />
+<h3 id="156-anadir-logging-a-la-validacion">156. Añadir logging a la validación<a class="headerlink" href="#156-anadir-logging-a-la-validacion" title="Permanent link">&para;</a></h3>
+<p>Podemos mejorar:</p>
+<pre><code class="language-python">equipo_valido()
+</code></pre>
+<p>para registrar los datos incorrectos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">def equipo_valido(
+    equipo
+):
+
+    if equipo[&quot;ram&quot;] &lt;= 0:
+
+        logging.warning(
+            f&quot;RAM incorrecta: &quot;
+            f&quot;{equipo['nombre']} &quot;
+            f&quot;({equipo['ram']} GB)&quot;
+        )
+
+        return False
+
+    if not equipo[&quot;nombre&quot;]:
+
+        logging.warning(
+            &quot;Equipo sin nombre&quot;
+        )
+
+        return False
+
+    return True
+</code></pre>
+<p>Ahora el programa no solamente rechaza el dato.</p>
+<p>También deja constancia del motivo.</p>
+<hr />
+<h3 id="157-comprobar-el-archivo-de-log">157. Comprobar el archivo de log<a class="headerlink" href="#157-comprobar-el-archivo-de-log" title="Permanent link">&para;</a></h3>
+<p>Después de ejecutar el programa consulta:</p>
+<pre><code class="language-text">practicas/capitulo7/logs/
+inventario.log
+</code></pre>
+<p>Podremos encontrar una entrada similar a:</p>
+<pre><code class="language-text">WARNING - RAM incorrecta: PC04 (-8 GB)
+</code></pre>
+<p>Estamos combinando:</p>
+<pre><code class="language-text">VALIDACIÓN
+    │
+    ▼
+detecta problema
+
+LOGGING
+    │
+    ▼
+registra problema
+
+DEBUGGER
+    │
+    ▼
+investiga problema
+</code></pre>
+<hr />
+<h3 id="158-introducir-un-nuevo-error">158. Introducir un nuevo error<a class="headerlink" href="#158-introducir-un-nuevo-error" title="Permanent link">&para;</a></h3>
+<p>Vamos a practicar con un problema diferente.</p>
+<p>Modifica temporalmente el CSV:</p>
+<pre><code class="language-csv">nombre,ip,ram,estado
+PC01,192.168.1.10,8,activo
+PC02,192.168.1.11,dieciseis,activo
+PC03,192.168.1.12,32,inactivo
+PC04,192.168.1.13,8,activo
+PC05,192.168.1.14,16,activo
+PC06,192.168.1.15,8,inactivo
+</code></pre>
+<p>Ahora:</p>
+<pre><code class="language-text">PC02
+</code></pre>
+<p>contiene:</p>
+<pre><code class="language-text">dieciseis
+</code></pre>
+<p>en lugar de:</p>
+<pre><code class="language-text">16
+</code></pre>
+<p>Ejecuta el programa.</p>
+<hr />
+<h3 id="159-aparece-una-excepcion">159. Aparece una excepción<a class="headerlink" href="#159-aparece-una-excepcion" title="Permanent link">&para;</a></h3>
+<p>Esta vez el programa no termina normalmente.</p>
+<p>La causa aparece cuando intentamos:</p>
+<pre><code class="language-python">int(
+    fila[&quot;ram&quot;]
+)
+</code></pre>
+<p>Python no puede convertir:</p>
+<pre><code class="language-text">&quot;dieciseis&quot;
+</code></pre>
+<p>en un entero.</p>
+<p>Obtendremos una excepción:</p>
+<pre><code class="language-text">ValueError
+</code></pre>
+<p>Ahora tenemos un problema diferente a los anteriores.</p>
+<hr />
+<h3 id="160-depurar-una-excepcion">160. Depurar una excepción<a class="headerlink" href="#160-depurar-una-excepcion" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint dentro de:</p>
+<pre><code class="language-python">cargar_inventario()
+</code></pre>
+<p>en:</p>
+<pre><code class="language-python">equipo = {
+</code></pre>
+<p>Utiliza:</p>
+<pre><code class="language-text">F10
+</code></pre>
+<p>para recorrer las filas.</p>
+<p>Añade a Watch:</p>
+<pre><code class="language-python">fila[&quot;nombre&quot;]
+</code></pre>
+<pre><code class="language-python">fila[&quot;ram&quot;]
+</code></pre>
+<p>Cuando lleguemos a:</p>
+<pre><code class="language-text">PC02
+</code></pre>
+<p>veremos:</p>
+<pre><code class="language-text">fila[&quot;ram&quot;] = &quot;dieciseis&quot;
+</code></pre>
+<hr />
+<h3 id="161-utilizar-debug-console">161. Utilizar Debug Console<a class="headerlink" href="#161-utilizar-debug-console" title="Permanent link">&para;</a></h3>
+<p>Antes de ejecutar la conversión prueba en Debug Console:</p>
+<pre><code class="language-python">fila[&quot;ram&quot;]
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">'dieciseis'
+</code></pre>
+<p>Podemos comprobar:</p>
+<pre><code class="language-python">fila[&quot;ram&quot;].isdigit()
+</code></pre>
+<p>El resultado será:</p>
+<pre><code class="language-text">False
+</code></pre>
+<p>Esto nos proporciona información sobre el dato antes de ejecutar la conversión.</p>
+<hr />
+<h3 id="162-gestionar-la-conversion">162. Gestionar la conversión<a class="headerlink" href="#162-gestionar-la-conversion" title="Permanent link">&para;</a></h3>
+<p>Podemos mejorar la carga:</p>
+<pre><code class="language-python">try:
+
+    ram = int(
+        fila[&quot;ram&quot;]
+    )
+
+except ValueError:
+
+    logging.warning(
+        f&quot;RAM no válida: &quot;
+        f&quot;{fila['nombre']} - &quot;
+        f&quot;{fila['ram']}&quot;
+    )
+
+    continue
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">equipo = {
+    &quot;nombre&quot;: fila[&quot;nombre&quot;],
+    &quot;ip&quot;: fila[&quot;ip&quot;],
+    &quot;ram&quot;: ram,
+    &quot;estado&quot;: fila[&quot;estado&quot;]
+}
+</code></pre>
+<p>Ahora una fila incorrecta no detendrá necesariamente todo el programa.</p>
+<hr />
+<h3 id="163-excepciones-y-depuracion">163. Excepciones y depuración<a class="headerlink" href="#163-excepciones-y-depuracion" title="Permanent link">&para;</a></h3>
+<p>Este ejemplo muestra la relación entre dos herramientas estudiadas.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-text">try / except
+</code></pre>
+<p>para gestionar una situación prevista.</p>
+<p>Y podemos utilizar:</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<p>para investigar:</p>
+<pre><code class="language-text">qué dato produjo
+la excepción
+</code></pre>
+<p>No son herramientas alternativas.</p>
+<p>Se complementan.</p>
+<hr />
+<h3 id="164-programa-corregido">164. Programa corregido<a class="headerlink" href="#164-programa-corregido" title="Permanent link">&para;</a></h3>
+<p>Después de la investigación podemos construir una versión corregida.</p>
+<pre><code class="language-python">import csv
+import logging
+
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+ARCHIVO_INVENTARIO = (
+    DIRECTORIO_CAPITULO
+    / &quot;datos&quot;
+    / &quot;inventario.csv&quot;
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;inventario.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    encoding=&quot;utf-8&quot;
+)
+
+
+def cargar_inventario(
+    archivo
+):
+
+    equipos = []
+
+    try:
+
+        fichero = archivo.open(
+            &quot;r&quot;,
+            encoding=&quot;utf-8&quot;,
+            newline=&quot;&quot;
+        )
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;No se puede abrir &quot;
+            f&quot;el inventario: {error}&quot;
+        )
+
+        return None
+
+    with fichero:
+
+        lector = csv.DictReader(
+            fichero
+        )
+
+        for fila in lector:
+
+            try:
+
+                ram = int(
+                    fila[&quot;ram&quot;]
+                )
+
+            except (
+                ValueError,
+                TypeError
+            ):
+
+                logging.warning(
+                    f&quot;RAM no válida: &quot;
+                    f&quot;{fila.get('nombre')} - &quot;
+                    f&quot;{fila.get('ram')}&quot;
+                )
+
+                continue
+
+            try:
+
+                equipo = {
+                    &quot;nombre&quot;: (
+                        fila[&quot;nombre&quot;].strip()
+                    ),
+                    &quot;ip&quot;: (
+                        fila[&quot;ip&quot;].strip()
+                    ),
+                    &quot;ram&quot;: ram,
+                    &quot;estado&quot;: (
+                        fila[&quot;estado&quot;].strip()
+                    )
+                }
+
+            except (
+                KeyError,
+                AttributeError
+            ):
+
+                logging.warning(
+                    f&quot;Fila incorrecta: &quot;
+                    f&quot;{fila}&quot;
+                )
+
+                continue
+
+            equipos.append(
+                equipo
+            )
+
+    return equipos
+
+
+def equipo_valido(
+    equipo
+):
+
+    if not equipo[&quot;nombre&quot;]:
+
+        logging.warning(
+            &quot;Equipo sin nombre&quot;
+        )
+
+        return False
+
+    if equipo[&quot;ram&quot;] &lt;= 0:
+
+        logging.warning(
+            f&quot;RAM incorrecta: &quot;
+            f&quot;{equipo['nombre']} &quot;
+            f&quot;({equipo['ram']} GB)&quot;
+        )
+
+        return False
+
+    if equipo[&quot;estado&quot;] not in (
+        &quot;activo&quot;,
+        &quot;inactivo&quot;
+    ):
+
+        logging.warning(
+            f&quot;Estado incorrecto: &quot;
+            f&quot;{equipo['nombre']} - &quot;
+            f&quot;{equipo['estado']}&quot;
+        )
+
+        return False
+
+    return True
+
+
+def contar_activos(
+    equipos
+):
+
+    activos = 0
+
+    for equipo in equipos:
+
+        if equipo[&quot;estado&quot;] == &quot;activo&quot;:
+
+            activos += 1
+
+    return activos
+
+
+def calcular_ram_total(
+    equipos
+):
+
+    total = 0
+
+    for equipo in equipos:
+
+        total += equipo[&quot;ram&quot;]
+
+    return total
+
+
+def calcular_ram_media(
+    total,
+    numero_equipos
+):
+
+    if numero_equipos == 0:
+
+        return 0
+
+    return (
+        total / numero_equipos
+    )
+
+
+def obtener_equipos_validos(
+    equipos
+):
+
+    validos = []
+
+    for equipo in equipos:
+
+        if equipo_valido(
+            equipo
+        ):
+
+            validos.append(
+                equipo
+            )
+
+    return validos
+
+
+def mostrar_resumen(
+    equipos
+):
+
+    validos = obtener_equipos_validos(
+        equipos
+    )
+
+    numero_equipos = len(
+        validos
+    )
+
+    activos = contar_activos(
+        validos
+    )
+
+    inactivos = (
+        numero_equipos
+        - activos
+    )
+
+    ram_total = calcular_ram_total(
+        validos
+    )
+
+    ram_media = calcular_ram_media(
+        ram_total,
+        numero_equipos
+    )
+
+    print(
+        f&quot;Equipos válidos: &quot;
+        f&quot;{numero_equipos}&quot;
+    )
+
+    print(
+        f&quot;Equipos activos: &quot;
+        f&quot;{activos}&quot;
+    )
+
+    print(
+        f&quot;Equipos inactivos: &quot;
+        f&quot;{inactivos}&quot;
+    )
+
+    print(
+        f&quot;RAM total: &quot;
+        f&quot;{ram_total} GB&quot;
+    )
+
+    print(
+        f&quot;RAM media: &quot;
+        f&quot;{ram_media:.2f} GB&quot;
+    )
+
+
+logging.info(
+    &quot;Inicio del programa&quot;
+)
+
+
+equipos = cargar_inventario(
+    ARCHIVO_INVENTARIO
+)
+
+
+if equipos is None:
+
+    print(
+        &quot;No se puede cargar &quot;
+        &quot;el inventario.&quot;
+    )
+
+    raise SystemExit(1)
+
+
+mostrar_resumen(
+    equipos
+)
+
+
+logging.info(
+    &quot;Fin del programa&quot;
+)
+</code></pre>
+<hr />
+<h3 id="165-no-basta-con-que-el-programa-funcione">165. No basta con que el programa funcione<a class="headerlink" href="#165-no-basta-con-que-el-programa-funcione" title="Permanent link">&para;</a></h3>
+<p>Después de realizar una corrección debemos comprobar diferentes situaciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">CSV correcto
+</code></pre>
+<pre><code class="language-text">RAM negativa
+</code></pre>
+<pre><code class="language-text">RAM igual a cero
+</code></pre>
+<pre><code class="language-text">RAM no numérica
+</code></pre>
+<pre><code class="language-text">nombre vacío
+</code></pre>
+<pre><code class="language-text">estado desconocido
+</code></pre>
+<pre><code class="language-text">archivo inexistente
+</code></pre>
+<p>La corrección de un error no debe introducir otros problemas.</p>
+<hr />
+<h3 id="166-pruebas-de-regresion">166. Pruebas de regresión<a class="headerlink" href="#166-pruebas-de-regresion" title="Permanent link">&para;</a></h3>
+<p>Cuando corregimos un error debemos comprobar que las partes que funcionaban anteriormente continúan funcionando.</p>
+<p>A esto se relaciona el concepto de:</p>
+<pre><code class="language-text">regresión
+</code></pre>
+<p>Una modificación puede corregir:</p>
+<pre><code class="language-text">problema A
+</code></pre>
+<p>pero provocar:</p>
+<pre><code class="language-text">problema B
+</code></pre>
+<p>Por eso después de una corrección debemos volver a probar el programa.</p>
+<hr />
+<h3 id="167-tabla-de-pruebas">167. Tabla de pruebas<a class="headerlink" href="#167-tabla-de-pruebas" title="Permanent link">&para;</a></h3>
+<p>Podemos preparar:</p>
+<table>
+<thead>
+<tr>
+<th>Prueba</th>
+<th>Resultado esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inventario correcto</td>
+<td>Procesamiento normal</td>
+</tr>
+<tr>
+<td>RAM negativa</td>
+<td>Equipo rechazado</td>
+</tr>
+<tr>
+<td>RAM cero</td>
+<td>Equipo rechazado</td>
+</tr>
+<tr>
+<td>RAM no numérica</td>
+<td>Fila ignorada y warning</td>
+</tr>
+<tr>
+<td>Nombre vacío</td>
+<td>Equipo rechazado</td>
+</tr>
+<tr>
+<td>Estado desconocido</td>
+<td>Equipo rechazado</td>
+</tr>
+<tr>
+<td>Archivo inexistente</td>
+<td>Error controlado</td>
+</tr>
+</tbody>
+</table>
+<p>Ejecuta varias de estas pruebas.</p>
+<p>Consulta también:</p>
+<pre><code class="language-text">inventario.log
+</code></pre>
+<p>para comprobar que los errores quedan registrados.</p>
+<hr />
+<h3 id="168-reto-error-de-estado">168. Reto: error de estado<a class="headerlink" href="#168-reto-error-de-estado" title="Permanent link">&para;</a></h3>
+<p>Modifica temporalmente:</p>
+<pre><code class="language-csv">PC05,192.168.1.14,16,encendido
+</code></pre>
+<p>Nuestro programa solamente admite:</p>
+<pre><code class="language-text">activo
+inactivo
+</code></pre>
+<p>Utiliza un breakpoint condicional para detenerte cuando:</p>
+<pre><code class="language-python">equipo[&quot;estado&quot;] not in (
+    &quot;activo&quot;,
+    &quot;inactivo&quot;
+)
+</code></pre>
+<p>Inspecciona el equipo.</p>
+<p>Después comprueba que el programa lo rechaza y genera el correspondiente:</p>
+<pre><code class="language-text">WARNING
+</code></pre>
+<hr />
+<h3 id="169-reto-equipo-concreto">169. Reto: equipo concreto<a class="headerlink" href="#169-reto-equipo-concreto" title="Permanent link">&para;</a></h3>
+<p>Supongamos que un usuario nos informa:</p>
+<pre><code class="language-text">PC05 produce resultados incorrectos
+</code></pre>
+<p>No queremos detenernos en todos los equipos.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">equipo[&quot;nombre&quot;] == &quot;PC05&quot;
+</code></pre>
+<p>como condición del breakpoint.</p>
+<p>Después podemos inspeccionar:</p>
+<pre><code class="language-text">nombre
+IP
+RAM
+estado
+</code></pre>
+<p>únicamente cuando se procesa ese equipo.</p>
+<hr />
+<h3 id="170-reto-combinacion-de-condiciones">170. Reto: combinación de condiciones<a class="headerlink" href="#170-reto-combinacion-de-condiciones" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">equipo[&quot;ram&quot;] &gt; 16
+</code></pre>
+<p>para detenernos ante equipos con más de 16 GB.</p>
+<p>O:</p>
+<pre><code class="language-python">(
+    equipo[&quot;estado&quot;] == &quot;activo&quot;
+    and equipo[&quot;ram&quot;] &gt;= 16
+)
+</code></pre>
+<p>para investigar solamente equipos:</p>
+<pre><code class="language-text">activos
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">16 GB o más
+</code></pre>
+<p>Los breakpoints condicionales permiten reducir enormemente el número de interrupciones.</p>
+<hr />
+<h3 id="171-reto-utilizar-watch">171. Reto: utilizar Watch<a class="headerlink" href="#171-reto-utilizar-watch" title="Permanent link">&para;</a></h3>
+<p>Durante la ejecución añade:</p>
+<pre><code class="language-python">len(equipos)
+</code></pre>
+<pre><code class="language-python">len(validos)
+</code></pre>
+<pre><code class="language-python">ram_total
+</code></pre>
+<pre><code class="language-python">numero_equipos
+</code></pre>
+<pre><code class="language-python">ram_total / numero_equipos
+</code></pre>
+<p>Observa cuándo puede evaluarse cada expresión.</p>
+<p>Recuerda:</p>
+<pre><code class="language-text">una variable debe existir
+en el contexto seleccionado
+</code></pre>
+<p>para poder utilizarla.</p>
+<hr />
+<h3 id="172-reto-seguir-una-funcion-completa">172. Reto: seguir una función completa<a class="headerlink" href="#172-reto-seguir-una-funcion-completa" title="Permanent link">&para;</a></h3>
+<p>Coloca un breakpoint antes de:</p>
+<pre><code class="language-python">mostrar_resumen(
+    equipos
+)
+</code></pre>
+<p>Después utiliza:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en:</p>
+<pre><code class="language-python">mostrar_resumen()
+</code></pre>
+<p>Continúa entrando en:</p>
+<pre><code class="language-text">obtener_equipos_validos()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">equipo_valido()
+</code></pre>
+<p>Observa cómo aumenta:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<p>Después utiliza:</p>
+<pre><code class="language-text">Shift + F11
+</code></pre>
+<p>para regresar progresivamente.</p>
+<hr />
+<h3 id="173-reto-investigar-sin-modificar-codigo">173. Reto: investigar sin modificar código<a class="headerlink" href="#173-reto-investigar-sin-modificar-codigo" title="Permanent link">&para;</a></h3>
+<p>El profesor puede modificar uno de los datos del CSV sin indicar cuál.</p>
+<p>El alumno deberá encontrarlo utilizando exclusivamente:</p>
+<pre><code class="language-text">Variables
+Watch
+Debug Console
+Breakpoints
+Breakpoints condicionales
+Call Stack
+</code></pre>
+<p>Durante la investigación no se permite añadir:</p>
+<pre><code class="language-python">print()
+</code></pre>
+<p>al programa.</p>
+<p>Una vez localizado el problema se podrá corregir.</p>
+<hr />
+<h3 id="174-documentar-una-incidencia">174. Documentar una incidencia<a class="headerlink" href="#174-documentar-una-incidencia" title="Permanent link">&para;</a></h3>
+<p>Una parte importante del trabajo técnico consiste en documentar lo ocurrido.</p>
+<p>Para cada error podemos utilizar:</p>
+<pre><code class="language-text">INCIDENCIA:
+
+Síntoma:
+
+Resultado esperado:
+
+Resultado obtenido:
+
+Breakpoint utilizado:
+
+Variables observadas:
+
+Causa:
+
+Corrección:
+
+Prueba posterior:
+
+Resultado final:
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">INCIDENCIA:
+RAM total incorrecta
+
+Resultado esperado:
+80 GB
+
+Resultado obtenido:
+8 GB
+
+Breakpoint utilizado:
+calcular_ram_total()
+
+Variables observadas:
+total
+equipo[&quot;ram&quot;]
+
+Causa:
+El valor de total se sustituía
+en cada iteración.
+
+Corrección:
+Cambiar:
+
+total = equipo[&quot;ram&quot;]
+
+por:
+
+total += equipo[&quot;ram&quot;]
+
+Prueba posterior:
+Ejecutar nuevamente el inventario.
+
+Resultado final:
+80 GB
+</code></pre>
+<hr />
+<h3 id="175-actividad-evaluable">175. Actividad evaluable<a class="headerlink" href="#175-actividad-evaluable" title="Permanent link">&para;</a></h3>
+<p>El profesor entregará un programa similar a:</p>
+<pre><code class="language-text">gestor_inventario_debug.py
+</code></pre>
+<p>con varios errores introducidos deliberadamente.</p>
+<p>El alumno deberá localizar al menos:</p>
+<pre><code class="language-text">un error de validación
+un error en una condición
+un error en un acumulador
+un dato incorrecto
+</code></pre>
+<p>Deberá utilizar obligatoriamente:</p>
+<pre><code class="language-text">un breakpoint normal
+un breakpoint condicional
+Variables
+Watch
+Debug Console
+Call Stack
+Step Into
+Step Over
+</code></pre>
+<p>No bastará con entregar el programa corregido.</p>
+<p>También deberá explicar:</p>
+<pre><code class="language-text">cómo localizó cada error
+</code></pre>
+<hr />
+<h3 id="176-entrega-propuesta">176. Entrega propuesta<a class="headerlink" href="#176-entrega-propuesta" title="Permanent link">&para;</a></h3>
+<p>La entrega puede contener:</p>
+<pre><code class="language-text">programa_original.py
+programa_corregido.py
+informe_depuracion.txt
+</code></pre>
+<p>El archivo:</p>
+<pre><code class="language-text">informe_depuracion.txt
+</code></pre>
+<p>deberá indicar para cada problema:</p>
+<pre><code class="language-text">síntoma
+evidencia
+causa
+corrección
+comprobación
+</code></pre>
+<p>De esta forma evaluamos no solamente:</p>
+<pre><code class="language-text">programar
+</code></pre>
+<p>sino también:</p>
+<pre><code class="language-text">diagnosticar
+</code></pre>
+<hr />
+<h3 id="177-metodologia-general-de-depuracion">177. Metodología general de depuración<a class="headerlink" href="#177-metodologia-general-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>Después de todas las prácticas del capítulo podemos establecer una metodología.</p>
+<pre><code class="language-text">1. REPRODUCIR
+      │
+      ▼
+   confirmar problema
+
+2. OBSERVAR
+      │
+      ▼
+   obtener evidencias
+
+3. AISLAR
+      │
+      ▼
+   reducir zona sospechosa
+
+4. INSPECCIONAR
+      │
+      ▼
+   variables y flujo
+
+5. FORMULAR HIPÓTESIS
+      │
+      ▼
+   posible causa
+
+6. COMPROBAR
+      │
+      ▼
+   debugger
+
+7. CORREGIR
+      │
+      ▼
+   modificar código
+
+8. VOLVER A PROBAR
+      │
+      ▼
+   comprobar solución
+</code></pre>
+<hr />
+<h3 id="178-elegir-correctamente-el-breakpoint">178. Elegir correctamente el breakpoint<a class="headerlink" href="#178-elegir-correctamente-el-breakpoint" title="Permanent link">&para;</a></h3>
+<p>No siempre debemos colocar el breakpoint exactamente donde aparece el resultado incorrecto.</p>
+<p>Supongamos:</p>
+<pre><code class="language-text">leer CSV
+   │
+   ▼
+validar
+   │
+   ▼
+calcular
+   │
+   ▼
+generar informe
+   │
+   ▼
+resultado incorrecto
+</code></pre>
+<p>Podemos comenzar cerca del resultado.</p>
+<p>Después retroceder conceptualmente:</p>
+<pre><code class="language-text">¿qué datos recibió?
+</code></pre>
+<pre><code class="language-text">¿quién llamó a esta función?
+</code></pre>
+<pre><code class="language-text">¿de dónde procedían esos datos?
+</code></pre>
+<p>Para ello utilizamos:</p>
+<pre><code class="language-text">Call Stack
+Variables
+Watch
+</code></pre>
+<hr />
+<h3 id="179-las-preguntas-del-depurador">179. Las preguntas del depurador<a class="headerlink" href="#179-las-preguntas-del-depurador" title="Permanent link">&para;</a></h3>
+<p>Durante una investigación podemos hacernos siempre estas preguntas:</p>
+<pre><code class="language-text">¿Dónde estoy?
+</code></pre>
+<pre><code class="language-text">¿Cómo he llegado aquí?
+</code></pre>
+<pre><code class="language-text">¿Qué variables existen?
+</code></pre>
+<pre><code class="language-text">¿Qué valores tienen?
+</code></pre>
+<pre><code class="language-text">¿Qué instrucción se ejecutará ahora?
+</code></pre>
+<pre><code class="language-text">¿Qué esperaba que ocurriera?
+</code></pre>
+<pre><code class="language-text">¿Qué ha ocurrido realmente?
+</code></pre>
+<pre><code class="language-text">¿En qué momento divergen ambos?
+</code></pre>
+<p>Encontrar ese punto suele acercarnos a la causa del problema.</p>
+<hr />
+<h3 id="180-herramientas-y-preguntas">180. Herramientas y preguntas<a class="headerlink" href="#180-herramientas-y-preguntas" title="Permanent link">&para;</a></h3>
+<p>Podemos relacionarlas:</p>
+<table>
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>Herramienta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>¿Dónde quiero detenerme?</td>
+<td>Breakpoint</td>
+</tr>
+<tr>
+<td>¿Cuándo quiero detenerme?</td>
+<td>Breakpoint condicional</td>
+</tr>
+<tr>
+<td>¿Qué valores existen?</td>
+<td>Variables</td>
+</tr>
+<tr>
+<td>¿Cómo cambia esta expresión?</td>
+<td>Watch</td>
+</tr>
+<tr>
+<td>¿Cómo he llegado aquí?</td>
+<td>Call Stack</td>
+</tr>
+<tr>
+<td>¿Cuánto vale esta expresión?</td>
+<td>Debug Console</td>
+</tr>
+<tr>
+<td>¿Qué hace la siguiente línea?</td>
+<td>Step Over</td>
+</tr>
+<tr>
+<td>¿Qué ocurre dentro de esta función?</td>
+<td>Step Into</td>
+</tr>
+<tr>
+<td>¿Cómo regreso al llamador?</td>
+<td>Step Out</td>
+</tr>
+</tbody>
+</table>
+<p>Esta tabla resume gran parte del capítulo.</p>
+<hr />
+<h3 id="181-errores-que-hemos-investigado">181. Errores que hemos investigado<a class="headerlink" href="#181-errores-que-hemos-investigado" title="Permanent link">&para;</a></h3>
+<p>Durante el capítulo hemos trabajado con:</p>
+<pre><code class="language-text">errores lógicos
+</code></pre>
+<p>por ejemplo:</p>
+<pre><code class="language-python">total = equipo[&quot;ram&quot;]
+</code></pre>
+<p>en lugar de acumular.</p>
+<p>También:</p>
+<pre><code class="language-text">condiciones incorrectas
+</code></pre>
+<p>como:</p>
+<pre><code class="language-python">estado == &quot;inactivo&quot;
+</code></pre>
+<p>cuando queríamos contar activos.</p>
+<p>También:</p>
+<pre><code class="language-text">datos incorrectos
+</code></pre>
+<p>como:</p>
+<pre><code class="language-text">RAM = -8
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-text">excepciones
+</code></pre>
+<p>como:</p>
+<pre><code class="language-text">ValueError
+</code></pre>
+<p>al intentar convertir texto a entero.</p>
+<hr />
+<h3 id="182-depuracion-y-calidad-del-software">182. Depuración y calidad del software<a class="headerlink" href="#182-depuracion-y-calidad-del-software" title="Permanent link">&para;</a></h3>
+<p>La depuración no consiste únicamente en:</p>
+<pre><code class="language-text">hacer desaparecer errores
+</code></pre>
+<p>También nos ayuda a comprender mejor nuestros programas.</p>
+<p>Durante una sesión de depuración podemos descubrir:</p>
+<pre><code class="language-text">funciones demasiado grandes
+</code></pre>
+<pre><code class="language-text">variables confusas
+</code></pre>
+<pre><code class="language-text">validaciones insuficientes
+</code></pre>
+<pre><code class="language-text">dependencias innecesarias
+</code></pre>
+<pre><code class="language-text">flujo demasiado complejo
+</code></pre>
+<p>Por tanto, depurar también puede ayudarnos a mejorar el diseño del programa.</p>
+<hr />
+<h3 id="183-relacion-con-capitulos-anteriores">183. Relación con capítulos anteriores<a class="headerlink" href="#183-relacion-con-capitulos-anteriores" title="Permanent link">&para;</a></h3>
+<p>Las técnicas de este capítulo pueden aplicarse a todo lo desarrollado anteriormente.</p>
+<p>En programas de archivos:</p>
+<pre><code class="language-text">Path
+CSV
+lectura
+escritura
+</code></pre>
+<p>podemos inspeccionar:</p>
+<pre><code class="language-text">rutas
+filas
+datos
+</code></pre>
+<p>En automatización:</p>
+<pre><code class="language-text">bucles
+inventarios
+backups
+</code></pre>
+<p>podemos seguir:</p>
+<pre><code class="language-text">iteraciones
+contadores
+estados
+</code></pre>
+<p>En APIs:</p>
+<pre><code class="language-text">requests
+JSON
+</code></pre>
+<p>podemos observar:</p>
+<pre><code class="language-text">status_code
+diccionarios
+respuestas
+</code></pre>
+<p>En redes:</p>
+<pre><code class="language-text">socket
+DNS
+TCP
+</code></pre>
+<p>podemos investigar:</p>
+<pre><code class="language-text">host
+IP
+puerto
+estado
+</code></pre>
+<hr />
+<h3 id="184-aplicar-el-depurador-al-capitulo-6">184. Aplicar el depurador al Capítulo 6<a class="headerlink" href="#184-aplicar-el-depurador-al-capitulo-6" title="Permanent link">&para;</a></h3>
+<p>Por ejemplo, en nuestro:</p>
+<pre><code class="language-text">diagnostico_red.py
+</code></pre>
+<p>podemos colocar un breakpoint en:</p>
+<pre><code class="language-python">resultado = (
+    diagnosticar_servicio(
+        servicio,
+        args.timeout
+    )
+)
+</code></pre>
+<p>y utilizar:</p>
+<pre><code class="language-text">F11
+</code></pre>
+<p>para entrar en la función.</p>
+<p>Después podemos observar:</p>
+<pre><code class="language-text">host
+puerto
+ip
+estado_tcp
+</code></pre>
+<p>Esto permite analizar paso a paso una herramienta real desarrollada anteriormente.</p>
+<hr />
+<h3 id="185-breakpoint-condicional-en-diagnostico_redpy">185. Breakpoint condicional en <code>diagnostico_red.py</code><a class="headerlink" href="#185-breakpoint-condicional-en-diagnostico_redpy" title="Permanent link">&para;</a></h3>
+<p>Si tenemos muchos servicios podemos detenernos únicamente ante:</p>
+<pre><code class="language-python">servicio[&quot;puerto&quot;] == 443
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">servicio[&quot;host&quot;] == &quot;example.com&quot;
+</code></pre>
+<p>También podemos investigar posteriormente un resultado concreto mediante una condición como:</p>
+<pre><code class="language-python">resultado[&quot;tcp&quot;] != &quot;ACCESIBLE&quot;
+</code></pre>
+<p>si colocamos el breakpoint en un punto donde <code>resultado</code> ya haya sido creado.</p>
+<hr />
+<h3 id="186-debug-console-en-aplicaciones-de-red">186. Debug Console en aplicaciones de red<a class="headerlink" href="#186-debug-console-en-aplicaciones-de-red" title="Permanent link">&para;</a></h3>
+<p>Con el programa detenido podemos consultar:</p>
+<pre><code class="language-python">servicio[&quot;host&quot;]
+</code></pre>
+<pre><code class="language-python">servicio[&quot;puerto&quot;]
+</code></pre>
+<pre><code class="language-python">args.timeout
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">resultado[&quot;tcp&quot;]
+</code></pre>
+<p>sin añadir instrucciones <code>print()</code>.</p>
+<p>Así podemos utilizar las técnicas del Capítulo 7 sobre programas del Capítulo 6.</p>
+<hr />
+<h3 id="187-preparacion-para-el-proyecto-final">187. Preparación para el proyecto final<a class="headerlink" href="#187-preparacion-para-el-proyecto-final" title="Permanent link">&para;</a></h3>
+<p>El siguiente paso del curso será construir un proyecto que integre buena parte de lo aprendido.</p>
+<p>El proyecto deberá trabajar con:</p>
+<pre><code class="language-text">inventario de equipos
+CSV
+ping
+socket
+puertos
+informes
+JSON
+logging
+argparse
+excepciones
+</code></pre>
+<p>Durante su desarrollo utilizaremos también:</p>
+<pre><code class="language-text">depuración
+</code></pre>
+<p>Por tanto, el Capítulo 7 no es un contenido aislado.</p>
+<p>Será una herramienta de trabajo durante el proyecto final.</p>
+<hr />
+<h3 id="188-resumen-del-capitulo-7">188. Resumen del Capítulo 7<a class="headerlink" href="#188-resumen-del-capitulo-7" title="Permanent link">&para;</a></h3>
+<p>En este capítulo hemos aprendido a utilizar el depurador de Visual Studio Code para analizar programas Python.</p>
+<p>Comenzamos utilizando:</p>
+<pre><code class="language-text">breakpoints
+</code></pre>
+<p>para detener temporalmente la ejecución.</p>
+<p>Después aprendimos:</p>
+<pre><code class="language-text">Continue
+Step Over
+Step Into
+Step Out
+</code></pre>
+<p>para controlar el avance del programa.</p>
+<p>Utilizamos:</p>
+<pre><code class="language-text">Variables
+</code></pre>
+<p>para observar el estado de la aplicación.</p>
+<p>Después incorporamos:</p>
+<pre><code class="language-text">Watch
+</code></pre>
+<p>para seguir expresiones concretas.</p>
+<p>Aprendimos a interpretar:</p>
+<pre><code class="language-text">Call Stack
+</code></pre>
+<p>para conocer la cadena de llamadas entre funciones.</p>
+<p>Utilizamos:</p>
+<pre><code class="language-text">Debug Console
+</code></pre>
+<p>para evaluar expresiones durante una pausa.</p>
+<p>Y finalmente trabajamos con:</p>
+<pre><code class="language-text">breakpoints condicionales
+</code></pre>
+<p>para detenernos solamente cuando se produce una situación determinada.</p>
+<hr />
+<h3 id="189-mapa-de-herramientas-del-depurador">189. Mapa de herramientas del depurador<a class="headerlink" href="#189-mapa-de-herramientas-del-depurador" title="Permanent link">&para;</a></h3>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">                   DEPURADOR
+                       │
+        ┌──────────────┼──────────────┐
+        │              │              │
+        ▼              ▼              ▼
+   BREAKPOINTS      INSPECCIÓN       EJECUCIÓN
+        │              │              │
+   ┌────┴────┐    ┌────┼────┐    ┌────┼────┐
+   │         │    │    │    │    │    │    │
+   ▼         ▼    ▼    ▼    ▼    ▼    ▼    ▼
+normal  condicional Var Watch Stack F10  F11  F5
+                        │
+                        ▼
+                 Debug Console
+</code></pre>
+<p>Cada herramienta tiene una finalidad concreta.</p>
+<hr />
+<h3 id="190-competencias-adquiridas">190. Competencias adquiridas<a class="headerlink" href="#190-competencias-adquiridas" title="Permanent link">&para;</a></h3>
+<p>Al finalizar el capítulo debemos ser capaces de:</p>
+<ul>
+<li>Iniciar una sesión de depuración en VS Code.</li>
+<li>Crear y eliminar breakpoints.</li>
+<li>Continuar una ejecución.</li>
+<li>Ejecutar paso a paso.</li>
+<li>Entrar y salir de funciones.</li>
+<li>Inspeccionar variables.</li>
+<li>Observar expresiones con Watch.</li>
+<li>Interpretar Call Stack.</li>
+<li>Utilizar Debug Console.</li>
+<li>Crear breakpoints condicionales.</li>
+<li>Depurar condiciones.</li>
+<li>Depurar bucles.</li>
+<li>Depurar funciones.</li>
+<li>Investigar errores lógicos.</li>
+<li>Investigar datos incorrectos.</li>
+<li>Analizar excepciones.</li>
+<li>Diferenciar síntomas y causas.</li>
+<li>Documentar una incidencia.</li>
+<li>Comprobar una corrección.</li>
+</ul>
+<hr />
+<h3 id="191-buenas-practicas-de-depuracion">191. Buenas prácticas de depuración<a class="headerlink" href="#191-buenas-practicas-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>Durante una investigación:</p>
+<pre><code class="language-text">reproduce primero el problema
+</code></pre>
+<pre><code class="language-text">no cambies código al azar
+</code></pre>
+<pre><code class="language-text">observa los datos reales
+</code></pre>
+<pre><code class="language-text">utiliza breakpoints cerca
+de la zona sospechosa
+</code></pre>
+<pre><code class="language-text">sigue el flujo paso a paso
+</code></pre>
+<pre><code class="language-text">utiliza Call Stack para
+buscar el origen
+</code></pre>
+<pre><code class="language-text">formula una hipótesis
+antes de modificar
+</code></pre>
+<pre><code class="language-text">realiza cambios pequeños
+</code></pre>
+<pre><code class="language-text">vuelve a probar
+después de corregir
+</code></pre>
+<hr />
+<h3 id="192-depuracion-excepciones-y-logging">192. Depuración, excepciones y logging<a class="headerlink" href="#192-depuracion-excepciones-y-logging" title="Permanent link">&para;</a></h3>
+<p>Ahora podemos distinguir claramente tres herramientas:</p>
+<pre><code class="language-text">              PROGRAMA
+                  │
+       ┌──────────┼──────────┐
+       │          │          │
+       ▼          ▼          ▼
+ EXCEPCIONES   LOGGING    DEBUGGER
+       │          │          │
+       ▼          ▼          ▼
+ gestionar     registrar   investigar
+ errores       eventos     ejecución
+</code></pre>
+<p>Un programa bien diseñado puede utilizar las tres.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">try / except
+</code></pre>
+<p>gestiona un error previsto.</p>
+<pre><code class="language-text">logging
+</code></pre>
+<p>deja constancia del problema.</p>
+<pre><code class="language-text">debugger
+</code></pre>
+<p>nos ayuda a investigar su causa durante el desarrollo.</p>
+<hr />
+<h3 id="193-cierre-de-la-unidad-de-depuracion">193. Cierre de la unidad de depuración<a class="headerlink" href="#193-cierre-de-la-unidad-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>La depuración profesional cambia nuestra forma de enfrentarnos a un programa que no funciona correctamente.</p>
+<p>En lugar de:</p>
+<pre><code class="language-text">probar cambios
+al azar
+</code></pre>
+<p>podemos utilizar:</p>
+<pre><code class="language-text">evidencias
+</code></pre>
+<p>obtenidas durante la ejecución.</p>
+<p>El proceso se convierte en:</p>
+<pre><code class="language-text">observar
+   │
+   ▼
+comprender
+   │
+   ▼
+formular hipótesis
+   │
+   ▼
+comprobar
+   │
+   ▼
+corregir
+   │
+   ▼
+validar
+</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Capítulo 7 completado</p>
+<p>Hemos aprendido a utilizar las principales herramientas de depuración de Visual Studio Code para investigar programas Python.</p>
+<p>Ya podemos detener una aplicación, inspeccionar su estado, seguir su ejecución, entrar en funciones, analizar la pila de llamadas y utilizar breakpoints condicionales para localizar problemas concretos.</p>
+<p>Estas técnicas serán utilizadas durante el desarrollo del proyecto final.</p>
+</div>
+<hr />
+<h3 id="194-siguiente-etapa-proyecto-final">194. Siguiente etapa: proyecto final<a class="headerlink" href="#194-siguiente-etapa-proyecto-final" title="Permanent link">&para;</a></h3>
+<p>Con este capítulo hemos completado la parte dedicada a:</p>
+<pre><code class="language-text">Depuración profesional en VS Code
+</code></pre>
+<p>Ahora estamos preparados para desarrollar el <strong>proyecto final integrador</strong>.</p>
+<p>El objetivo será construir una herramienta de administración de red capaz de:</p>
+<pre><code class="language-text">leer equipos desde CSV
+        │
+        ▼
+validar inventario
+        │
+        ▼
+comprobar conectividad
+        │
+        ├── ping
+        │
+        └── puertos TCP
+        │
+        ▼
+procesar resultados
+        │
+        ├── equipos accesibles
+        ├── equipos no accesibles
+        └── servicios disponibles
+        │
+        ▼
+generar informe
+        │
+        ├── TXT
+        └── JSON
+        │
+        ▼
+registrar actividad
+        │
+        ▼
+       LOG
+</code></pre>
+<p>El proyecto nos permitirá integrar los principales conocimientos desarrollados durante todo el libro:</p>
+<pre><code class="language-text">PYTHON
+  │
+  ├── archivos
+  ├── CSV
+  ├── pathlib
+  ├── subprocess
+  ├── automatización
+  ├── argparse
+  ├── excepciones
+  ├── logging
+  ├── JSON
+  ├── socket
+  └── depuración
+</code></pre>
+<p>A partir de este momento dejaremos de estudiar estos elementos principalmente de forma aislada.</p>
+<p>Los utilizaremos conjuntamente para construir una aplicación completa.</p></div>
 
 <div class="monlau-page-navigation">
 
