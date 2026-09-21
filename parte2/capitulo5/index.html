@@ -119,8 +119,44 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#diagnostico-basico-de-red" class="nav-link">Diagnóstico básico de red</a>
+            <li class="nav-item" data-bs-level="1"><a href="#capitulo-5-peticiones-http-y-consumo-de-apis" class="nav-link">Capítulo 5. Peticiones HTTP y consumo de APIs</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-comunicacion-http-desde-python" class="nav-link">1. Comunicación HTTP desde Python</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#30-introduccion-a-las-apis-y-json" class="nav-link">30. Introducción a las APIs y JSON</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_1" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#64-envio-de-datos-mediante-post" class="nav-link">64. Envío de datos mediante POST</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen_2" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#98-practica-final-cliente-de-una-api" class="nav-link">98. Práctica final: cliente de una API</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#130-que-hemos-aprendido-en-el-capitulo-5" class="nav-link">130. Qué hemos aprendido en el capítulo 5</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#138-fin-del-capitulo" class="nav-link">138. Fin del capítulo</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -128,7 +164,6284 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="diagnostico-basico-de-red">Diagnóstico básico de red<a class="headerlink" href="#diagnostico-basico-de-red" title="Permanent link">&para;</a></h1></div>
+<h1 id="capitulo-5-peticiones-http-y-consumo-de-apis">Capítulo 5. Peticiones HTTP y consumo de APIs<a class="headerlink" href="#capitulo-5-peticiones-http-y-consumo-de-apis" title="Permanent link">&para;</a></h1>
+<p>Hasta ahora nuestros programas Python han trabajado principalmente con recursos del propio ordenador o de nuestra red local.</p>
+<p>Hemos aprendido a:</p>
+<ul>
+<li>Leer y escribir archivos.</li>
+<li>Procesar archivos CSV.</li>
+<li>Trabajar con rutas y directorios.</li>
+<li>Ejecutar comandos del sistema.</li>
+<li>Automatizar tareas.</li>
+<li>Recibir argumentos desde la línea de comandos.</li>
+<li>Controlar excepciones.</li>
+<li>Registrar operaciones mediante logs.</li>
+</ul>
+<p>En este capítulo daremos un paso más.</p>
+<p>Nuestros programas comenzarán a comunicarse con <strong>servicios disponibles a través de una red</strong>.</p>
+<p>Por ejemplo, un programa Python puede:</p>
+<pre><code class="language-text">consultar una página web
+obtener nuestra IP pública
+consultar información de un servidor
+obtener datos meteorológicos
+consultar el estado de un servicio
+enviar información a una aplicación web
+consumir una API
+</code></pre>
+<p>Para ello estudiaremos principalmente:</p>
+<pre><code class="language-text">HTTP
+   │
+   ▼
+requests
+   │
+   ▼
+GET / POST
+   │
+   ▼
+respuestas HTTP
+   │
+   ▼
+JSON
+   │
+   ▼
+APIs
+</code></pre>
+<hr />
+<h2 id="1-comunicacion-http-desde-python">1. Comunicación HTTP desde Python<a class="headerlink" href="#1-comunicacion-http-desde-python" title="Permanent link">&para;</a></h2>
+<p>Cuando utilizamos un navegador para visitar una página web se produce una comunicación entre dos elementos:</p>
+<pre><code class="language-text">CLIENTE
+   │
+   │ petición
+   ▼
+SERVIDOR
+   │
+   │ respuesta
+   ▼
+CLIENTE
+</code></pre>
+<p>El navegador actúa como <strong>cliente</strong>.</p>
+<p>El servidor web recibe una petición y devuelve una respuesta.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Navegador
+    │
+    │ GET
+    ▼
+Servidor web
+    │
+    │ respuesta
+    ▼
+Navegador
+</code></pre>
+<p>Python también puede actuar como cliente.</p>
+<p>En lugar de utilizar un navegador podremos escribir un programa que realice la petición.</p>
+<pre><code class="language-text">Programa Python
+      │
+      │ petición HTTP
+      ▼
+Servidor
+      │
+      │ respuesta HTTP
+      ▼
+Programa Python
+</code></pre>
+<p>Esto permitirá automatizar la comunicación con servicios web.</p>
+<hr />
+<h3 id="2-que-es-http">2. ¿Qué es HTTP?<a class="headerlink" href="#2-que-es-http" title="Permanent link">&para;</a></h3>
+<p>HTTP significa:</p>
+<pre><code class="language-text">HyperText Transfer Protocol
+</code></pre>
+<p>Es uno de los protocolos utilizados para intercambiar información entre clientes y servidores web.</p>
+<p>Cuando escribimos una dirección en un navegador, por ejemplo:</p>
+<pre><code class="language-text">https://example.com
+</code></pre>
+<p>el navegador realiza una petición al servidor.</p>
+<p>El servidor procesa esa petición y devuelve una respuesta.</p>
+<p>De forma simplificada:</p>
+<pre><code class="language-text">CLIENTE                    SERVIDOR
+   │                           │
+   │ ------ petición --------&gt; │
+   │                           │
+   │ &lt;----- respuesta -------- │
+   │                           │
+</code></pre>
+<p>HTTP utiliza diferentes tipos de peticiones.</p>
+<p>En este capítulo trabajaremos principalmente con:</p>
+<pre><code class="language-text">GET
+POST
+</code></pre>
+<hr />
+<h3 id="3-el-metodo-get">3. El método GET<a class="headerlink" href="#3-el-metodo-get" title="Permanent link">&para;</a></h3>
+<p>Una petición:</p>
+<pre><code class="language-text">GET
+</code></pre>
+<p>se utiliza habitualmente para <strong>solicitar información</strong> a un servidor.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">GET /datos
+</code></pre>
+<p>podría solicitar determinada información.</p>
+<p>El proceso sería:</p>
+<pre><code class="language-text">Python
+   │
+   │ GET /datos
+   ▼
+Servidor
+   │
+   │ datos solicitados
+   ▼
+Python
+</code></pre>
+<p>Algunos ejemplos de información que podríamos consultar son:</p>
+<pre><code class="language-text">IP pública
+estado de un servicio
+lista de dispositivos
+datos meteorológicos
+información de una aplicación
+datos almacenados en un servidor
+</code></pre>
+<hr />
+<h3 id="4-el-metodo-post">4. El método POST<a class="headerlink" href="#4-el-metodo-post" title="Permanent link">&para;</a></h3>
+<p>Otro método que utilizaremos más adelante será:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>Normalmente se utiliza para <strong>enviar información al servidor</strong>.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Python
+   │
+   │ POST
+   │ datos
+   ▼
+Servidor
+</code></pre>
+<p>Podríamos utilizarlo para enviar:</p>
+<pre><code class="language-text">datos de un sensor
+información de un equipo
+un formulario
+un registro
+un nuevo elemento
+</code></pre>
+<p>Por ahora comenzaremos con:</p>
+<pre><code class="language-text">GET
+</code></pre>
+<p>porque resulta más sencillo para comprender el funcionamiento de las peticiones HTTP.</p>
+<hr />
+<h3 id="5-la-biblioteca-requests">5. La biblioteca <code>requests</code><a class="headerlink" href="#5-la-biblioteca-requests" title="Permanent link">&para;</a></h3>
+<p>Python permite realizar comunicaciones HTTP utilizando diferentes herramientas.</p>
+<p>En este capítulo utilizaremos:</p>
+<pre><code class="language-python">requests
+</code></pre>
+<p>Esta biblioteca facilita enormemente el envío de peticiones HTTP.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">requests.get(...)
+</code></pre>
+<p>permite realizar una petición:</p>
+<pre><code class="language-text">GET
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">requests.post(...)
+</code></pre>
+<p>permite realizar una petición:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>Pero antes debemos instalarla.</p>
+<hr />
+<h3 id="6-comprobar-el-entorno-virtual">6. Comprobar el entorno virtual<a class="headerlink" href="#6-comprobar-el-entorno-virtual" title="Permanent link">&para;</a></h3>
+<p>Antes de instalar una nueva biblioteca debemos comprobar que estamos trabajando dentro del entorno virtual del proyecto.</p>
+<p>Abre el terminal integrado de VS Code.</p>
+<p>Debemos encontrarnos en:</p>
+<pre><code class="language-text">C:\Users\aguileraj\Documents\Proyectos\Libro-Python-FP
+</code></pre>
+<p>Si el entorno virtual está activo, el terminal mostrará algo parecido a:</p>
+<pre><code class="language-text">(.venv)
+</code></pre>
+<p>al principio de la línea.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">(.venv) PS C:\Users\aguileraj\Documents\Proyectos\Libro-Python-FP&gt;
+</code></pre>
+<p>Si no está activo, desde PowerShell podemos ejecutar:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\Activate.ps1
+</code></pre>
+<p>Después debería aparecer:</p>
+<pre><code class="language-text">(.venv)
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Entorno virtual</p>
+<p>Instalaremos <code>requests</code> dentro del entorno virtual del proyecto.</p>
+<p>De esta forma las dependencias del libro permanecen separadas de otras instalaciones de Python del ordenador.</p>
+</div>
+<hr />
+<h3 id="7-instalar-requests">7. Instalar <code>requests</code><a class="headerlink" href="#7-instalar-requests" title="Permanent link">&para;</a></h3>
+<p>Con el entorno virtual activo ejecuta:</p>
+<pre><code class="language-powershell">python -m pip install requests
+</code></pre>
+<p>Durante la instalación aparecerán diferentes mensajes.</p>
+<p>Al finalizar deberíamos ver que <code>requests</code> se ha instalado correctamente.</p>
+<p>Podemos comprobarlo mediante:</p>
+<pre><code class="language-powershell">python -m pip show requests
+</code></pre>
+<p>Aparecerá información similar a:</p>
+<pre><code class="language-text">Name: requests
+Version: ...
+Summary: Python HTTP for Humans.
+Location: ...
+</code></pre>
+<p>La versión exacta puede variar.</p>
+<hr />
+<h3 id="8-comprobar-que-requests-funciona">8. Comprobar que <code>requests</code> funciona<a class="headerlink" href="#8-comprobar-que-requests-funciona" title="Permanent link">&para;</a></h3>
+<p>Vamos a realizar una prueba muy sencilla.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">capitulo5/
+</code></pre>
+<p>y dentro:</p>
+<pre><code class="language-text">programas/
+</code></pre>
+<p>La estructura inicial será:</p>
+<pre><code class="language-text">practicas/
+└── capitulo5/
+    └── programas/
+</code></pre>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo5/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">probar_requests.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+print(
+    &quot;requests importado &quot;
+    &quot;correctamente.&quot;
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python probar_requests.py
+</code></pre>
+<p>Deberíamos obtener:</p>
+<pre><code class="language-text">requests importado correctamente.
+</code></pre>
+<p>Si aparece este mensaje, la biblioteca está preparada.</p>
+<hr />
+<h3 id="9-nuestra-primera-peticion-http">9. Nuestra primera petición HTTP<a class="headerlink" href="#9-nuestra-primera-peticion-http" title="Permanent link">&para;</a></h3>
+<p>Vamos a realizar nuestra primera petición real.</p>
+<p>Modifica:</p>
+<pre><code class="language-text">probar_requests.py
+</code></pre>
+<p>para que contenga:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+
+print(
+    respuesta
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python probar_requests.py
+</code></pre>
+<p>Podemos obtener algo parecido a:</p>
+<pre><code class="language-text">&lt;Response [200]&gt;
+</code></pre>
+<p>Acabamos de realizar una petición HTTP desde Python.</p>
+<p>El proceso ha sido:</p>
+<pre><code class="language-text">probar_requests.py
+       │
+       ▼
+requests.get()
+       │
+       ▼
+https://example.com
+       │
+       ▼
+servidor
+       │
+       ▼
+respuesta HTTP
+       │
+       ▼
+objeto Response
+</code></pre>
+<hr />
+<h3 id="10-el-objeto-response">10. El objeto <code>Response</code><a class="headerlink" href="#10-el-objeto-response" title="Permanent link">&para;</a></h3>
+<p>La instrucción:</p>
+<pre><code class="language-python">respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+</code></pre>
+<p>no guarda simplemente el texto de la página.</p>
+<p>Guarda un objeto que representa la <strong>respuesta HTTP</strong>.</p>
+<p>Podemos consultar diferentes propiedades de ese objeto.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<pre><code class="language-python">respuesta.headers
+</code></pre>
+<p>Más adelante utilizaremos también:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<p>cuando el servidor devuelva datos JSON.</p>
+<hr />
+<h3 id="11-el-codigo-de-estado-http">11. El código de estado HTTP<a class="headerlink" href="#11-el-codigo-de-estado-http" title="Permanent link">&para;</a></h3>
+<p>Modifica el programa:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+
+print(
+    f&quot;Código HTTP: &quot;
+    f&quot;{respuesta.status_code}&quot;
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python probar_requests.py
+</code></pre>
+<p>Normalmente obtendremos:</p>
+<pre><code class="language-text">Código HTTP: 200
+</code></pre>
+<p>El número:</p>
+<pre><code class="language-text">200
+</code></pre>
+<p>es un <strong>código de estado HTTP</strong>.</p>
+<p>Indica el resultado de la petición.</p>
+<hr />
+<h3 id="12-algunos-codigos-http-importantes">12. Algunos códigos HTTP importantes<a class="headerlink" href="#12-algunos-codigos-http-importantes" title="Permanent link">&para;</a></h3>
+<p>Los códigos HTTP se agrupan en diferentes familias.</p>
+<pre><code class="language-text">1xx → información
+2xx → operación correcta
+3xx → redirección
+4xx → problema relacionado con la petición
+5xx → problema en el servidor
+</code></pre>
+<p>Algunos códigos habituales son:</p>
+<pre><code class="language-text">200 OK
+</code></pre>
+<p>La petición se ha procesado correctamente.</p>
+<pre><code class="language-text">201 Created
+</code></pre>
+<p>Se ha creado correctamente un recurso.</p>
+<pre><code class="language-text">301 Moved Permanently
+</code></pre>
+<p>El recurso ha sido movido permanentemente.</p>
+<pre><code class="language-text">400 Bad Request
+</code></pre>
+<p>La petición no es válida.</p>
+<pre><code class="language-text">401 Unauthorized
+</code></pre>
+<p>Es necesaria autenticación válida.</p>
+<pre><code class="language-text">403 Forbidden
+</code></pre>
+<p>El servidor rechaza el acceso al recurso.</p>
+<pre><code class="language-text">404 Not Found
+</code></pre>
+<p>El recurso solicitado no se encuentra.</p>
+<pre><code class="language-text">500 Internal Server Error
+</code></pre>
+<p>El servidor ha encontrado un problema interno.</p>
+<div class="admonition note">
+<p class="admonition-title">No memorices todos los códigos</p>
+<p>No es necesario memorizar todos los códigos HTTP.</p>
+<p>Lo importante inicialmente es comprender las familias:</p>
+<p><code>text
+2xx → éxito
+4xx → problema con la petición
+5xx → problema en el servidor</code></p>
+</div>
+<hr />
+<h3 id="13-consultar-el-contenido-de-la-respuesta">13. Consultar el contenido de la respuesta<a class="headerlink" href="#13-consultar-el-contenido-de-la-respuesta" title="Permanent link">&para;</a></h3>
+<p>Podemos acceder al contenido textual mediante:</p>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<p>Modifica:</p>
+<pre><code class="language-text">probar_requests.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+
+print(
+    f&quot;Código HTTP: &quot;
+    f&quot;{respuesta.status_code}&quot;
+)
+
+print()
+print(&quot;CONTENIDO&quot;)
+print(&quot;=========&quot;)
+print()
+
+print(
+    respuesta.text
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python probar_requests.py
+</code></pre>
+<p>Ahora veremos el código HTML recibido desde el servidor.</p>
+<p>El proceso completo es:</p>
+<pre><code class="language-text">Python
+   │
+   │ GET
+   ▼
+example.com
+   │
+   │ HTTP 200
+   │ HTML
+   ▼
+Python
+   │
+   ▼
+respuesta.text
+</code></pre>
+<hr />
+<h3 id="14-python-no-es-un-navegador">14. Python no es un navegador<a class="headerlink" href="#14-python-no-es-un-navegador" title="Permanent link">&para;</a></h3>
+<p>Cuando hacemos:</p>
+<pre><code class="language-python">requests.get(...)
+</code></pre>
+<p>Python obtiene la respuesta del servidor.</p>
+<p>Pero no representa gráficamente la página como haría Chrome, Edge o Firefox.</p>
+<p>Si el servidor devuelve:</p>
+<pre><code class="language-html">&lt;h1&gt;Ejemplo&lt;/h1&gt;
+</code></pre>
+<p>el navegador interpreta ese HTML y lo representa visualmente.</p>
+<p>Nuestro programa recibe simplemente los datos.</p>
+<pre><code class="language-text">NAVEGADOR
+
+HTML
+ │
+ ▼
+interpretación
+ │
+ ▼
+página visual
+
+
+PYTHON + REQUESTS
+
+HTML
+ │
+ ▼
+texto/datos
+ │
+ ▼
+procesamiento
+</code></pre>
+<p>Esto es precisamente lo que nos interesa.</p>
+<p>Queremos que nuestros programas puedan <strong>procesar automáticamente las respuestas</strong>.</p>
+<hr />
+<h3 id="15-consultar-las-cabeceras-http">15. Consultar las cabeceras HTTP<a class="headerlink" href="#15-consultar-las-cabeceras-http" title="Permanent link">&para;</a></h3>
+<p>Una respuesta HTTP contiene también cabeceras.</p>
+<p>Podemos consultarlas mediante:</p>
+<pre><code class="language-python">respuesta.headers
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+
+print(
+    respuesta.headers
+)
+</code></pre>
+<p>Las cabeceras contienen información adicional sobre la respuesta.</p>
+<p>Podemos consultar una cabecera concreta.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    respuesta.headers.get(
+        &quot;Content-Type&quot;
+    )
+)
+</code></pre>
+<p>Podemos obtener algo parecido a:</p>
+<pre><code class="language-text">text/html
+</code></pre>
+<p>Esto nos indica qué tipo de contenido ha enviado el servidor.</p>
+<hr />
+<h3 id="16-content-type">16. <code>Content-Type</code><a class="headerlink" href="#16-content-type" title="Permanent link">&para;</a></h3>
+<p>Una cabecera especialmente importante es:</p>
+<pre><code class="language-text">Content-Type
+</code></pre>
+<p>Puede indicar diferentes tipos de contenido.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">text/html
+</code></pre>
+<p>contenido HTML.</p>
+<pre><code class="language-text">text/plain
+</code></pre>
+<p>texto.</p>
+<pre><code class="language-text">application/json
+</code></pre>
+<p>datos JSON.</p>
+<p>Esta última será especialmente importante cuando comencemos a trabajar con APIs.</p>
+<pre><code class="language-text">Content-Type
+     │
+     ├── text/html
+     ├── text/plain
+     └── application/json
+</code></pre>
+<hr />
+<h3 id="17-comprobar-si-la-peticion-ha-sido-correcta">17. Comprobar si la petición ha sido correcta<a class="headerlink" href="#17-comprobar-si-la-peticion-ha-sido-correcta" title="Permanent link">&para;</a></h3>
+<p>Podemos comprobar:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">if respuesta.status_code == 200:
+
+    print(
+        &quot;Petición correcta.&quot;
+    )
+
+else:
+
+    print(
+        &quot;La petición no ha &quot;
+        &quot;devuelto HTTP 200.&quot;
+    )
+</code></pre>
+<p>Programa completo:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+
+if respuesta.status_code == 200:
+
+    print(
+        &quot;Petición correcta.&quot;
+    )
+
+else:
+
+    print(
+        f&quot;Error HTTP: &quot;
+        f&quot;{respuesta.status_code}&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="18-el-metodo-raise_for_status">18. El método <code>raise_for_status()</code><a class="headerlink" href="#18-el-metodo-raise_for_status" title="Permanent link">&para;</a></h3>
+<p><code>requests</code> dispone de otro mecanismo muy útil:</p>
+<pre><code class="language-python">respuesta.raise_for_status()
+</code></pre>
+<p>Este método comprueba el código HTTP.</p>
+<p>Si se ha producido un error HTTP, genera una excepción.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">import requests
+
+
+respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+
+respuesta.raise_for_status()
+
+
+print(
+    &quot;Petición realizada &quot;
+    &quot;correctamente.&quot;
+)
+</code></pre>
+<p>Esto nos permitirá combinar <code>requests</code> con el control de excepciones estudiado en el capítulo anterior.</p>
+<hr />
+<h3 id="19-errores-de-red">19. Errores de red<a class="headerlink" href="#19-errores-de-red" title="Permanent link">&para;</a></h3>
+<p>Cuando trabajamos con Internet pueden producirse problemas que no aparecían al trabajar únicamente con archivos locales.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">servidor no disponible
+problema de conexión
+nombre DNS incorrecto
+tiempo de espera agotado
+respuesta HTTP de error
+</code></pre>
+<p>Por eso no deberíamos asumir que:</p>
+<pre><code class="language-python">requests.get(...)
+</code></pre>
+<p>siempre funcionará.</p>
+<hr />
+<h3 id="20-controlar-errores-con-requests">20. Controlar errores con <code>requests</code><a class="headerlink" href="#20-controlar-errores-con-requests" title="Permanent link">&para;</a></h3>
+<p>Vamos a crear:</p>
+<pre><code class="language-text">get_seguro.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = &quot;https://example.com&quot;
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: se ha superado &quot;
+        &quot;el tiempo de espera.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;establecer la conexión.&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR en la petición: &quot;
+        f&quot;{error}&quot;
+    )
+
+else:
+
+    print(
+        &quot;Petición realizada &quot;
+        &quot;correctamente.&quot;
+    )
+
+    print(
+        f&quot;Código HTTP: &quot;
+        f&quot;{respuesta.status_code}&quot;
+    )
+</code></pre>
+<p>Aquí estamos aplicando directamente lo aprendido en el capítulo anterior.</p>
+<hr />
+<h3 id="21-jerarquia-de-errores-de-requests">21. Jerarquía de errores de <code>requests</code><a class="headerlink" href="#21-jerarquia-de-errores-de-requests" title="Permanent link">&para;</a></h3>
+<p><code>requests</code> dispone de diferentes excepciones.</p>
+<p>En este momento nos interesan principalmente:</p>
+<pre><code class="language-text">RequestException
+      │
+      ├── ConnectionError
+      │
+      ├── Timeout
+      │
+      └── HTTPError
+</code></pre>
+<p>Podemos interpretarlas así:</p>
+<pre><code class="language-text">ConnectionError
+    problema estableciendo
+    la conexión
+
+
+Timeout
+    la operación ha tardado
+    demasiado
+
+
+HTTPError
+    respuesta HTTP considerada
+    errónea
+
+
+RequestException
+    error general relacionado
+    con requests
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Orden de los <code>except</code></p>
+<p>Las excepciones más concretas deben comprobarse antes que las más generales.</p>
+<p>Por eso dejamos:</p>
+<p><code>python
+except requests.exceptions.RequestException:</code></p>
+<p>para el final.</p>
+</div>
+<hr />
+<h3 id="22-por-que-utilizar-timeout">22. ¿Por qué utilizar <code>timeout</code>?<a class="headerlink" href="#22-por-que-utilizar-timeout" title="Permanent link">&para;</a></h3>
+<p>Observa que nuestros ejemplos utilizan:</p>
+<pre><code class="language-python">timeout=10
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">requests.get(
+    url,
+    timeout=10
+)
+</code></pre>
+<p>Esto evita que el programa pueda permanecer esperando indefinidamente una respuesta.</p>
+<p>Si el servidor o la conexión no responden adecuadamente, <code>requests</code> puede generar:</p>
+<pre><code class="language-python">requests.exceptions.Timeout
+</code></pre>
+<p>que podemos controlar.</p>
+<div class="admonition warning">
+<p class="admonition-title">Utiliza tiempos de espera</p>
+<p>En scripts de administración es recomendable establecer tiempos de espera en las operaciones de red.</p>
+<p>Un servicio que no responde no debería bloquear indefinidamente todo nuestro programa.</p>
+</div>
+<hr />
+<h3 id="23-crear-una-funcion-reutilizable">23. Crear una función reutilizable<a class="headerlink" href="#23-crear-una-funcion-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Vamos a encapsular la petición en una función.</p>
+<p>Crea:</p>
+<pre><code class="language-text">cliente_http.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+def obtener_url(url):
+
+    try:
+
+        respuesta = requests.get(
+            url,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+    except requests.exceptions.Timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;conectar.&quot;
+        )
+
+        return None
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        return None
+
+    else:
+
+        return respuesta
+</code></pre>
+<p>Después podemos utilizar:</p>
+<pre><code class="language-python">respuesta = obtener_url(
+    &quot;https://example.com&quot;
+)
+
+
+if respuesta is not None:
+
+    print(
+        f&quot;Código HTTP: &quot;
+        f&quot;{respuesta.status_code}&quot;
+    )
+
+    print(
+        f&quot;Tipo: &quot;
+        f&quot;{respuesta.headers.get('Content-Type')}&quot;
+    )
+</code></pre>
+<p>La función:</p>
+<pre><code class="language-python">obtener_url()
+</code></pre>
+<p>podrá reutilizarse con diferentes direcciones.</p>
+<hr />
+<h3 id="24-recibir-la-url-mediante-argparse">24. Recibir la URL mediante <code>argparse</code><a class="headerlink" href="#24-recibir-la-url-mediante-argparse" title="Permanent link">&para;</a></h3>
+<p>Vamos a combinar este capítulo con el anterior.</p>
+<p>Crea:</p>
+<pre><code class="language-text">consultar_web.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+
+import requests
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Consulta una dirección &quot;
+        &quot;web mediante HTTP.&quot;
+    )
+)
+
+parser.add_argument(
+    &quot;url&quot;,
+    help=(
+        &quot;URL que se consultará&quot;
+    )
+)
+
+args = parser.parse_args()
+
+
+try:
+
+    respuesta = requests.get(
+        args.url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;establecer la conexión.&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;RESULTADO HTTP&quot;)
+    print(&quot;==============&quot;)
+    print()
+
+    print(
+        f&quot;URL: {args.url}&quot;
+    )
+
+    print(
+        f&quot;Código: &quot;
+        f&quot;{respuesta.status_code}&quot;
+    )
+
+    print(
+        f&quot;Tipo: &quot;
+        f&quot;{respuesta.headers.get('Content-Type')}&quot;
+    )
+
+    print(
+        f&quot;Tamaño: &quot;
+        f&quot;{len(respuesta.content)} bytes&quot;
+    )
+</code></pre>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python consultar_web.py https://example.com
+</code></pre>
+<hr />
+<h3 id="25-anadir-logging">25. Añadir <code>logging</code><a class="headerlink" href="#25-anadir-logging" title="Permanent link">&para;</a></h3>
+<p>Podemos incorporar también el registro aprendido en el capítulo 4.</p>
+<p>Añade:</p>
+<pre><code class="language-python">import logging
+</code></pre>
+<p>y configura:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=&quot;http.log&quot;,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=(
+        &quot;%Y-%m-%d %H:%M:%S&quot;
+    )
+)
+</code></pre>
+<p>Antes de realizar la petición:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Consultando {args.url}&quot;
+)
+</code></pre>
+<p>Si se produce un error:</p>
+<pre><code class="language-python">logging.error(
+    f&quot;Error consultando &quot;
+    f&quot;{args.url}&quot;
+)
+</code></pre>
+<p>Si la petición funciona:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Respuesta HTTP &quot;
+    f&quot;{respuesta.status_code} &quot;
+    f&quot;de {args.url}&quot;
+)
+</code></pre>
+<p>De esta forma empezamos a integrar los diferentes capítulos:</p>
+<pre><code class="language-text">Capítulo 4
+argparse
+excepciones
+logging
+     │
+     ▼
+Capítulo 5
+requests
+HTTP
+</code></pre>
+<hr />
+<h3 id="26-practica-guiada-comprobar-una-pagina-web">26. Práctica guiada: comprobar una página web<a class="headerlink" href="#26-practica-guiada-comprobar-una-pagina-web" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_web.py
+</code></pre>
+<p>El programa deberá recibir:</p>
+<pre><code class="language-powershell">python comprobar_web.py https://example.com
+</code></pre>
+<p>y mostrar:</p>
+<pre><code class="language-text">COMPROBACIÓN WEB
+================
+
+URL: https://example.com
+Código HTTP: 200
+Estado: DISPONIBLE
+Tipo: text/html
+</code></pre>
+<p>El programa deberá utilizar:</p>
+<pre><code class="language-text">argparse
+requests
+timeout
+try / except
+raise_for_status()
+</code></pre>
+<p>Si se produce un problema de conexión deberá mostrar un mensaje comprensible.</p>
+<hr />
+<h3 id="27-practica-propuesta-comprobador-de-varios-servicios">27. Práctica propuesta: comprobador de varios servicios<a class="headerlink" href="#27-practica-propuesta-comprobador-de-varios-servicios" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_servicios.py
+</code></pre>
+<p>Dentro del programa define inicialmente:</p>
+<pre><code class="language-python">servicios = [
+    &quot;https://example.com&quot;,
+    &quot;https://www.python.org&quot;
+]
+</code></pre>
+<p>El programa deberá recorrer la lista:</p>
+<pre><code class="language-python">for url in servicios:
+</code></pre>
+<p>y realizar una petición a cada servicio.</p>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">COMPROBACIÓN DE SERVICIOS
+=========================
+
+https://example.com
+HTTP: 200
+Estado: DISPONIBLE
+
+https://www.python.org
+HTTP: 200
+Estado: DISPONIBLE
+</code></pre>
+<p>Si alguno no responde, el programa debe continuar comprobando los demás.</p>
+<div class="admonition note">
+<p class="admonition-title">Automatización</p>
+<p>Observa que estamos aplicando nuevamente el patrón estudiado en capítulos anteriores:</p>
+<p><code>text
+lista de elementos
+      │
+      ▼
+    bucle
+      │
+      ▼
+   operación
+      │
+      ▼
+  comprobación
+      │
+      ▼
+   resultado</code></p>
+<p>La diferencia es que ahora la operación se realiza mediante HTTP.</p>
+</div>
+<hr />
+<h3 id="28-http-frente-a-ping">28. HTTP frente a <code>ping</code><a class="headerlink" href="#28-http-frente-a-ping" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora habíamos utilizado:</p>
+<pre><code class="language-text">ping
+</code></pre>
+<p>para comprobar conectividad.</p>
+<p>Ahora podemos utilizar:</p>
+<pre><code class="language-text">HTTP
+</code></pre>
+<p>para comprobar un servicio web.</p>
+<p>No responden exactamente a la misma pregunta.</p>
+<pre><code class="language-text">PING
+
+¿Existe conectividad IP
+y obtenemos respuesta ICMP?
+
+
+HTTP
+
+¿Podemos comunicarnos con
+el servicio web?
+</code></pre>
+<p>Un servidor podría no responder a <code>ping</code> y, sin embargo, tener su servicio web disponible.</p>
+<p>También podría ocurrir que el equipo estuviera accesible pero el servicio web tuviera un problema.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">equipo accesible
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">servicio web disponible
+</code></pre>
+<p>no significan exactamente lo mismo.</p>
+<hr />
+<h3 id="29-de-una-pagina-web-a-una-api">29. De una página web a una API<a class="headerlink" href="#29-de-una-pagina-web-a-una-api" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos realizado una petición a:</p>
+<pre><code class="language-text">https://example.com
+</code></pre>
+<p>y hemos recibido principalmente:</p>
+<pre><code class="language-text">HTML
+</code></pre>
+<p>Pero un programa normalmente no necesita una página diseñada para que la vea una persona.</p>
+<p>Es mucho más útil recibir información estructurada.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">IP: 203.0.113.10
+Ciudad: Barcelona
+Estado: activo
+</code></pre>
+<p>Los servicios destinados a ser utilizados por otros programas suelen proporcionar la información mediante una <strong>API</strong>.</p>
+<p>En muchas APIs encontraremos respuestas en formato:</p>
+<pre><code class="language-text">JSON
+</code></pre>
+<p>En lugar de recibir:</p>
+<pre><code class="language-html">&lt;h1&gt;Servidor activo&lt;/h1&gt;
+</code></pre>
+<p>podríamos recibir:</p>
+<pre><code class="language-json">{
+    &quot;servidor&quot;: &quot;web01&quot;,
+    &quot;estado&quot;: &quot;activo&quot;
+}
+</code></pre>
+<p>Python puede procesar esta información fácilmente.</p>
+<p>Este será nuestro siguiente paso.</p>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<p>En esta primera parte del capítulo hemos aprendido que Python puede actuar como cliente HTTP:</p>
+<pre><code class="language-text">Python
+   │
+   │ petición HTTP
+   ▼
+Servidor
+   │
+   │ respuesta HTTP
+   ▼
+Python
+</code></pre>
+<p>Hemos instalado y utilizado:</p>
+<pre><code class="language-python">requests
+</code></pre>
+<p>y realizado nuestra primera petición:</p>
+<pre><code class="language-python">requests.get(
+    url,
+    timeout=10
+)
+</code></pre>
+<p>Hemos aprendido a consultar:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<pre><code class="language-python">respuesta.headers
+</code></pre>
+<p>y hemos introducido:</p>
+<pre><code class="language-python">respuesta.raise_for_status()
+</code></pre>
+<p>También hemos estudiado algunos códigos HTTP:</p>
+<pre><code class="language-text">2xx → éxito
+3xx → redirección
+4xx → problema con la petición
+5xx → problema en el servidor
+</code></pre>
+<p>y hemos combinado <code>requests</code> con el control de excepciones:</p>
+<pre><code class="language-text">Timeout
+ConnectionError
+HTTPError
+RequestException
+</code></pre>
+<p>Finalmente hemos conectado lo aprendido en capítulos anteriores:</p>
+<pre><code class="language-text">argparse
+    +
+excepciones
+    +
+logging
+    +
+requests
+</code></pre>
+<p>para comenzar a construir herramientas capaces de comprobar servicios web.</p>
+<p>Hasta ahora las respuestas que hemos procesado han sido principalmente HTML.</p>
+<p>En la siguiente parte comenzaremos a trabajar con <strong>APIs y JSON</strong>, utilizando:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<p>para convertir las respuestas de los servicios web en estructuras de datos que Python puede procesar directamente.</p>
+<hr />
+<h2 id="30-introduccion-a-las-apis-y-json">30. Introducción a las APIs y JSON<a class="headerlink" href="#30-introduccion-a-las-apis-y-json" title="Permanent link">&para;</a></h2>
+<p>En la primera parte del capítulo hemos realizado peticiones HTTP con:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>y hemos recibido respuestas de servidores web.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">respuesta = requests.get(
+    &quot;https://example.com&quot;,
+    timeout=10
+)
+</code></pre>
+<p>En este caso el servidor devuelve principalmente:</p>
+<pre><code class="language-text">HTML
+</code></pre>
+<p>El HTML está pensado fundamentalmente para representar páginas que serán visualizadas por una persona mediante un navegador.</p>
+<p>Sin embargo, cuando dos programas necesitan intercambiar información resulta más útil utilizar datos estructurados.</p>
+<p>Aquí aparecen dos conceptos fundamentales:</p>
+<pre><code class="language-text">API
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">JSON
+</code></pre>
+<hr />
+<h3 id="31-que-es-una-api">31. ¿Qué es una API?<a class="headerlink" href="#31-que-es-una-api" title="Permanent link">&para;</a></h3>
+<p>API significa:</p>
+<pre><code class="language-text">Application Programming Interface
+</code></pre>
+<p>Una API permite que diferentes programas o servicios se comuniquen siguiendo unas reglas determinadas.</p>
+<p>Podemos imaginar una API como un intermediario:</p>
+<pre><code class="language-text">PROGRAMA PYTHON
+       │
+       │ petición
+       ▼
+      API
+       │
+       ▼
+  APLICACIÓN
+  O SERVICIO
+       │
+       ▼
+      API
+       │
+       │ respuesta
+       ▼
+PROGRAMA PYTHON
+</code></pre>
+<p>Nuestro programa no necesita conocer cómo funciona internamente el servidor.</p>
+<p>Solo necesita conocer:</p>
+<pre><code class="language-text">qué dirección debe consultar
+qué información debe enviar
+qué respuesta recibirá
+</code></pre>
+<hr />
+<h3 id="32-ejemplo-conceptual-de-una-api">32. Ejemplo conceptual de una API<a class="headerlink" href="#32-ejemplo-conceptual-de-una-api" title="Permanent link">&para;</a></h3>
+<p>Imaginemos un servicio que proporciona información sobre equipos.</p>
+<p>Podríamos realizar:</p>
+<pre><code class="language-text">GET /equipos/PC01
+</code></pre>
+<p>y recibir:</p>
+<pre><code class="language-json">{
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;,
+    &quot;estado&quot;: &quot;activo&quot;
+}
+</code></pre>
+<p>Nuestro programa Python podría utilizar esos datos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">API
+ │
+ ▼
+JSON
+ │
+ ▼
+Python
+ │
+ ├── nombre
+ ├── ip
+ └── estado
+</code></pre>
+<hr />
+<h3 id="33-que-es-json">33. ¿Qué es JSON?<a class="headerlink" href="#33-que-es-json" title="Permanent link">&para;</a></h3>
+<p>JSON significa:</p>
+<pre><code class="language-text">JavaScript Object Notation
+</code></pre>
+<p>Es un formato de texto utilizado ampliamente para intercambiar información estructurada.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-json">{
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;,
+    &quot;activo&quot;: true
+}
+</code></pre>
+<p>Podemos observar una estructura formada por:</p>
+<pre><code class="language-text">clave : valor
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">&quot;nombre&quot; : &quot;PC01&quot;
+</code></pre>
+<pre><code class="language-text">&quot;ip&quot; : &quot;192.168.1.20&quot;
+</code></pre>
+<pre><code class="language-text">&quot;activo&quot; : true
+</code></pre>
+<hr />
+<h3 id="34-json-y-los-diccionarios-de-python">34. JSON y los diccionarios de Python<a class="headerlink" href="#34-json-y-los-diccionarios-de-python" title="Permanent link">&para;</a></h3>
+<p>JSON se parece mucho a los diccionarios que ya conocemos en Python.</p>
+<p>JSON:</p>
+<pre><code class="language-json">{
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;
+}
+</code></pre>
+<p>Python:</p>
+<pre><code class="language-python">equipo = {
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;
+}
+</code></pre>
+<p>Por esta razón resulta muy cómodo trabajar con respuestas JSON desde Python.</p>
+<p>Cuando <code>requests</code> procesa un objeto JSON, normalmente podremos trabajar con estructuras como:</p>
+<pre><code class="language-text">dict
+list
+str
+int
+float
+bool
+None
+</code></pre>
+<hr />
+<h3 id="35-algunas-diferencias-entre-json-y-python">35. Algunas diferencias entre JSON y Python<a class="headerlink" href="#35-algunas-diferencias-entre-json-y-python" title="Permanent link">&para;</a></h3>
+<p>Aunque visualmente se parecen, JSON y Python no son exactamente lo mismo.</p>
+<p>Por ejemplo, JSON utiliza:</p>
+<pre><code class="language-json">true
+false
+null
+</code></pre>
+<p>Python utiliza:</p>
+<pre><code class="language-python">True
+False
+None
+</code></pre>
+<p>Por ejemplo, este JSON:</p>
+<pre><code class="language-json">{
+    &quot;activo&quot;: true,
+    &quot;error&quot;: null
+}
+</code></pre>
+<p>al convertirse a estructuras Python corresponderá conceptualmente a:</p>
+<pre><code class="language-python">{
+    &quot;activo&quot;: True,
+    &quot;error&quot;: None
+}
+</code></pre>
+<p>No necesitamos realizar estas conversiones manualmente cuando utilizamos:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<hr />
+<h3 id="36-nuestra-primera-api">36. Nuestra primera API<a class="headerlink" href="#36-nuestra-primera-api" title="Permanent link">&para;</a></h3>
+<p>Vamos a utilizar una API pública sencilla para realizar nuestras primeras pruebas.</p>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo5/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">primera_api.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users/1&quot;
+)
+
+
+respuesta = requests.get(
+    url,
+    timeout=10
+)
+
+
+print(
+    f&quot;Código HTTP: &quot;
+    f&quot;{respuesta.status_code}&quot;
+)
+
+print()
+
+print(
+    respuesta.text
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python primera_api.py
+</code></pre>
+<p>Recibiremos información estructurada sobre un usuario de prueba.</p>
+<div class="admonition note">
+<p class="admonition-title">API de pruebas</p>
+<p>JSONPlaceholder es un servicio pensado para realizar pruebas y ejemplos.</p>
+<p>Los datos que devuelve son ficticios y resultan adecuados para aprender a consumir APIs sin modificar información real.</p>
+</div>
+<hr />
+<h3 id="37-comprobar-el-tipo-de-contenido">37. Comprobar el tipo de contenido<a class="headerlink" href="#37-comprobar-el-tipo-de-contenido" title="Permanent link">&para;</a></h3>
+<p>Podemos consultar:</p>
+<pre><code class="language-python">respuesta.headers.get(
+    &quot;Content-Type&quot;
+)
+</code></pre>
+<p>Modifica el programa:</p>
+<pre><code class="language-python">print(
+    f&quot;Tipo: &quot;
+    f&quot;{respuesta.headers.get('Content-Type')}&quot;
+)
+</code></pre>
+<p>La respuesta indicará un tipo relacionado con:</p>
+<pre><code class="language-text">application/json
+</code></pre>
+<p>Esto nos informa de que el servidor está devolviendo JSON.</p>
+<hr />
+<h3 id="38-respuestatext-frente-a-respuestajson">38. <code>respuesta.text</code> frente a <code>respuesta.json()</code><a class="headerlink" href="#38-respuestatext-frente-a-respuestajson" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos utilizado:</p>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<p>Esto devuelve el contenido como texto.</p>
+<p>Pero si sabemos que la respuesta contiene JSON podemos utilizar:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<p>Modifica:</p>
+<pre><code class="language-text">primera_api.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users/1&quot;
+)
+
+
+respuesta = requests.get(
+    url,
+    timeout=10
+)
+
+respuesta.raise_for_status()
+
+
+datos = respuesta.json()
+
+
+print(
+    datos
+)
+</code></pre>
+<p>Ahora:</p>
+<pre><code class="language-python">datos
+</code></pre>
+<p>ya no contiene simplemente el texto recibido.</p>
+<p>Contiene una estructura de datos Python.</p>
+<hr />
+<h3 id="39-comprobar-el-tipo-recibido">39. Comprobar el tipo recibido<a class="headerlink" href="#39-comprobar-el-tipo-recibido" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">print(
+    type(datos)
+)
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">&lt;class 'dict'&gt;
+</code></pre>
+<p>Esto significa que podemos trabajar con:</p>
+<pre><code class="language-python">datos
+</code></pre>
+<p>como con cualquier otro diccionario.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    datos[&quot;name&quot;]
+)
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">print(
+    datos[&quot;email&quot;]
+)
+</code></pre>
+<hr />
+<h3 id="40-acceder-a-los-datos-de-la-api">40. Acceder a los datos de la API<a class="headerlink" href="#40-acceder-a-los-datos-de-la-api" title="Permanent link">&para;</a></h3>
+<p>Podemos mostrar únicamente la información que nos interesa:</p>
+<pre><code class="language-python">print(
+    f&quot;Nombre: &quot;
+    f&quot;{datos['name']}&quot;
+)
+
+print(
+    f&quot;Usuario: &quot;
+    f&quot;{datos['username']}&quot;
+)
+
+print(
+    f&quot;Email: &quot;
+    f&quot;{datos['email']}&quot;
+)
+</code></pre>
+<p>Observa lo que hemos conseguido:</p>
+<pre><code class="language-text">SERVIDOR
+   │
+   ▼
+respuesta JSON
+   │
+   ▼
+respuesta.json()
+   │
+   ▼
+diccionario Python
+   │
+   ▼
+datos[&quot;name&quot;]
+datos[&quot;email&quot;]
+</code></pre>
+<p>Ya no necesitamos analizar manualmente el texto de la respuesta.</p>
+<hr />
+<h3 id="41-datos-json-anidados">41. Datos JSON anidados<a class="headerlink" href="#41-datos-json-anidados" title="Permanent link">&para;</a></h3>
+<p>Una respuesta JSON puede contener estructuras dentro de otras estructuras.</p>
+<p>Por ejemplo, los datos recibidos incluyen información de dirección.</p>
+<p>Podemos acceder a:</p>
+<pre><code class="language-python">datos[&quot;address&quot;]
+</code></pre>
+<p>Esto devuelve otro diccionario.</p>
+<p>Podemos comprobarlo:</p>
+<pre><code class="language-python">direccion = datos[&quot;address&quot;]
+
+print(
+    type(direccion)
+)
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">&lt;class 'dict'&gt;
+</code></pre>
+<p>Ahora podemos acceder a:</p>
+<pre><code class="language-python">direccion[&quot;city&quot;]
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    f&quot;Ciudad: &quot;
+    f&quot;{datos['address']['city']}&quot;
+)
+</code></pre>
+<p>La estructura es:</p>
+<pre><code class="language-text">datos
+ │
+ ├── name
+ ├── username
+ ├── email
+ │
+ └── address
+       │
+       ├── street
+       ├── suite
+       ├── city
+       └── zipcode
+</code></pre>
+<hr />
+<h3 id="42-crear-una-ficha-a-partir-de-una-api">42. Crear una ficha a partir de una API<a class="headerlink" href="#42-crear-una-ficha-a-partir-de-una-api" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">ficha_usuario.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users/1&quot;
+)
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    datos = respuesta.json()
+
+    print()
+    print(&quot;FICHA DEL USUARIO&quot;)
+    print(&quot;=================&quot;)
+    print()
+
+    print(
+        f&quot;Nombre: &quot;
+        f&quot;{datos['name']}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{datos['username']}&quot;
+    )
+
+    print(
+        f&quot;Email: &quot;
+        f&quot;{datos['email']}&quot;
+    )
+
+    print(
+        f&quot;Ciudad: &quot;
+        f&quot;{datos['address']['city']}&quot;
+    )
+
+    print(
+        f&quot;Empresa: &quot;
+        f&quot;{datos['company']['name']}&quot;
+    )
+</code></pre>
+<p>Ahora nuestro programa transforma una respuesta JSON en información seleccionada y presentada de forma comprensible.</p>
+<hr />
+<h3 id="43-listas-dentro-de-json">43. Listas dentro de JSON<a class="headerlink" href="#43-listas-dentro-de-json" title="Permanent link">&para;</a></h3>
+<p>Una API también puede devolver una lista.</p>
+<p>Cambia la URL por:</p>
+<pre><code class="language-python">url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users&quot;
+)
+</code></pre>
+<p>Ahora la API devuelve varios usuarios.</p>
+<p>Podemos hacer:</p>
+<pre><code class="language-python">datos = respuesta.json()
+
+print(
+    type(datos)
+)
+</code></pre>
+<p>En este caso obtendremos:</p>
+<pre><code class="language-text">&lt;class 'list'&gt;
+</code></pre>
+<p>La estructura conceptual es:</p>
+<pre><code class="language-text">lista
+ │
+ ├── usuario 1
+ │      ├── name
+ │      ├── email
+ │      └── ...
+ │
+ ├── usuario 2
+ │      ├── name
+ │      ├── email
+ │      └── ...
+ │
+ └── usuario ...
+</code></pre>
+<hr />
+<h3 id="44-recorrer-una-respuesta-json">44. Recorrer una respuesta JSON<a class="headerlink" href="#44-recorrer-una-respuesta-json" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">listar_usuarios.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users&quot;
+)
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    usuarios = respuesta.json()
+
+    print()
+    print(&quot;USUARIOS&quot;)
+    print(&quot;========&quot;)
+    print()
+
+    for usuario in usuarios:
+
+        print(
+            f&quot;{usuario['name']} &quot;
+            f&quot;- {usuario['email']}&quot;
+        )
+</code></pre>
+<p>Aquí estamos combinando:</p>
+<pre><code class="language-text">HTTP
+ │
+ ▼
+JSON
+ │
+ ▼
+lista Python
+ │
+ ▼
+for
+ │
+ ▼
+diccionario
+</code></pre>
+<hr />
+<h3 id="45-contar-elementos-recibidos">45. Contar elementos recibidos<a class="headerlink" href="#45-contar-elementos-recibidos" title="Permanent link">&para;</a></h3>
+<p>Como:</p>
+<pre><code class="language-python">usuarios
+</code></pre>
+<p>es una lista, podemos utilizar:</p>
+<pre><code class="language-python">len()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    f&quot;Usuarios recibidos: &quot;
+    f&quot;{len(usuarios)}&quot;
+)
+</code></pre>
+<p>Este patrón será frecuente cuando trabajemos con APIs:</p>
+<pre><code class="language-python">datos = respuesta.json()
+
+for elemento in datos:
+
+    # procesar elemento
+</code></pre>
+<hr />
+<h3 id="46-utilizar-get-con-diccionarios">46. Utilizar <code>.get()</code> con diccionarios<a class="headerlink" href="#46-utilizar-get-con-diccionarios" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos utilizado:</p>
+<pre><code class="language-python">datos[&quot;email&quot;]
+</code></pre>
+<p>Si la clave:</p>
+<pre><code class="language-text">email
+</code></pre>
+<p>no existe, Python puede generar:</p>
+<pre><code class="language-text">KeyError
+</code></pre>
+<p>En algunas situaciones podemos utilizar:</p>
+<pre><code class="language-python">datos.get(&quot;email&quot;)
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">email = datos.get(
+    &quot;email&quot;
+)
+</code></pre>
+<p>Si la clave no existe, obtendremos:</p>
+<pre><code class="language-python">None
+</code></pre>
+<p>También podemos proporcionar un valor predeterminado:</p>
+<pre><code class="language-python">email = datos.get(
+    &quot;email&quot;,
+    &quot;No disponible&quot;
+)
+</code></pre>
+<p>Esto puede resultar útil cuando una API contiene campos opcionales.</p>
+<hr />
+<h3 id="47-puede-fallar-respuestajson">47. ¿Puede fallar <code>respuesta.json()</code>?<a class="headerlink" href="#47-puede-fallar-respuestajson" title="Permanent link">&para;</a></h3>
+<p>Sí.</p>
+<p>No debemos asumir que cualquier respuesta HTTP contiene JSON válido.</p>
+<p>Por ejemplo, un servidor podría devolver:</p>
+<pre><code class="language-text">HTML
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">texto
+</code></pre>
+<p>Si intentamos convertir una respuesta que no contiene JSON válido:</p>
+<pre><code class="language-python">datos = respuesta.json()
+</code></pre>
+<p>puede producirse un error de decodificación.</p>
+<p>Por tanto, en programas robustos también debemos tenerlo en cuenta.</p>
+<hr />
+<h3 id="48-controlar-errores-al-procesar-json">48. Controlar errores al procesar JSON<a class="headerlink" href="#48-controlar-errores-al-procesar-json" title="Permanent link">&para;</a></h3>
+<p>Podemos escribir:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;users/1&quot;
+)
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: problema &quot;
+        &quot;de conexión.&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+except requests.exceptions.JSONDecodeError:
+
+    print(
+        &quot;ERROR: la respuesta &quot;
+        &quot;no contiene JSON válido.&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    print(
+        datos
+    )
+</code></pre>
+<p>Ahora nuestro programa controla tanto problemas de comunicación como problemas al interpretar la respuesta.</p>
+<hr />
+<h3 id="49-separar-descarga-y-procesamiento">49. Separar descarga y procesamiento<a class="headerlink" href="#49-separar-descarga-y-procesamiento" title="Permanent link">&para;</a></h3>
+<p>Una buena práctica consiste en separar diferentes responsabilidades.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">def obtener_datos(url):
+
+    try:
+
+        respuesta = requests.get(
+            url,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        return respuesta.json()
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        return None
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">datos = obtener_datos(
+    url
+)
+
+
+if datos is not None:
+
+    print(
+        datos
+    )
+</code></pre>
+<p>Ahora tenemos:</p>
+<pre><code class="language-text">obtener_datos()
+      │
+      ├── petición HTTP
+      ├── comprobación
+      ├── JSON
+      └── errores
+</code></pre>
+<p>El resto del programa puede concentrarse en procesar los datos.</p>
+<hr />
+<h3 id="50-consultar-un-usuario-desde-la-linea-de-comandos">50. Consultar un usuario desde la línea de comandos<a class="headerlink" href="#50-consultar-un-usuario-desde-la-linea-de-comandos" title="Permanent link">&para;</a></h3>
+<p>Vamos a combinar la API con <code>argparse</code>.</p>
+<p>Crea:</p>
+<pre><code class="language-text">consultar_usuario.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+
+import requests
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Consulta un usuario &quot;
+        &quot;mediante una API.&quot;
+    )
+)
+
+parser.add_argument(
+    &quot;id&quot;,
+    type=int,
+    help=&quot;Identificador del usuario&quot;
+)
+
+args = parser.parse_args()
+
+
+if args.id &lt; 1:
+
+    parser.error(
+        &quot;El identificador debe &quot;
+        &quot;ser mayor que cero.&quot;
+    )
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    f&quot;users/{args.id}&quot;
+)
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;establecer la conexión.&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+except requests.exceptions.JSONDecodeError:
+
+    print(
+        &quot;ERROR: respuesta JSON &quot;
+        &quot;no válida.&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;DATOS DEL USUARIO&quot;)
+    print(&quot;=================&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{datos.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Nombre: &quot;
+        f&quot;{datos.get('name')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{datos.get('username')}&quot;
+    )
+
+    print(
+        f&quot;Email: &quot;
+        f&quot;{datos.get('email')}&quot;
+    )
+</code></pre>
+<p>Ahora podemos ejecutar:</p>
+<pre><code class="language-powershell">python consultar_usuario.py 1
+</code></pre>
+<p>También:</p>
+<pre><code class="language-powershell">python consultar_usuario.py 5
+</code></pre>
+<p>La misma aplicación consulta diferentes recursos sin modificar el código.</p>
+<hr />
+<h3 id="51-que-es-un-endpoint">51. ¿Qué es un endpoint?<a class="headerlink" href="#51-que-es-un-endpoint" title="Permanent link">&para;</a></h3>
+<p>En una API encontraremos frecuentemente el término:</p>
+<pre><code class="language-text">endpoint
+</code></pre>
+<p>Un endpoint es una dirección concreta de la API que permite acceder a un recurso o realizar una operación.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">https://jsonplaceholder.typicode.com/users
+</code></pre>
+<p>podría representar el conjunto de usuarios.</p>
+<p>Mientras que:</p>
+<pre><code class="language-text">https://jsonplaceholder.typicode.com/users/1
+</code></pre>
+<p>representa un usuario concreto.</p>
+<p>Podemos verlo así:</p>
+<pre><code class="language-text">API
+ │
+ ├── /users
+ │
+ │     lista de usuarios
+ │
+ ├── /users/1
+ │
+ │     usuario 1
+ │
+ └── /users/2
+       usuario 2
+</code></pre>
+<p>La documentación de cada API nos indicará qué endpoints están disponibles.</p>
+<hr />
+<h3 id="52-parametros-de-consulta">52. Parámetros de consulta<a class="headerlink" href="#52-parametros-de-consulta" title="Permanent link">&para;</a></h3>
+<p>Muchas APIs permiten enviar parámetros en la propia URL.</p>
+<p>Podemos encontrar direcciones como:</p>
+<pre><code class="language-text">/recurso?parametro=valor
+</code></pre>
+<p>La parte situada después de:</p>
+<pre><code class="language-text">?
+</code></pre>
+<p>contiene parámetros de consulta.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">/posts?userId=1
+</code></pre>
+<p>indica que queremos filtrar los elementos utilizando:</p>
+<pre><code class="language-text">userId=1
+</code></pre>
+<hr />
+<h3 id="53-enviar-parametros-con-requests">53. Enviar parámetros con <code>requests</code><a class="headerlink" href="#53-enviar-parametros-con-requests" title="Permanent link">&para;</a></h3>
+<p>No es necesario construir manualmente:</p>
+<pre><code class="language-text">?userId=1
+</code></pre>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">params
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+parametros = {
+    &quot;userId&quot;: 1
+}
+
+
+respuesta = requests.get(
+    url,
+    params=parametros,
+    timeout=10
+)
+
+
+respuesta.raise_for_status()
+
+
+datos = respuesta.json()
+
+
+print(
+    f&quot;Elementos recibidos: &quot;
+    f&quot;{len(datos)}&quot;
+)
+</code></pre>
+<p><code>requests</code> construirá la URL correspondiente.</p>
+<p>Podemos comprobarla mediante:</p>
+<pre><code class="language-python">print(
+    respuesta.url
+)
+</code></pre>
+<hr />
+<h3 id="54-ventajas-de-utilizar-params">54. Ventajas de utilizar <code>params</code><a class="headerlink" href="#54-ventajas-de-utilizar-params" title="Permanent link">&para;</a></h3>
+<p>En lugar de construir:</p>
+<pre><code class="language-python">url = (
+    &quot;https://servidor/recurso&quot;
+    &quot;?userId=1&quot;
+)
+</code></pre>
+<p>podemos separar:</p>
+<pre><code class="language-python">url = (
+    &quot;https://servidor/recurso&quot;
+)
+
+parametros = {
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<p>y realizar:</p>
+<pre><code class="language-python">requests.get(
+    url,
+    params=parametros
+)
+</code></pre>
+<p>Esto hace que el código sea más claro, especialmente cuando tenemos varios parámetros.</p>
+<hr />
+<h3 id="55-practica-guiada-consultar-publicaciones">55. Práctica guiada: consultar publicaciones<a class="headerlink" href="#55-practica-guiada-consultar-publicaciones" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">consultar_posts.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+
+import requests
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Consulta publicaciones &quot;
+        &quot;de un usuario.&quot;
+    )
+)
+
+parser.add_argument(
+    &quot;usuario&quot;,
+    type=int,
+    help=&quot;ID del usuario&quot;
+)
+
+args = parser.parse_args()
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+parametros = {
+    &quot;userId&quot;: args.usuario
+}
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        params=parametros,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    publicaciones = (
+        respuesta.json()
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;PUBLICACIONES&quot;)
+    print(&quot;=============&quot;)
+    print()
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{args.usuario}&quot;
+    )
+
+    print(
+        f&quot;Total: &quot;
+        f&quot;{len(publicaciones)}&quot;
+    )
+
+    print()
+
+    for publicacion in publicaciones:
+
+        print(
+            f&quot;ID: &quot;
+            f&quot;{publicacion['id']}&quot;
+        )
+
+        print(
+            f&quot;Título: &quot;
+            f&quot;{publicacion['title']}&quot;
+        )
+
+        print()
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python consultar_posts.py 1
+</code></pre>
+<hr />
+<h3 id="56-obtener-nuestra-ip-publica">56. Obtener nuestra IP pública<a class="headerlink" href="#56-obtener-nuestra-ip-publica" title="Permanent link">&para;</a></h3>
+<p>Ahora vamos a realizar una aplicación más relacionada con administración de sistemas y redes.</p>
+<p>Existen servicios web que devuelven la dirección IP pública desde la que se realiza una petición.</p>
+<p>Conceptualmente:</p>
+<pre><code class="language-text">Nuestro PC
+    │
+    │ Internet
+    ▼
+Servicio web
+    │
+    │ detecta IP origen
+    ▼
+respuesta JSON
+    │
+    ▼
+Python
+</code></pre>
+<p>Un servicio de este tipo puede devolver:</p>
+<pre><code class="language-json">{
+    &quot;ip&quot;: &quot;203.0.113.25&quot;
+}
+</code></pre>
+<p>Nuestro programa podría hacer:</p>
+<pre><code class="language-python">datos = respuesta.json()
+
+ip = datos[&quot;ip&quot;]
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Direcciones de los ejemplos</p>
+<p>Las direcciones IP utilizadas en las explicaciones son ejemplos.</p>
+<p>La dirección obtenida al consultar un servicio real dependerá de la conexión desde la que se ejecute el programa.</p>
+</div>
+<hr />
+<h3 id="57-programa-para-consultar-la-ip-publica">57. Programa para consultar la IP pública<a class="headerlink" href="#57-programa-para-consultar-la-ip-publica" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">ip_publica.py
+</code></pre>
+<p>Podemos utilizar un servicio que devuelva la dirección en formato JSON.</p>
+<p>La estructura del programa será:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://api.ipify.org&quot;
+)
+
+
+parametros = {
+    &quot;format&quot;: &quot;json&quot;
+}
+
+
+try:
+
+    respuesta = requests.get(
+        url,
+        params=parametros,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: problema &quot;
+        &quot;de conexión.&quot;
+    )
+
+except requests.exceptions.JSONDecodeError:
+
+    print(
+        &quot;ERROR: respuesta JSON &quot;
+        &quot;no válida.&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    ip = datos.get(
+        &quot;ip&quot;
+    )
+
+    print()
+    print(&quot;DIRECCIÓN IP PÚBLICA&quot;)
+    print(&quot;====================&quot;)
+    print()
+
+    print(
+        f&quot;IP: {ip}&quot;
+    )
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python ip_publica.py
+</code></pre>
+<p>La dirección mostrada será la dirección pública observada por el servicio.</p>
+<div class="admonition note">
+<p class="admonition-title">IP pública</p>
+<p>Si los equipos de una red utilizan NAT, varios dispositivos de la red local pueden aparecer en Internet utilizando la misma dirección IP pública.</p>
+</div>
+<hr />
+<h3 id="58-guardar-datos-obtenidos-de-una-api">58. Guardar datos obtenidos de una API<a class="headerlink" href="#58-guardar-datos-obtenidos-de-una-api" title="Permanent link">&para;</a></h3>
+<p>También podemos guardar los resultados.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">from pathlib import Path
+
+
+archivo = Path(
+    &quot;../resultados/ip_publica.txt&quot;
+)
+
+
+archivo.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+archivo.write_text(
+    f&quot;IP pública: {ip}\n&quot;,
+    encoding=&quot;utf-8&quot;
+)
+</code></pre>
+<p>De esta forma combinamos:</p>
+<pre><code class="language-text">API
+ │
+ ▼
+JSON
+ │
+ ▼
+Python
+ │
+ ▼
+procesamiento
+ │
+ ▼
+archivo
+</code></pre>
+<hr />
+<h3 id="59-guardar-json-completo">59. Guardar JSON completo<a class="headerlink" href="#59-guardar-json-completo" title="Permanent link">&para;</a></h3>
+<p>Python incluye el módulo:</p>
+<pre><code class="language-python">json
+</code></pre>
+<p>que permite trabajar con JSON.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">import json
+</code></pre>
+<p>Si tenemos:</p>
+<pre><code class="language-python">datos = respuesta.json()
+</code></pre>
+<p>podemos guardar esa estructura en un archivo:</p>
+<pre><code class="language-python">with open(
+    &quot;respuesta.json&quot;,
+    &quot;w&quot;,
+    encoding=&quot;utf-8&quot;
+) as archivo:
+
+    json.dump(
+        datos,
+        archivo,
+        indent=4,
+        ensure_ascii=False
+    )
+</code></pre>
+<p>El parámetro:</p>
+<pre><code class="language-python">indent=4
+</code></pre>
+<p>hace que el archivo resulte más fácil de leer.</p>
+<hr />
+<h3 id="60-practica-guardar-usuarios-en-json">60. Práctica: guardar usuarios en JSON<a class="headerlink" href="#60-practica-guardar-usuarios-en-json" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">guardar_usuarios.py
+</code></pre>
+<p>El programa deberá:</p>
+<ol>
+<li>Consultar:</li>
+</ol>
+<pre><code class="language-text">/users
+</code></pre>
+<ol>
+<li>Convertir la respuesta mediante:</li>
+</ol>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<ol>
+<li>Crear:</li>
+</ol>
+<pre><code class="language-text">resultados/
+</code></pre>
+<p>si no existe.</p>
+<ol>
+<li>Guardar:</li>
+</ol>
+<pre><code class="language-text">usuarios.json
+</code></pre>
+<ol>
+<li>Mostrar cuántos usuarios se han almacenado.</li>
+</ol>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">DESCARGA COMPLETADA
+===================
+
+Usuarios: 10
+Archivo: resultados/usuarios.json
+</code></pre>
+<hr />
+<h3 id="61-anadir-logs-a-nuestras-consultas">61. Añadir logs a nuestras consultas<a class="headerlink" href="#61-anadir-logs-a-nuestras-consultas" title="Permanent link">&para;</a></h3>
+<p>Podemos combinar nuevamente:</p>
+<pre><code class="language-text">requests
++
+JSON
++
+logging
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Consultando API: {url}&quot;
+)
+</code></pre>
+<p>Si funciona:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Respuesta HTTP: &quot;
+    f&quot;{respuesta.status_code}&quot;
+)
+</code></pre>
+<p>Si falla:</p>
+<pre><code class="language-python">logging.error(
+    f&quot;Error consultando {url}&quot;
+)
+</code></pre>
+<p>Esto resulta especialmente útil cuando las consultas se realizan automáticamente.</p>
+<hr />
+<h3 id="62-patron-de-consumo-de-una-api">62. Patrón de consumo de una API<a class="headerlink" href="#62-patron-de-consumo-de-una-api" title="Permanent link">&para;</a></h3>
+<p>Ya podemos establecer un patrón general:</p>
+<pre><code class="language-text">      DEFINIR URL
+           │
+           ▼
+       PARÁMETROS
+           │
+           ▼
+     requests.get()
+           │
+           ▼
+       RESPUESTA
+           │
+           ▼
+    status / errores
+           │
+           ▼
+  respuesta.json()
+           │
+           ▼
+     datos Python
+           │
+           ▼
+      procesar
+           │
+           ▼
+ mostrar / guardar
+</code></pre>
+<p>En código:</p>
+<pre><code class="language-python">try:
+
+    respuesta = requests.get(
+        url,
+        params=parametros,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    datos = respuesta.json()
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    # Procesar datos
+    ...
+</code></pre>
+<p>Este patrón aparecerá frecuentemente cuando trabajemos con APIs.</p>
+<hr />
+<h3 id="63-practica-integradora-de-esta-parte">63. Práctica integradora de esta parte<a class="headerlink" href="#63-practica-integradora-de-esta-parte" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">consulta_api.py
+</code></pre>
+<p>El programa permitirá ejecutar:</p>
+<pre><code class="language-powershell">python consulta_api.py 1
+</code></pre>
+<p>El número representa el identificador de un usuario.</p>
+<p>El programa deberá:</p>
+<ol>
+<li>Recibir el ID mediante <code>argparse</code>.</li>
+<li>Validar que sea mayor que cero.</li>
+<li>Consultar la API.</li>
+<li>Utilizar <code>timeout</code>.</li>
+<li>Comprobar errores HTTP.</li>
+<li>Convertir la respuesta con <code>respuesta.json()</code>.</li>
+<li>Mostrar:</li>
+</ol>
+<pre><code class="language-text">nombre
+usuario
+email
+ciudad
+empresa
+</code></pre>
+<ol>
+<li>Registrar la operación mediante <code>logging</code>.</li>
+<li>Guardar la respuesta completa en:</li>
+</ol>
+<pre><code class="language-text">resultados/usuario_ID.json
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">resultados/usuario_1.json
+</code></pre>
+<p>El flujo será:</p>
+<pre><code class="language-text">     argparse
+        │
+        ▼
+       ID
+        │
+        ▼
+ construir URL
+        │
+        ▼
+ requests.get()
+        │
+        ▼
+     HTTP
+        │
+        ▼
+      JSON
+        │
+        ▼
+ diccionario Python
+        │
+   ┌────┴─────┐
+   │          │
+   ▼          ▼
+pantalla    archivo
+              │
+              ▼
+             JSON
+
+        +
+        │
+        ▼
+      logging
+</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Objetivo</p>
+<p>Si completas esta práctica serás capaz de consultar una API, procesar su respuesta JSON y utilizar los datos obtenidos dentro de un programa Python.</p>
+</div>
+<hr />
+<h2 id="resumen_1">Resumen<a class="headerlink" href="#resumen_1" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos aprendido qué es una:</p>
+<pre><code class="language-text">API
+</code></pre>
+<p>y cómo puede utilizarse para intercambiar información entre aplicaciones.</p>
+<p>Hemos trabajado con:</p>
+<pre><code class="language-text">JSON
+</code></pre>
+<p>y hemos comprobado su relación con las estructuras de Python.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-json">{
+    &quot;nombre&quot;: &quot;PC01&quot;
+}
+</code></pre>
+<p>puede convertirse en un diccionario Python mediante:</p>
+<pre><code class="language-python">datos = respuesta.json()
+</code></pre>
+<p>Después podemos acceder:</p>
+<pre><code class="language-python">datos[&quot;nombre&quot;]
+</code></pre>
+<p>También hemos trabajado con respuestas que contienen listas:</p>
+<pre><code class="language-python">for elemento in datos:
+</code></pre>
+<p>y estructuras anidadas:</p>
+<pre><code class="language-python">datos[&quot;address&quot;][&quot;city&quot;]
+</code></pre>
+<p>Hemos utilizado parámetros de consulta mediante:</p>
+<pre><code class="language-python">params=parametros
+</code></pre>
+<p>y hemos aplicado estos conocimientos para consultar información mediante APIs.</p>
+<p>Nuestro patrón básico es ahora:</p>
+<pre><code class="language-text">API
+ │
+ ▼
+GET
+ │
+ ▼
+respuesta HTTP
+ │
+ ▼
+JSON
+ │
+ ▼
+dict / list
+ │
+ ▼
+procesamiento
+</code></pre>
+<p>Además hemos conectado estos conocimientos con capítulos anteriores:</p>
+<pre><code class="language-text">argparse
++
+pathlib
++
+excepciones
++
+logging
++
+requests
++
+JSON
+</code></pre>
+<p>En la siguiente parte estudiaremos el segundo método HTTP principal de esta unidad:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>Hasta ahora hemos utilizado principalmente:</p>
+<pre><code class="language-text">GET → solicitar información
+</code></pre>
+<p>A continuación aprenderemos:</p>
+<pre><code class="language-text">POST → enviar información
+</code></pre>
+<p>y veremos cómo enviar datos JSON desde Python a un servicio web mediante <code>requests</code>.</p>
+<hr />
+<h2 id="64-envio-de-datos-mediante-post">64. Envío de datos mediante POST<a class="headerlink" href="#64-envio-de-datos-mediante-post" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora nuestras comunicaciones han seguido principalmente este modelo:</p>
+<pre><code class="language-text">Python
+   │
+   │ GET
+   ▼
+Servidor
+   │
+   │ datos
+   ▼
+Python
+</code></pre>
+<p>Hemos utilizado:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>para solicitar información.</p>
+<p>Pero nuestros programas también pueden necesitar <strong>enviar información a un servidor</strong>.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">registrar un equipo
+enviar datos de un sensor
+crear un usuario
+guardar una incidencia
+enviar resultados de diagnóstico
+registrar información de inventario
+</code></pre>
+<p>Para estas operaciones podemos utilizar el método HTTP:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<hr />
+<h3 id="65-diferencia-basica-entre-get-y-post">65. Diferencia básica entre GET y POST<a class="headerlink" href="#65-diferencia-basica-entre-get-y-post" title="Permanent link">&para;</a></h3>
+<p>Podemos establecer inicialmente esta diferencia:</p>
+<pre><code class="language-text">GET
+ │
+ └── solicitar información
+
+
+POST
+ │
+ └── enviar información
+     para que el servidor
+     la procese
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">GET /equipos/1
+</code></pre>
+<p>podría solicitar información sobre un equipo.</p>
+<p>Mientras que:</p>
+<pre><code class="language-text">POST /equipos
+</code></pre>
+<p>podría enviar los datos necesarios para crear un nuevo equipo.</p>
+<div class="admonition note">
+<p class="admonition-title">Métodos HTTP</p>
+<p><code>GET</code> y <code>POST</code> no son los únicos métodos HTTP.</p>
+<p>Existen otros como:</p>
+<p><code>text
+PUT
+PATCH
+DELETE</code></p>
+<p>En esta unidad nos centraremos en <code>GET</code> y <code>POST</code>.</p>
+</div>
+<hr />
+<h3 id="66-funcionamiento-de-una-peticion-post">66. Funcionamiento de una petición POST<a class="headerlink" href="#66-funcionamiento-de-una-peticion-post" title="Permanent link">&para;</a></h3>
+<p>Una petición POST puede contener información.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">PROGRAMA PYTHON
+      │
+      │ POST
+      │
+      │ {
+      │   &quot;nombre&quot;: &quot;PC01&quot;,
+      │   &quot;ip&quot;: &quot;192.168.1.20&quot;
+      │ }
+      ▼
+    SERVIDOR
+      │
+      │ procesa
+      │ los datos
+      ▼
+   RESPUESTA
+</code></pre>
+<p>El servidor puede:</p>
+<pre><code class="language-text">validar los datos
+guardarlos
+procesarlos
+crear un recurso
+devolver un resultado
+</code></pre>
+<hr />
+<h3 id="67-requestspost">67. <code>requests.post()</code><a class="headerlink" href="#67-requestspost" title="Permanent link">&para;</a></h3>
+<p>La biblioteca <code>requests</code> proporciona:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>Su estructura básica es:</p>
+<pre><code class="language-python">respuesta = requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+</code></pre>
+<p>Observa:</p>
+<pre><code class="language-python">json=datos
+</code></pre>
+<p>Esto indica a <code>requests</code> que queremos enviar los datos como JSON.</p>
+<hr />
+<h3 id="68-preparar-los-datos">68. Preparar los datos<a class="headerlink" href="#68-preparar-los-datos" title="Permanent link">&para;</a></h3>
+<p>Los datos que enviaremos pueden estar inicialmente en un diccionario Python.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">datos = {
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;,
+    &quot;ubicacion&quot;: &quot;Aula 1&quot;
+}
+</code></pre>
+<p>Conceptualmente:</p>
+<pre><code class="language-text">diccionario Python
+        │
+        ▼
+   requests.post()
+        │
+        ▼
+       JSON
+        │
+        ▼
+     servidor
+</code></pre>
+<p><code>requests</code> se encargará de preparar los datos JSON necesarios.</p>
+<hr />
+<h3 id="69-nuestra-primera-peticion-post">69. Nuestra primera petición POST<a class="headerlink" href="#69-nuestra-primera-peticion-post" title="Permanent link">&para;</a></h3>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo5/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">primer_post.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+datos = {
+    &quot;title&quot;: &quot;Prueba desde Python&quot;,
+    &quot;body&quot;: (
+        &quot;Contenido enviado &quot;
+        &quot;desde nuestro programa&quot;
+    ),
+    &quot;userId&quot;: 1
+}
+
+
+respuesta = requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+
+
+print(
+    f&quot;Código HTTP: &quot;
+    f&quot;{respuesta.status_code}&quot;
+)
+
+print()
+
+print(
+    respuesta.text
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python primer_post.py
+</code></pre>
+<p>El servidor devolverá una respuesta relacionada con el recurso enviado.</p>
+<div class="admonition note">
+<p class="admonition-title">Servicio de pruebas</p>
+<p>JSONPlaceholder simula determinadas operaciones para permitir practicar con peticiones HTTP.</p>
+<p>No debemos interpretar este ejemplo como la creación permanente de información en una base de datos real.</p>
+</div>
+<hr />
+<h3 id="70-codigo-http-201">70. Código HTTP 201<a class="headerlink" href="#70-codigo-http-201" title="Permanent link">&para;</a></h3>
+<p>En una operación POST podemos recibir:</p>
+<pre><code class="language-text">201 Created
+</code></pre>
+<p>El código:</p>
+<pre><code class="language-text">201
+</code></pre>
+<p>indica que la petición ha producido la creación de un recurso.</p>
+<p>Recordemos:</p>
+<pre><code class="language-text">200 OK
+</code></pre>
+<p>indica una operación correcta de forma general.</p>
+<p>Mientras que:</p>
+<pre><code class="language-text">201 Created
+</code></pre>
+<p>se utiliza para indicar que se ha creado un recurso correctamente.</p>
+<hr />
+<h3 id="71-procesar-la-respuesta-del-post">71. Procesar la respuesta del POST<a class="headerlink" href="#71-procesar-la-respuesta-del-post" title="Permanent link">&para;</a></h3>
+<p>Si el servidor devuelve JSON podemos utilizar nuevamente:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<p>Modifica el programa:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+datos = {
+    &quot;title&quot;: &quot;Prueba desde Python&quot;,
+    &quot;body&quot;: (
+        &quot;Contenido enviado &quot;
+        &quot;desde nuestro programa&quot;
+    ),
+    &quot;userId&quot;: 1
+}
+
+
+respuesta = requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+
+respuesta.raise_for_status()
+
+
+resultado = respuesta.json()
+
+
+print(
+    resultado
+)
+</code></pre>
+<p>Podemos acceder a sus elementos como con cualquier diccionario:</p>
+<pre><code class="language-python">print(
+    f&quot;ID: &quot;
+    f&quot;{resultado.get('id')}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="72-datos-enviados-y-datos-recibidos">72. Datos enviados y datos recibidos<a class="headerlink" href="#72-datos-enviados-y-datos-recibidos" title="Permanent link">&para;</a></h3>
+<p>Es importante distinguir:</p>
+<pre><code class="language-python">datos
+</code></pre>
+<p>de:</p>
+<pre><code class="language-python">resultado
+</code></pre>
+<p>En nuestro ejemplo:</p>
+<pre><code class="language-text">datos
+  │
+  └── información enviada
+      al servidor
+
+
+resultado
+  │
+  └── información devuelta
+      por el servidor
+</code></pre>
+<p>El flujo completo es:</p>
+<pre><code class="language-text">diccionario Python
+      │
+      ▼
+     datos
+      │
+      ▼
+requests.post()
+      │
+      ▼
+     JSON
+      │
+      ▼
+   SERVIDOR
+      │
+      ▼
+respuesta JSON
+      │
+      ▼
+respuesta.json()
+      │
+      ▼
+   resultado
+</code></pre>
+<hr />
+<h3 id="73-mostrar-una-respuesta-de-forma-organizada">73. Mostrar una respuesta de forma organizada<a class="headerlink" href="#73-mostrar-una-respuesta-de-forma-organizada" title="Permanent link">&para;</a></h3>
+<p>Podemos presentar únicamente la información que nos interesa.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print()
+print(&quot;RESULTADO&quot;)
+print(&quot;=========&quot;)
+print()
+
+print(
+    f&quot;ID: &quot;
+    f&quot;{resultado.get('id')}&quot;
+)
+
+print(
+    f&quot;Título: &quot;
+    f&quot;{resultado.get('title')}&quot;
+)
+
+print(
+    f&quot;Usuario: &quot;
+    f&quot;{resultado.get('userId')}&quot;
+)
+</code></pre>
+<p>No es necesario mostrar siempre todo el JSON recibido.</p>
+<p>Nuestros programas pueden seleccionar y procesar únicamente los campos necesarios.</p>
+<hr />
+<h3 id="74-controlar-errores-en-una-peticion-post">74. Controlar errores en una petición POST<a class="headerlink" href="#74-controlar-errores-en-una-peticion-post" title="Permanent link">&para;</a></h3>
+<p>Una petición POST también puede fallar.</p>
+<p>Podemos tener:</p>
+<pre><code class="language-text">problema de conexión
+timeout
+error HTTP
+respuesta JSON incorrecta
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">post_seguro.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import requests
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+datos = {
+    &quot;title&quot;: &quot;Prueba&quot;,
+    &quot;body&quot;: &quot;Mensaje de prueba&quot;,
+    &quot;userId&quot;: 1
+}
+
+
+try:
+
+    respuesta = requests.post(
+        url,
+        json=datos,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    resultado = respuesta.json()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;establecer la conexión.&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+except requests.exceptions.JSONDecodeError:
+
+    print(
+        &quot;ERROR: respuesta JSON &quot;
+        &quot;no válida.&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR en la petición: &quot;
+        f&quot;{error}&quot;
+    )
+
+else:
+
+    print(
+        &quot;Datos enviados &quot;
+        &quot;correctamente.&quot;
+    )
+
+    print(
+        f&quot;Código HTTP: &quot;
+        f&quot;{respuesta.status_code}&quot;
+    )
+
+    print(
+        f&quot;ID recibido: &quot;
+        f&quot;{resultado.get('id')}&quot;
+    )
+</code></pre>
+<p>Este patrón es muy parecido al utilizado con <code>GET</code>.</p>
+<hr />
+<h3 id="75-get-y-post-utilizan-el-mismo-modelo-de-respuesta">75. GET y POST utilizan el mismo modelo de respuesta<a class="headerlink" href="#75-get-y-post-utilizan-el-mismo-modelo-de-respuesta" title="Permanent link">&para;</a></h3>
+<p>Una idea importante es que tanto:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>como:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>devuelven un objeto:</p>
+<pre><code class="language-text">Response
+</code></pre>
+<p>Por eso podemos utilizar en ambos casos:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<pre><code class="language-python">respuesta.headers
+</code></pre>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<pre><code class="language-python">respuesta.raise_for_status()
+</code></pre>
+<p>Lo que cambia principalmente es la operación HTTP que estamos solicitando al servidor.</p>
+<hr />
+<h3 id="76-enviar-datos-introducidos-por-el-usuario">76. Enviar datos introducidos por el usuario<a class="headerlink" href="#76-enviar-datos-introducidos-por-el-usuario" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora tenemos:</p>
+<pre><code class="language-python">datos = {
+    &quot;title&quot;: &quot;Prueba&quot;,
+    &quot;body&quot;: &quot;Mensaje de prueba&quot;,
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<p>Los valores están escritos directamente en el código.</p>
+<p>Podemos obtenerlos mediante:</p>
+<pre><code class="language-python">input()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">titulo = input(
+    &quot;Título: &quot;
+)
+
+contenido = input(
+    &quot;Contenido: &quot;
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">datos = {
+    &quot;title&quot;: titulo,
+    &quot;body&quot;: contenido,
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<p>Ahora el programa puede enviar diferentes datos sin modificar el código.</p>
+<hr />
+<h3 id="77-enviar-datos-mediante-argparse">77. Enviar datos mediante <code>argparse</code><a class="headerlink" href="#77-enviar-datos-mediante-argparse" title="Permanent link">&para;</a></h3>
+<p>Para nuestros scripts de administración resulta más interesante utilizar:</p>
+<pre><code class="language-python">argparse
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">enviar_post.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+
+import requests
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Envía información &quot;
+        &quot;mediante HTTP POST.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;titulo&quot;,
+    help=&quot;Título del mensaje&quot;
+)
+
+
+parser.add_argument(
+    &quot;contenido&quot;,
+    help=&quot;Contenido del mensaje&quot;
+)
+
+
+parser.add_argument(
+    &quot;--usuario&quot;,
+    type=int,
+    default=1,
+    help=&quot;Identificador del usuario&quot;
+)
+
+
+args = parser.parse_args()
+
+
+if args.usuario &lt; 1:
+
+    parser.error(
+        &quot;El identificador del &quot;
+        &quot;usuario debe ser mayor &quot;
+        &quot;que cero.&quot;
+    )
+
+
+datos = {
+    &quot;title&quot;: args.titulo,
+    &quot;body&quot;: args.contenido,
+    &quot;userId&quot;: args.usuario
+}
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+try:
+
+    respuesta = requests.post(
+        url,
+        json=datos,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    resultado = respuesta.json()
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;DATOS ENVIADOS&quot;)
+    print(&quot;=============&quot;)
+    print()
+
+    print(
+        f&quot;Título: &quot;
+        f&quot;{resultado.get('title')}&quot;
+    )
+
+    print(
+        f&quot;Contenido: &quot;
+        f&quot;{resultado.get('body')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{resultado.get('userId')}&quot;
+    )
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{resultado.get('id')}&quot;
+    )
+</code></pre>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python enviar_post.py &quot;Prueba&quot; &quot;Mensaje desde Python&quot;
+</code></pre>
+<p>También:</p>
+<pre><code class="language-powershell">python enviar_post.py &quot;Incidencia&quot; &quot;Equipo sin red&quot; --usuario 2
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Argumentos con espacios</p>
+<p>Cuando un argumento contiene espacios debemos escribirlo entre comillas:</p>
+<p><code>powershell
+"Equipo sin red"</code></p>
+</div>
+<hr />
+<h3 id="78-que-envia-realmente-jsondatos">78. ¿Qué envía realmente <code>json=datos</code>?<a class="headerlink" href="#78-que-envia-realmente-jsondatos" title="Permanent link">&para;</a></h3>
+<p>Cuando escribimos:</p>
+<pre><code class="language-python">requests.post(
+    url,
+    json=datos
+)
+</code></pre>
+<p><code>requests</code> prepara automáticamente el contenido JSON y configura la petición adecuadamente.</p>
+<p>Nuestro diccionario:</p>
+<pre><code class="language-python">datos = {
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;activo&quot;: True
+}
+</code></pre>
+<p>se representa en JSON de forma equivalente a:</p>
+<pre><code class="language-json">{
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;activo&quot;: true
+}
+</code></pre>
+<p>Esto evita que tengamos que construir manualmente el texto JSON para las operaciones habituales.</p>
+<hr />
+<h3 id="79-cabecera-content-type">79. Cabecera <code>Content-Type</code><a class="headerlink" href="#79-cabecera-content-type" title="Permanent link">&para;</a></h3>
+<p>Cuando enviamos JSON, el servidor necesita saber qué tipo de información está recibiendo.</p>
+<p>Para JSON encontraremos habitualmente:</p>
+<pre><code class="language-text">Content-Type: application/json
+</code></pre>
+<p>Al utilizar:</p>
+<pre><code class="language-python">json=datos
+</code></pre>
+<p><code>requests</code> prepara la petición para enviar los datos como JSON.</p>
+<p>Podemos comprobar qué cabeceras se enviaron utilizando información de la petición preparada.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    respuesta.request.headers.get(
+        &quot;Content-Type&quot;
+    )
+)
+</code></pre>
+<p>Podremos obtener:</p>
+<pre><code class="language-text">application/json
+</code></pre>
+<hr />
+<h3 id="80-json-frente-a-data">80. <code>json=</code> frente a <code>data=</code><a class="headerlink" href="#80-json-frente-a-data" title="Permanent link">&para;</a></h3>
+<p>Podemos encontrar ejemplos de <code>requests</code> que utilizan:</p>
+<pre><code class="language-python">data=
+</code></pre>
+<p>y otros que utilizan:</p>
+<pre><code class="language-python">json=
+</code></pre>
+<p>No significan exactamente lo mismo.</p>
+<p>En este capítulo, cuando queramos enviar un objeto JSON utilizaremos:</p>
+<pre><code class="language-python">json=datos
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Para nuestras APIs</p>
+<p>Cuando la API espere JSON utilizaremos:</p>
+<p><code>python
+json=datos</code></p>
+<p>Esto mantiene el código sencillo y expresa claramente nuestra intención.</p>
+</div>
+<hr />
+<h3 id="81-enviar-informacion-de-un-equipo">81. Enviar información de un equipo<a class="headerlink" href="#81-enviar-informacion-de-un-equipo" title="Permanent link">&para;</a></h3>
+<p>Vamos a acercar el ejemplo a una tarea de administración.</p>
+<p>Crea:</p>
+<pre><code class="language-text">enviar_equipo.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+
+import requests
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Envía información &quot;
+        &quot;de un equipo.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;nombre&quot;,
+    help=&quot;Nombre del equipo&quot;
+)
+
+
+parser.add_argument(
+    &quot;ip&quot;,
+    help=&quot;Dirección IP&quot;
+)
+
+
+parser.add_argument(
+    &quot;--ubicacion&quot;,
+    default=&quot;No indicada&quot;,
+    help=&quot;Ubicación del equipo&quot;
+)
+
+
+args = parser.parse_args()
+
+
+datos = {
+    &quot;nombre&quot;: args.nombre,
+    &quot;ip&quot;: args.ip,
+    &quot;ubicacion&quot;: args.ubicacion
+}
+
+
+print()
+print(&quot;DATOS PREPARADOS&quot;)
+print(&quot;================&quot;)
+print()
+
+print(
+    datos
+)
+</code></pre>
+<p>Podemos ejecutarlo:</p>
+<pre><code class="language-powershell">python enviar_equipo.py PC01 192.168.1.20 --ubicacion &quot;Aula 1&quot;
+</code></pre>
+<p>Obtendremos un diccionario preparado para ser enviado a una API:</p>
+<pre><code class="language-text">{
+    'nombre': 'PC01',
+    'ip': '192.168.1.20',
+    'ubicacion': 'Aula 1'
+}
+</code></pre>
+<hr />
+<h3 id="82-separar-preparacion-y-envio">82. Separar preparación y envío<a class="headerlink" href="#82-separar-preparacion-y-envio" title="Permanent link">&para;</a></h3>
+<p>Podemos crear una función:</p>
+<pre><code class="language-python">def enviar_datos(
+    url,
+    datos
+):
+
+    try:
+
+        respuesta = requests.post(
+            url,
+            json=datos,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        return respuesta.json()
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        return None
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">resultado = enviar_datos(
+    url,
+    datos
+)
+
+
+if resultado is not None:
+
+    print(
+        &quot;Datos enviados.&quot;
+    )
+</code></pre>
+<p>Estamos separando:</p>
+<pre><code class="language-text">preparar datos
+      │
+      ▼
+enviar_datos()
+      │
+      ▼
+procesar respuesta
+</code></pre>
+<p>Esto facilita reutilizar el código.</p>
+<hr />
+<h3 id="83-registrar-una-peticion-post-mediante-logging">83. Registrar una petición POST mediante <code>logging</code><a class="headerlink" href="#83-registrar-una-peticion-post-mediante-logging" title="Permanent link">&para;</a></h3>
+<p>También podemos registrar las operaciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Enviando datos a {url}&quot;
+)
+</code></pre>
+<p>Si funciona:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;POST correcto. &quot;
+    f&quot;HTTP {respuesta.status_code}&quot;
+)
+</code></pre>
+<p>Si se produce un error:</p>
+<pre><code class="language-python">logging.error(
+    f&quot;Error enviando datos &quot;
+    f&quot;a {url}&quot;
+)
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">No registres información sensible</p>
+<p>Antes de guardar los datos enviados en un log debemos comprobar qué contienen.</p>
+<p>No debemos registrar información como:</p>
+<p><code>text
+contraseñas
+tokens
+claves de API
+credenciales</code></p>
+</div>
+<hr />
+<h3 id="84-programa-post-con-logging">84. Programa POST con logging<a class="headerlink" href="#84-programa-post-con-logging" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">post_logging.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import logging
+
+import requests
+
+
+logging.basicConfig(
+    filename=&quot;http.log&quot;,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=(
+        &quot;%Y-%m-%d %H:%M:%S&quot;
+    )
+)
+
+
+url = (
+    &quot;https://jsonplaceholder.typicode.com/&quot;
+    &quot;posts&quot;
+)
+
+
+datos = {
+    &quot;title&quot;: &quot;Prueba&quot;,
+    &quot;body&quot;: &quot;Datos enviados desde Python&quot;,
+    &quot;userId&quot;: 1
+}
+
+
+logging.info(
+    f&quot;Iniciando POST a {url}&quot;
+)
+
+
+try:
+
+    respuesta = requests.post(
+        url,
+        json=datos,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    resultado = respuesta.json()
+
+except requests.exceptions.Timeout:
+
+    print(
+        &quot;ERROR: timeout.&quot;
+    )
+
+    logging.error(
+        f&quot;Timeout en POST a {url}&quot;
+    )
+
+except requests.exceptions.ConnectionError:
+
+    print(
+        &quot;ERROR: conexión.&quot;
+    )
+
+    logging.error(
+        f&quot;Error de conexión &quot;
+        f&quot;con {url}&quot;
+    )
+
+except requests.exceptions.HTTPError as error:
+
+    print(
+        f&quot;ERROR HTTP: {error}&quot;
+    )
+
+    logging.error(
+        f&quot;Error HTTP: {error}&quot;
+    )
+
+except requests.exceptions.JSONDecodeError:
+
+    print(
+        &quot;ERROR: JSON no válido.&quot;
+    )
+
+    logging.error(
+        &quot;Respuesta JSON no válida&quot;
+    )
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+    logging.exception(
+        &quot;Error realizando POST&quot;
+    )
+
+else:
+
+    print(
+        &quot;Datos enviados &quot;
+        &quot;correctamente.&quot;
+    )
+
+    logging.info(
+        f&quot;POST correcto. &quot;
+        f&quot;HTTP {respuesta.status_code}&quot;
+    )
+
+finally:
+
+    logging.info(
+        &quot;Operación POST finalizada&quot;
+    )
+</code></pre>
+<p>Ahora combinamos:</p>
+<pre><code class="language-text">POST
++
+JSON
++
+excepciones
++
+logging
+</code></pre>
+<hr />
+<h3 id="85-get-y-post-en-una-misma-aplicacion">85. GET y POST en una misma aplicación<a class="headerlink" href="#85-get-y-post-en-una-misma-aplicacion" title="Permanent link">&para;</a></h3>
+<p>Una aplicación puede utilizar diferentes métodos HTTP.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">              API
+               │
+       ┌───────┴────────┐
+       │                │
+       ▼                ▼
+      GET              POST
+       │                │
+       ▼                ▼
+ consultar           enviar
+ información       información
+</code></pre>
+<p>Podríamos crear un programa con:</p>
+<pre><code class="language-text">--listar
+</code></pre>
+<p>para realizar un GET.</p>
+<p>Y:</p>
+<pre><code class="language-text">--crear
+</code></pre>
+<p>para realizar un POST.</p>
+<p>Esto nos permitirá comenzar a construir pequeños <strong>clientes de APIs</strong>.</p>
+<hr />
+<h3 id="86-practica-guiada-cliente-de-publicaciones">86. Práctica guiada: cliente de publicaciones<a class="headerlink" href="#86-practica-guiada-cliente-de-publicaciones" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">cliente_posts.py
+</code></pre>
+<p>El programa deberá ofrecer dos operaciones:</p>
+<pre><code class="language-text">--listar
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">--crear
+</code></pre>
+<p>Para evitar utilizar ambas simultáneamente podemos crear:</p>
+<pre><code class="language-python">grupo = (
+    parser.add_mutually_exclusive_group(
+        required=True
+    )
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--listar&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Lista publicaciones&quot;
+)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--crear&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Crea una publicación&quot;
+)
+</code></pre>
+<p>También necesitaremos:</p>
+<pre><code class="language-text">--titulo
+--contenido
+--usuario
+</code></pre>
+<hr />
+<h3 id="87-estructura-del-cliente">87. Estructura del cliente<a class="headerlink" href="#87-estructura-del-cliente" title="Permanent link">&para;</a></h3>
+<p>Nuestro programa tendrá dos funciones:</p>
+<pre><code class="language-python">def listar_publicaciones():
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">def crear_publicacion(
+    titulo,
+    contenido,
+    usuario
+):
+</code></pre>
+<p>La primera utilizará:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>La segunda:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>El programa principal decidirá:</p>
+<pre><code class="language-python">if args.listar:
+
+    listar_publicaciones()
+
+elif args.crear:
+
+    crear_publicacion(
+        args.titulo,
+        args.contenido,
+        args.usuario
+    )
+</code></pre>
+<hr />
+<h3 id="88-funcion-get">88. Función GET<a class="headerlink" href="#88-funcion-get" title="Permanent link">&para;</a></h3>
+<p>Podemos crear:</p>
+<pre><code class="language-python">def listar_publicaciones():
+
+    try:
+
+        respuesta = requests.get(
+            URL,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        datos = respuesta.json()
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        return
+
+    print()
+    print(&quot;PUBLICACIONES&quot;)
+    print(&quot;=============&quot;)
+    print()
+
+    for publicacion in datos[:5]:
+
+        print(
+            f&quot;ID: &quot;
+            f&quot;{publicacion.get('id')}&quot;
+        )
+
+        print(
+            f&quot;Título: &quot;
+            f&quot;{publicacion.get('title')}&quot;
+        )
+
+        print()
+</code></pre>
+<p>En esta práctica mostramos únicamente los cinco primeros elementos mediante:</p>
+<pre><code class="language-python">datos[:5]
+</code></pre>
+<hr />
+<h3 id="89-funcion-post">89. Función POST<a class="headerlink" href="#89-funcion-post" title="Permanent link">&para;</a></h3>
+<p>La segunda función será:</p>
+<pre><code class="language-python">def crear_publicacion(
+    titulo,
+    contenido,
+    usuario
+):
+
+    datos = {
+        &quot;title&quot;: titulo,
+        &quot;body&quot;: contenido,
+        &quot;userId&quot;: usuario
+    }
+
+    try:
+
+        respuesta = requests.post(
+            URL,
+            json=datos,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        resultado = respuesta.json()
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        return
+
+    print()
+    print(&quot;PUBLICACIÓN ENVIADA&quot;)
+    print(&quot;===================&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{resultado.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Título: &quot;
+        f&quot;{resultado.get('title')}&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="90-validar-los-argumentos-del-post">90. Validar los argumentos del POST<a class="headerlink" href="#90-validar-los-argumentos-del-post" title="Permanent link">&para;</a></h3>
+<p>Si el usuario ejecuta:</p>
+<pre><code class="language-powershell">python cliente_posts.py --crear
+</code></pre>
+<p>nos faltan datos.</p>
+<p>Necesitamos:</p>
+<pre><code class="language-text">título
+contenido
+</code></pre>
+<p>Podemos comprobar:</p>
+<pre><code class="language-python">if args.crear:
+
+    if not args.titulo:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--titulo&quot;
+        )
+
+    if not args.contenido:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--contenido&quot;
+        )
+</code></pre>
+<p>Después llamaremos a:</p>
+<pre><code class="language-python">crear_publicacion(
+    args.titulo,
+    args.contenido,
+    args.usuario
+)
+</code></pre>
+<p>Esta es una buena demostración de que una aplicación necesita:</p>
+<pre><code class="language-text">argumentos
+    │
+    ▼
+validación
+    │
+    ▼
+operación
+</code></pre>
+<hr />
+<h3 id="91-ejemplos-de-ejecucion">91. Ejemplos de ejecución<a class="headerlink" href="#91-ejemplos-de-ejecucion" title="Permanent link">&para;</a></h3>
+<p>Para listar:</p>
+<pre><code class="language-powershell">python cliente_posts.py --listar
+</code></pre>
+<p>Para crear:</p>
+<pre><code class="language-powershell">python cliente_posts.py --crear --titulo &quot;Prueba&quot; --contenido &quot;Mensaje desde Python&quot;
+</code></pre>
+<p>También podemos indicar:</p>
+<pre><code class="language-powershell">python cliente_posts.py --crear --titulo &quot;Incidencia&quot; --contenido &quot;PC sin conexión&quot; --usuario 3
+</code></pre>
+<hr />
+<h3 id="92-get-y-post-no-significan-leer-y-escribir-archivos">92. GET y POST no significan leer y escribir archivos<a class="headerlink" href="#92-get-y-post-no-significan-leer-y-escribir-archivos" title="Permanent link">&para;</a></h3>
+<p>Es importante no confundir los métodos HTTP con operaciones locales.</p>
+<pre><code class="language-text">GET
+</code></pre>
+<p>no significa simplemente:</p>
+<pre><code class="language-text">leer archivo
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>no significa simplemente:</p>
+<pre><code class="language-text">escribir archivo
+</code></pre>
+<p>Son métodos definidos por HTTP.</p>
+<p>El comportamiento concreto depende de cómo esté diseñada la API.</p>
+<p>Por ejemplo, una API puede definir:</p>
+<pre><code class="language-text">GET /equipos
+</code></pre>
+<p>para obtener equipos.</p>
+<p>Y:</p>
+<pre><code class="language-text">POST /equipos
+</code></pre>
+<p>para crear uno nuevo.</p>
+<p>La documentación de la API es la que nos indica cómo debemos utilizarla.</p>
+<hr />
+<h3 id="93-la-documentacion-de-una-api">93. La documentación de una API<a class="headerlink" href="#93-la-documentacion-de-una-api" title="Permanent link">&para;</a></h3>
+<p>Antes de utilizar una API real debemos consultar su documentación.</p>
+<p>Necesitamos conocer aspectos como:</p>
+<pre><code class="language-text">URL base
+endpoints
+métodos HTTP
+parámetros
+formato de los datos
+campos obligatorios
+autenticación
+códigos de respuesta
+estructura del JSON
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Endpoint:
+POST /equipos
+
+Datos:
+
+{
+    &quot;nombre&quot;: &quot;...&quot;,
+    &quot;ip&quot;: &quot;...&quot;
+}
+
+Respuesta:
+
+201 Created
+</code></pre>
+<p>Nuestro programa debe adaptarse al contrato definido por la API.</p>
+<hr />
+<h3 id="94-apis-que-requieren-autenticacion">94. APIs que requieren autenticación<a class="headerlink" href="#94-apis-que-requieren-autenticacion" title="Permanent link">&para;</a></h3>
+<p>Muchas APIs públicas permiten algunas consultas sin autenticación.</p>
+<p>Sin embargo, en servicios reales es frecuente necesitar algún mecanismo de autenticación.</p>
+<p>Podemos encontrar conceptos como:</p>
+<pre><code class="language-text">API key
+token
+Authorization
+</code></pre>
+<p>En este capítulo no necesitamos entrar todavía en sistemas de autenticación complejos.</p>
+<p>Lo importante es comprender que no todas las APIs permiten realizar peticiones libremente.</p>
+<div class="admonition warning">
+<p class="admonition-title">Credenciales</p>
+<p>Nunca debemos escribir claves o tokens reales en ejemplos que vayan a publicarse en GitHub.</p>
+<p>Tampoco debemos almacenarlos directamente en el código de un repositorio público.</p>
+</div>
+<hr />
+<h3 id="95-practica-propuesta-registrar-una-incidencia">95. Práctica propuesta: registrar una incidencia<a class="headerlink" href="#95-practica-propuesta-registrar-una-incidencia" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">enviar_incidencia.py
+</code></pre>
+<p>El programa deberá recibir:</p>
+<pre><code class="language-text">equipo
+descripción
+prioridad
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python enviar_incidencia.py PC01 &quot;Sin conexión de red&quot; --prioridad alta
+</code></pre>
+<p>Internamente deberá preparar:</p>
+<pre><code class="language-python">datos = {
+    &quot;equipo&quot;: ...,
+    &quot;descripcion&quot;: ...,
+    &quot;prioridad&quot;: ...
+}
+</code></pre>
+<p>Después deberá:</p>
+<ol>
+<li>Mostrar los datos que se enviarían.</li>
+<li>Realizar un POST contra un servicio de pruebas.</li>
+<li>Comprobar el código HTTP.</li>
+<li>Procesar la respuesta JSON.</li>
+<li>Mostrar el resultado.</li>
+<li>Registrar la operación mediante <code>logging</code>.</li>
+</ol>
+<div class="admonition example">
+<p class="admonition-title">Objetivo</p>
+<p>La finalidad de esta práctica es simular el comportamiento de una herramienta que envía incidencias a un servicio web.</p>
+</div>
+<hr />
+<h3 id="96-practica-propuesta-enviar-inventario">96. Práctica propuesta: enviar inventario<a class="headerlink" href="#96-practica-propuesta-enviar-inventario" title="Permanent link">&para;</a></h3>
+<p>Vamos a recuperar también los archivos CSV utilizados anteriormente.</p>
+<p>Supongamos:</p>
+<pre><code class="language-text">datos/inventario.csv
+</code></pre>
+<p>con:</p>
+<pre><code class="language-csv">nombre,ip,ubicacion
+PC01,192.168.1.20,Aula 1
+PC02,192.168.1.21,Aula 1
+PC03,192.168.1.22,Aula 2
+</code></pre>
+<p>El programa:</p>
+<pre><code class="language-text">enviar_inventario.py
+</code></pre>
+<p>deberá:</p>
+<pre><code class="language-text">leer CSV
+    │
+    ▼
+recorrer equipos
+    │
+    ▼
+crear diccionario
+    │
+    ▼
+POST
+    │
+    ▼
+comprobar respuesta
+    │
+    ▼
+registrar resultado
+</code></pre>
+<p>Para cada fila tendremos:</p>
+<pre><code class="language-python">datos = {
+    &quot;nombre&quot;: fila[&quot;nombre&quot;],
+    &quot;ip&quot;: fila[&quot;ip&quot;],
+    &quot;ubicacion&quot;: fila[&quot;ubicacion&quot;]
+}
+</code></pre>
+<p>Después podremos realizar:</p>
+<pre><code class="language-python">requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Integración</p>
+<p>Esta práctica combina contenidos de diferentes capítulos:</p>
+<p><code>text
+CSV
+  +
+bucles
+  +
+excepciones
+  +
+logging
+  +
+HTTP
+  +
+JSON</code></p>
+</div>
+<hr />
+<h3 id="97-patron-completo-de-una-peticion-post">97. Patrón completo de una petición POST<a class="headerlink" href="#97-patron-completo-de-una-peticion-post" title="Permanent link">&para;</a></h3>
+<p>Podemos establecer el siguiente patrón:</p>
+<pre><code class="language-text">      OBTENER DATOS
+           │
+           ▼
+        VALIDAR
+           │
+           ▼
+crear diccionario Python
+           │
+           ▼
+    requests.post()
+           │
+           ▼
+         JSON
+           │
+           ▼
+        SERVIDOR
+           │
+           ▼
+    respuesta HTTP
+           │
+           ▼
+   raise_for_status()
+           │
+           ▼
+    respuesta.json()
+           │
+           ▼
+   procesar resultado
+           │
+           ▼
+ mostrar / guardar / log
+</code></pre>
+<p>En código:</p>
+<pre><code class="language-python">try:
+
+    respuesta = requests.post(
+        url,
+        json=datos,
+        timeout=10
+    )
+
+    respuesta.raise_for_status()
+
+    resultado = respuesta.json()
+
+except requests.exceptions.RequestException as error:
+
+    print(
+        f&quot;ERROR: {error}&quot;
+    )
+
+else:
+
+    # Procesar resultado
+    ...
+</code></pre>
+<hr />
+<h2 id="resumen_2">Resumen<a class="headerlink" href="#resumen_2" title="Permanent link">&para;</a></h2>
+<p>En esta parte hemos incorporado el método HTTP:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>y hemos establecido una primera diferencia:</p>
+<pre><code class="language-text">GET
+ │
+ └── solicitar información
+
+
+POST
+ │
+ └── enviar información
+     para que sea procesada
+</code></pre>
+<p>Con <code>requests</code> utilizamos:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>Para enviar un diccionario Python como JSON podemos utilizar:</p>
+<pre><code class="language-python">datos = {
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;
+}
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">respuesta = requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+</code></pre>
+<p>Después podemos comprobar:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<p>procesar errores:</p>
+<pre><code class="language-python">respuesta.raise_for_status()
+</code></pre>
+<p>y convertir una respuesta JSON mediante:</p>
+<pre><code class="language-python">resultado = respuesta.json()
+</code></pre>
+<p>También hemos combinado:</p>
+<pre><code class="language-text">argparse
++
+validación
++
+requests
++
+GET
++
+POST
++
+JSON
++
+excepciones
++
+logging
+</code></pre>
+<p>Con ello ya disponemos de los principales elementos necesarios para construir un pequeño <strong>cliente de una API</strong>.</p>
+<p>En la siguiente parte realizaremos la <strong>práctica integradora y cierre del capítulo 5</strong>, construyendo una herramienta que combine consultas GET, envío mediante POST, procesamiento JSON, argumentos, control de errores, almacenamiento de resultados y logs.</p>
+<hr />
+<h2 id="98-practica-final-cliente-de-una-api">98. Práctica final: cliente de una API<a class="headerlink" href="#98-practica-final-cliente-de-una-api" title="Permanent link">&para;</a></h2>
+<p>Durante este capítulo hemos aprendido a comunicarnos con servicios web desde Python.</p>
+<p>Hemos utilizado:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>para solicitar información y:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>para enviar información.</p>
+<p>También hemos procesado respuestas JSON mediante:</p>
+<pre><code class="language-python">respuesta.json()
+</code></pre>
+<p>Ahora construiremos una aplicación que integre estos conocimientos.</p>
+<p>El programa se llamará:</p>
+<pre><code class="language-text">cliente_api.py
+</code></pre>
+<p>y permitirá realizar diferentes operaciones desde la línea de comandos.</p>
+<hr />
+<h3 id="99-objetivos-de-la-practica">99. Objetivos de la práctica<a class="headerlink" href="#99-objetivos-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Nuestra aplicación permitirá:</p>
+<pre><code class="language-text">listar usuarios
+consultar un usuario
+listar publicaciones
+crear una publicación
+</code></pre>
+<p>Además deberá:</p>
+<ul>
+<li>Recibir opciones mediante <code>argparse</code>.</li>
+<li>Realizar peticiones <code>GET</code>.</li>
+<li>Realizar peticiones <code>POST</code>.</li>
+<li>Procesar respuestas JSON.</li>
+<li>Controlar errores de conexión.</li>
+<li>Utilizar tiempos de espera.</li>
+<li>Registrar las operaciones mediante <code>logging</code>.</li>
+<li>Guardar algunos resultados en archivos JSON.</li>
+</ul>
+<p>El flujo general será:</p>
+<pre><code class="language-text">          USUARIO
+             │
+             ▼
+          argparse
+             │
+             ▼
+        seleccionar
+         operación
+             │
+       ┌─────┴─────┐
+       │           │
+       ▼           ▼
+      GET         POST
+       │           │
+       └─────┬─────┘
+             │
+             ▼
+         SERVIDOR
+             │
+             ▼
+       respuesta HTTP
+             │
+             ▼
+            JSON
+             │
+       ┌─────┴──────┐
+       │            │
+       ▼            ▼
+    pantalla      archivo
+       │
+       └─────┬──────┘
+             │
+             ▼
+           logging
+</code></pre>
+<hr />
+<h3 id="100-estructura-de-directorios">100. Estructura de directorios<a class="headerlink" href="#100-estructura-de-directorios" title="Permanent link">&para;</a></h3>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">practicas/
+└── capitulo5/
+    ├── datos/
+    ├── logs/
+    ├── programas/
+    │   └── cliente_api.py
+    └── resultados/
+</code></pre>
+<p>El programa creará automáticamente:</p>
+<pre><code class="language-text">logs/
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">resultados/
+</code></pre>
+<p>si no existen.</p>
+<hr />
+<h3 id="101-api-utilizada">101. API utilizada<a class="headerlink" href="#101-api-utilizada" title="Permanent link">&para;</a></h3>
+<p>Para la práctica utilizaremos el servicio de pruebas:</p>
+<pre><code class="language-text">JSONPlaceholder
+</code></pre>
+<p>Trabajaremos principalmente con los recursos:</p>
+<pre><code class="language-text">/users
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">/posts
+</code></pre>
+<p>Conceptualmente:</p>
+<pre><code class="language-text">API
+ │
+ ├── /users
+ │      │
+ │      ├── GET → usuarios
+ │      │
+ │      └── GET /ID → usuario
+ │
+ └── /posts
+        │
+        ├── GET → publicaciones
+        │
+        └── POST → crear publicación
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Entorno de aprendizaje</p>
+<p>Estamos utilizando una API diseñada para realizar pruebas.</p>
+<p>Las operaciones de creación son simuladas y no deben interpretarse como modificaciones permanentes de una base de datos real.</p>
+</div>
+<hr />
+<h3 id="102-crear-el-programa">102. Crear el programa<a class="headerlink" href="#102-crear-el-programa" title="Permanent link">&para;</a></h3>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo5/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">cliente_api.py
+</code></pre>
+<p>Comenzamos con las importaciones:</p>
+<pre><code class="language-python">import argparse
+import json
+import logging
+
+from pathlib import Path
+
+import requests
+</code></pre>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">argparse
+    argumentos
+
+json
+    guardar datos JSON
+
+logging
+    registro de actividad
+
+pathlib
+    rutas y archivos
+
+requests
+    comunicaciones HTTP
+</code></pre>
+<hr />
+<h3 id="103-definir-las-rutas">103. Definir las rutas<a class="headerlink" href="#103-definir-las-rutas" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+</code></pre>
+<p>Creamos los directorios:</p>
+<pre><code class="language-python">DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+</code></pre>
+<hr />
+<h3 id="104-definir-la-url-base">104. Definir la URL base<a class="headerlink" href="#104-definir-la-url-base" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">URL_BASE = (
+    &quot;https://jsonplaceholder.typicode.com&quot;
+)
+</code></pre>
+<p>Después podremos construir diferentes endpoints:</p>
+<pre><code class="language-python">f&quot;{URL_BASE}/users&quot;
+</code></pre>
+<pre><code class="language-python">f&quot;{URL_BASE}/posts&quot;
+</code></pre>
+<pre><code class="language-python">f&quot;{URL_BASE}/users/1&quot;
+</code></pre>
+<p>Esto evita repetir continuamente la dirección completa.</p>
+<hr />
+<h3 id="105-configurar-el-log">105. Configurar el log<a class="headerlink" href="#105-configurar-el-log" title="Permanent link">&para;</a></h3>
+<p>Creamos:</p>
+<pre><code class="language-python">ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;cliente_api.log&quot;
+)
+</code></pre>
+<p>Configuramos:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<p>Ahora podremos registrar:</p>
+<pre><code class="language-python">logging.info(...)
+</code></pre>
+<pre><code class="language-python">logging.warning(...)
+</code></pre>
+<pre><code class="language-python">logging.error(...)
+</code></pre>
+<hr />
+<h3 id="106-crear-una-funcion-get-reutilizable">106. Crear una función GET reutilizable<a class="headerlink" href="#106-crear-una-funcion-get-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Muchas operaciones utilizarán:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>Por tanto, crearemos una función:</p>
+<pre><code class="language-python">def obtener_json(
+    url,
+    parametros=None
+):
+
+    logging.info(
+        f&quot;GET {url}&quot;
+    )
+
+    try:
+
+        respuesta = requests.get(
+            url,
+            params=parametros,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        datos = respuesta.json()
+
+    except requests.exceptions.Timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        logging.error(
+            f&quot;Timeout en GET {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;establecer la conexión.&quot;
+        )
+
+        logging.error(
+            f&quot;Error de conexión: &quot;
+            f&quot;{url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        logging.error(
+            f&quot;Error HTTP en &quot;
+            f&quot;{url}: {error}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.JSONDecodeError:
+
+        print(
+            &quot;ERROR: respuesta JSON &quot;
+            &quot;no válida.&quot;
+        )
+
+        logging.error(
+            f&quot;JSON no válido: {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        logging.exception(
+            f&quot;Error GET: {url}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;GET correcto: &quot;
+            f&quot;HTTP {respuesta.status_code}&quot;
+        )
+
+        return datos
+</code></pre>
+<p>Ahora podremos reutilizar esta función para diferentes consultas.</p>
+<hr />
+<h3 id="107-crear-una-funcion-post-reutilizable">107. Crear una función POST reutilizable<a class="headerlink" href="#107-crear-una-funcion-post-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Haremos algo similar para:</p>
+<pre><code class="language-text">POST
+</code></pre>
+<p>Añade:</p>
+<pre><code class="language-python">def enviar_json(
+    url,
+    datos
+):
+
+    logging.info(
+        f&quot;POST {url}&quot;
+    )
+
+    try:
+
+        respuesta = requests.post(
+            url,
+            json=datos,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        resultado = respuesta.json()
+
+    except requests.exceptions.Timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        logging.error(
+            f&quot;Timeout en POST {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print(
+            &quot;ERROR: problema &quot;
+            &quot;de conexión.&quot;
+        )
+
+        logging.error(
+            f&quot;Error de conexión: &quot;
+            f&quot;{url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        logging.error(
+            f&quot;Error HTTP en POST: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.JSONDecodeError:
+
+        print(
+            &quot;ERROR: respuesta JSON &quot;
+            &quot;no válida.&quot;
+        )
+
+        logging.error(
+            &quot;Respuesta POST &quot;
+            &quot;sin JSON válido&quot;
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        logging.exception(
+            f&quot;Error POST: {url}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;POST correcto: &quot;
+            f&quot;HTTP {respuesta.status_code}&quot;
+        )
+
+        return resultado
+</code></pre>
+<p>Ya tenemos dos funciones generales:</p>
+<pre><code class="language-text">obtener_json()
+      │
+      └── GET
+
+
+enviar_json()
+      │
+      └── POST
+</code></pre>
+<hr />
+<h3 id="108-funcion-para-guardar-json">108. Función para guardar JSON<a class="headerlink" href="#108-funcion-para-guardar-json" title="Permanent link">&para;</a></h3>
+<p>Vamos a crear otra función reutilizable:</p>
+<pre><code class="language-python">def guardar_json(
+    datos,
+    nombre
+):
+
+    archivo = (
+        DIRECTORIO_RESULTADOS
+        / nombre
+    )
+
+    try:
+
+        with open(
+            archivo,
+            &quot;w&quot;,
+            encoding=&quot;utf-8&quot;
+        ) as fichero:
+
+            json.dump(
+                datos,
+                fichero,
+                indent=4,
+                ensure_ascii=False
+            )
+
+    except OSError as error:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;guardar el archivo.&quot;
+        )
+
+        logging.exception(
+            f&quot;Error guardando &quot;
+            f&quot;{archivo}: {error}&quot;
+        )
+
+        return False
+
+    else:
+
+        logging.info(
+            f&quot;Archivo guardado: &quot;
+            f&quot;{archivo}&quot;
+        )
+
+        return True
+</code></pre>
+<p>Esta función recibe:</p>
+<pre><code class="language-text">datos
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">nombre del archivo
+</code></pre>
+<p>y los almacena dentro de:</p>
+<pre><code class="language-text">resultados/
+</code></pre>
+<hr />
+<h3 id="109-operacion-listar-usuarios">109. Operación: listar usuarios<a class="headerlink" href="#109-operacion-listar-usuarios" title="Permanent link">&para;</a></h3>
+<p>Creamos:</p>
+<pre><code class="language-python">def listar_usuarios():
+
+    url = (
+        f&quot;{URL_BASE}/users&quot;
+    )
+
+    usuarios = obtener_json(
+        url
+    )
+
+    if usuarios is None:
+
+        return
+
+    print()
+    print(&quot;USUARIOS&quot;)
+    print(&quot;========&quot;)
+    print()
+
+    for usuario in usuarios:
+
+        print(
+            f&quot;{usuario.get('id')} - &quot;
+            f&quot;{usuario.get('name')} - &quot;
+            f&quot;{usuario.get('email')}&quot;
+        )
+
+    print()
+
+    print(
+        f&quot;Total: {len(usuarios)}&quot;
+    )
+</code></pre>
+<p>Esta función realiza:</p>
+<pre><code class="language-text">GET /users
+      │
+      ▼
+lista JSON
+      │
+      ▼
+for
+      │
+      ▼
+usuarios
+</code></pre>
+<hr />
+<h3 id="110-operacion-consultar-un-usuario">110. Operación: consultar un usuario<a class="headerlink" href="#110-operacion-consultar-un-usuario" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">def consultar_usuario(
+    identificador
+):
+
+    url = (
+        f&quot;{URL_BASE}/users/&quot;
+        f&quot;{identificador}&quot;
+    )
+
+    usuario = obtener_json(
+        url
+    )
+
+    if usuario is None:
+
+        return
+
+    print()
+    print(&quot;USUARIO&quot;)
+    print(&quot;=======&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{usuario.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Nombre: &quot;
+        f&quot;{usuario.get('name')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{usuario.get('username')}&quot;
+    )
+
+    print(
+        f&quot;Email: &quot;
+        f&quot;{usuario.get('email')}&quot;
+    )
+
+    direccion = usuario.get(
+        &quot;address&quot;,
+        {}
+    )
+
+    print(
+        f&quot;Ciudad: &quot;
+        f&quot;{direccion.get('city')}&quot;
+    )
+
+    empresa = usuario.get(
+        &quot;company&quot;,
+        {}
+    )
+
+    print(
+        f&quot;Empresa: &quot;
+        f&quot;{empresa.get('name')}&quot;
+    )
+
+    nombre_archivo = (
+        f&quot;usuario_&quot;
+        f&quot;{identificador}.json&quot;
+    )
+
+    if guardar_json(
+        usuario,
+        nombre_archivo
+    ):
+
+        print()
+        print(
+            f&quot;Datos guardados en &quot;
+            f&quot;{nombre_archivo}&quot;
+        )
+</code></pre>
+<p>Aquí utilizamos:</p>
+<pre><code class="language-python">usuario.get(
+    &quot;address&quot;,
+    {}
+)
+</code></pre>
+<p>para obtener un diccionario vacío si no existe la dirección.</p>
+<p>De esta forma podemos utilizar posteriormente:</p>
+<pre><code class="language-python">direccion.get(&quot;city&quot;)
+</code></pre>
+<p>sin acceder directamente a una clave inexistente.</p>
+<hr />
+<h3 id="111-operacion-listar-publicaciones">111. Operación: listar publicaciones<a class="headerlink" href="#111-operacion-listar-publicaciones" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">def listar_publicaciones(
+    usuario=None
+):
+
+    url = (
+        f&quot;{URL_BASE}/posts&quot;
+    )
+
+    parametros = None
+
+    if usuario is not None:
+
+        parametros = {
+            &quot;userId&quot;: usuario
+        }
+
+    publicaciones = obtener_json(
+        url,
+        parametros
+    )
+
+    if publicaciones is None:
+
+        return
+
+    print()
+    print(&quot;PUBLICACIONES&quot;)
+    print(&quot;=============&quot;)
+    print()
+
+    for publicacion in publicaciones:
+
+        print(
+            f&quot;ID: &quot;
+            f&quot;{publicacion.get('id')}&quot;
+        )
+
+        print(
+            f&quot;Título: &quot;
+            f&quot;{publicacion.get('title')}&quot;
+        )
+
+        print(
+            &quot;-&quot; * 40
+        )
+
+    print()
+
+    print(
+        f&quot;Total: &quot;
+        f&quot;{len(publicaciones)}&quot;
+    )
+</code></pre>
+<p>Si recibimos:</p>
+<pre><code class="language-python">usuario=None
+</code></pre>
+<p>consultaremos todas las publicaciones.</p>
+<p>Si recibimos:</p>
+<pre><code class="language-python">usuario=1
+</code></pre>
+<p>se enviará:</p>
+<pre><code class="language-python">params={
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<hr />
+<h3 id="112-operacion-crear-una-publicacion">112. Operación: crear una publicación<a class="headerlink" href="#112-operacion-crear-una-publicacion" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">def crear_publicacion(
+    titulo,
+    contenido,
+    usuario
+):
+
+    url = (
+        f&quot;{URL_BASE}/posts&quot;
+    )
+
+    datos = {
+        &quot;title&quot;: titulo,
+        &quot;body&quot;: contenido,
+        &quot;userId&quot;: usuario
+    }
+
+    resultado = enviar_json(
+        url,
+        datos
+    )
+
+    if resultado is None:
+
+        return
+
+    print()
+    print(&quot;PUBLICACIÓN ENVIADA&quot;)
+    print(&quot;===================&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{resultado.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Título: &quot;
+        f&quot;{resultado.get('title')}&quot;
+    )
+
+    print(
+        f&quot;Contenido: &quot;
+        f&quot;{resultado.get('body')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{resultado.get('userId')}&quot;
+    )
+
+    guardar_json(
+        resultado,
+        &quot;ultima_publicacion.json&quot;
+    )
+</code></pre>
+<p>Tenemos ahora las cuatro operaciones principales:</p>
+<pre><code class="language-text">listar_usuarios()
+consultar_usuario()
+listar_publicaciones()
+crear_publicacion()
+</code></pre>
+<hr />
+<h3 id="113-crear-la-interfaz-con-argparse">113. Crear la interfaz con <code>argparse</code><a class="headerlink" href="#113-crear-la-interfaz-con-argparse" title="Permanent link">&para;</a></h3>
+<p>Ahora definiremos las opciones del programa.</p>
+<p>Añade:</p>
+<pre><code class="language-python">parser = argparse.ArgumentParser(
+    description=(
+        &quot;Cliente de API desarrollado &quot;
+        &quot;con Python y requests.&quot;
+    )
+)
+</code></pre>
+<p>Creamos un grupo:</p>
+<pre><code class="language-python">grupo = (
+    parser.add_mutually_exclusive_group(
+        required=True
+    )
+)
+</code></pre>
+<p>Esto obligará a seleccionar una operación.</p>
+<hr />
+<h3 id="114-anadir-las-operaciones">114. Añadir las operaciones<a class="headerlink" href="#114-anadir-las-operaciones" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--usuarios&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Lista los usuarios&quot;
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--usuario&quot;,
+    type=int,
+    metavar=&quot;ID&quot;,
+    help=&quot;Consulta un usuario&quot;
+)
+</code></pre>
+<p>Añadimos:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--posts&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Lista publicaciones&quot;
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">grupo.add_argument(
+    &quot;--crear&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Crea una publicación&quot;
+)
+</code></pre>
+<hr />
+<h3 id="115-argumentos-adicionales">115. Argumentos adicionales<a class="headerlink" href="#115-argumentos-adicionales" title="Permanent link">&para;</a></h3>
+<p>Para crear una publicación necesitaremos:</p>
+<pre><code class="language-text">título
+contenido
+ID del usuario
+</code></pre>
+<p>Añade:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--titulo&quot;,
+    help=&quot;Título de la publicación&quot;
+)
+</code></pre>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--contenido&quot;,
+    help=&quot;Contenido de la publicación&quot;
+)
+</code></pre>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--autor&quot;,
+    type=int,
+    default=1,
+    help=(
+        &quot;ID del usuario. &quot;
+        &quot;Por defecto: 1&quot;
+    )
+)
+</code></pre>
+<p>También permitiremos filtrar publicaciones:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--filtrar-usuario&quot;,
+    type=int,
+    metavar=&quot;ID&quot;,
+    help=(
+        &quot;Filtra publicaciones &quot;
+        &quot;por usuario&quot;
+    )
+)
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">args = parser.parse_args()
+</code></pre>
+<hr />
+<h3 id="116-validar-los-argumentos">116. Validar los argumentos<a class="headerlink" href="#116-validar-los-argumentos" title="Permanent link">&para;</a></h3>
+<p>Antes de realizar las operaciones debemos validar algunos valores.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">if (
+    args.usuario is not None
+    and args.usuario &lt; 1
+):
+
+    parser.error(
+        &quot;El ID del usuario debe &quot;
+        &quot;ser mayor que cero.&quot;
+    )
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">if (
+    args.filtrar_usuario is not None
+    and args.filtrar_usuario &lt; 1
+):
+
+    parser.error(
+        &quot;El ID para filtrar debe &quot;
+        &quot;ser mayor que cero.&quot;
+    )
+</code></pre>
+<p>Para crear una publicación:</p>
+<pre><code class="language-python">if args.crear:
+
+    if not args.titulo:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--titulo&quot;
+        )
+
+    if not args.contenido:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--contenido&quot;
+        )
+
+    if args.autor &lt; 1:
+
+        parser.error(
+            &quot;--autor debe ser &quot;
+            &quot;mayor que cero&quot;
+        )
+</code></pre>
+<hr />
+<h3 id="117-programa-principal">117. Programa principal<a class="headerlink" href="#117-programa-principal" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">logging.info(
+    &quot;Programa iniciado&quot;
+)
+
+
+if args.usuarios:
+
+    listar_usuarios()
+
+elif args.usuario is not None:
+
+    consultar_usuario(
+        args.usuario
+    )
+
+elif args.posts:
+
+    listar_publicaciones(
+        args.filtrar_usuario
+    )
+
+elif args.crear:
+
+    crear_publicacion(
+        args.titulo,
+        args.contenido,
+        args.autor
+    )
+
+
+logging.info(
+    &quot;Programa finalizado&quot;
+)
+</code></pre>
+<p>Nuestra aplicación ya está completa.</p>
+<hr />
+<h3 id="118-consultar-la-ayuda">118. Consultar la ayuda<a class="headerlink" href="#118-consultar-la-ayuda" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --help
+</code></pre>
+<p>Deberemos encontrar opciones similares a:</p>
+<pre><code class="language-text">--usuarios
+--usuario ID
+--posts
+--crear
+--titulo
+--contenido
+--autor
+--filtrar-usuario
+</code></pre>
+<p>Gracias a <code>argparse</code>, nuestro programa dispone de su propia ayuda.</p>
+<hr />
+<h3 id="119-prueba-1-listar-usuarios">119. Prueba 1: listar usuarios<a class="headerlink" href="#119-prueba-1-listar-usuarios" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --usuarios
+</code></pre>
+<p>El programa realizará:</p>
+<pre><code class="language-text">GET /users
+</code></pre>
+<p>y mostrará la lista recibida.</p>
+<hr />
+<h3 id="120-prueba-2-consultar-un-usuario">120. Prueba 2: consultar un usuario<a class="headerlink" href="#120-prueba-2-consultar-un-usuario" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --usuario 1
+</code></pre>
+<p>Deberá mostrar información como:</p>
+<pre><code class="language-text">USUARIO
+=======
+
+ID: ...
+Nombre: ...
+Usuario: ...
+Email: ...
+Ciudad: ...
+Empresa: ...
+</code></pre>
+<p>Además deberá crear:</p>
+<pre><code class="language-text">resultados/usuario_1.json
+</code></pre>
+<hr />
+<h3 id="121-comprobar-el-archivo-json">121. Comprobar el archivo JSON<a class="headerlink" href="#121-comprobar-el-archivo-json" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<pre><code class="language-text">resultados/usuario_1.json
+</code></pre>
+<p>El archivo deberá contener la información recibida de la API.</p>
+<p>Gracias a:</p>
+<pre><code class="language-python">indent=4
+</code></pre>
+<p>el contenido aparecerá correctamente indentado.</p>
+<p>Hemos realizado:</p>
+<pre><code class="language-text">API
+ │
+ ▼
+GET
+ │
+ ▼
+JSON
+ │
+ ▼
+dict
+ │
+ ▼
+json.dump()
+ │
+ ▼
+archivo .json
+</code></pre>
+<hr />
+<h3 id="122-prueba-3-listar-publicaciones">122. Prueba 3: listar publicaciones<a class="headerlink" href="#122-prueba-3-listar-publicaciones" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --posts
+</code></pre>
+<p>El programa realizará:</p>
+<pre><code class="language-text">GET /posts
+</code></pre>
+<p>y mostrará las publicaciones recibidas.</p>
+<hr />
+<h3 id="123-filtrar-publicaciones">123. Filtrar publicaciones<a class="headerlink" href="#123-filtrar-publicaciones" title="Permanent link">&para;</a></h3>
+<p>Ahora ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --posts --filtrar-usuario 1
+</code></pre>
+<p>Nuestro programa enviará un parámetro equivalente a:</p>
+<pre><code class="language-text">?userId=1
+</code></pre>
+<p>mediante:</p>
+<pre><code class="language-python">params={
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<p>Esto permite comprobar cómo una misma petición puede modificarse mediante parámetros.</p>
+<hr />
+<h3 id="124-prueba-4-crear-una-publicacion">124. Prueba 4: crear una publicación<a class="headerlink" href="#124-prueba-4-crear-una-publicacion" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python cliente_api.py --crear --titulo &quot;Prueba&quot; --contenido &quot;Mensaje enviado desde Python&quot;
+</code></pre>
+<p>También podemos especificar el usuario:</p>
+<pre><code class="language-powershell">python cliente_api.py --crear --titulo &quot;Incidencia&quot; --contenido &quot;Equipo sin conexión&quot; --autor 3
+</code></pre>
+<p>El programa realizará:</p>
+<pre><code class="language-text">POST /posts
+</code></pre>
+<p>enviando:</p>
+<pre><code class="language-json">{
+    &quot;title&quot;: &quot;...&quot;,
+    &quot;body&quot;: &quot;...&quot;,
+    &quot;userId&quot;: 3
+}
+</code></pre>
+<p>Después procesará la respuesta JSON.</p>
+<hr />
+<h3 id="125-comprobar-los-logs">125. Comprobar los logs<a class="headerlink" href="#125-comprobar-los-logs" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<pre><code class="language-text">logs/cliente_api.log
+</code></pre>
+<p>Después de varias operaciones podremos encontrar registros similares a:</p>
+<pre><code class="language-text">2026-09-21 13:00:10 - INFO - Programa iniciado
+2026-09-21 13:00:10 - INFO - GET https://...
+2026-09-21 13:00:11 - INFO - GET correcto: HTTP 200
+2026-09-21 13:00:11 - INFO - Programa finalizado
+</code></pre>
+<p>También podrán aparecer operaciones POST:</p>
+<pre><code class="language-text">2026-09-21 13:05:20 - INFO - POST https://...
+2026-09-21 13:05:21 - INFO - POST correcto: HTTP 201
+</code></pre>
+<p>Ahora nuestra aplicación deja un registro de su actividad.</p>
+<hr />
+<h3 id="126-codigo-completo">126. Código completo<a class="headerlink" href="#126-codigo-completo" title="Permanent link">&para;</a></h3>
+<p>Una vez comprendidas y probadas las partes anteriores, el programa completo será:</p>
+<pre><code class="language-python">import argparse
+import json
+import logging
+
+from pathlib import Path
+
+import requests
+
+
+# -----------------------------
+# Rutas
+# -----------------------------
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+# -----------------------------
+# Configuración
+# -----------------------------
+
+URL_BASE = (
+    &quot;https://jsonplaceholder.typicode.com&quot;
+)
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;cliente_api.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+
+
+# -----------------------------
+# Funciones HTTP
+# -----------------------------
+
+def obtener_json(
+    url,
+    parametros=None
+):
+
+    logging.info(
+        f&quot;GET {url}&quot;
+    )
+
+    try:
+
+        respuesta = requests.get(
+            url,
+            params=parametros,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        datos = respuesta.json()
+
+    except requests.exceptions.Timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        logging.error(
+            f&quot;Timeout en GET {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;establecer la conexión.&quot;
+        )
+
+        logging.error(
+            f&quot;Error de conexión: &quot;
+            f&quot;{url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        logging.error(
+            f&quot;Error HTTP en &quot;
+            f&quot;{url}: {error}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.JSONDecodeError:
+
+        print(
+            &quot;ERROR: respuesta JSON &quot;
+            &quot;no válida.&quot;
+        )
+
+        logging.error(
+            f&quot;JSON no válido: {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        logging.exception(
+            f&quot;Error GET: {url}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;GET correcto: &quot;
+            f&quot;HTTP {respuesta.status_code}&quot;
+        )
+
+        return datos
+
+
+def enviar_json(
+    url,
+    datos
+):
+
+    logging.info(
+        f&quot;POST {url}&quot;
+    )
+
+    try:
+
+        respuesta = requests.post(
+            url,
+            json=datos,
+            timeout=10
+        )
+
+        respuesta.raise_for_status()
+
+        resultado = respuesta.json()
+
+    except requests.exceptions.Timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        logging.error(
+            f&quot;Timeout en POST {url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.ConnectionError:
+
+        print(
+            &quot;ERROR: problema &quot;
+            &quot;de conexión.&quot;
+        )
+
+        logging.error(
+            f&quot;Error de conexión: &quot;
+            f&quot;{url}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.HTTPError as error:
+
+        print(
+            f&quot;ERROR HTTP: {error}&quot;
+        )
+
+        logging.error(
+            f&quot;Error HTTP en POST: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return None
+
+    except requests.exceptions.JSONDecodeError:
+
+        print(
+            &quot;ERROR: respuesta JSON &quot;
+            &quot;no válida.&quot;
+        )
+
+        logging.error(
+            &quot;Respuesta POST &quot;
+            &quot;sin JSON válido&quot;
+        )
+
+        return None
+
+    except requests.exceptions.RequestException as error:
+
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+        logging.exception(
+            f&quot;Error POST: {url}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;POST correcto: &quot;
+            f&quot;HTTP {respuesta.status_code}&quot;
+        )
+
+        return resultado
+
+
+# -----------------------------
+# Archivos
+# -----------------------------
+
+def guardar_json(
+    datos,
+    nombre
+):
+
+    archivo = (
+        DIRECTORIO_RESULTADOS
+        / nombre
+    )
+
+    try:
+
+        with open(
+            archivo,
+            &quot;w&quot;,
+            encoding=&quot;utf-8&quot;
+        ) as fichero:
+
+            json.dump(
+                datos,
+                fichero,
+                indent=4,
+                ensure_ascii=False
+            )
+
+    except OSError as error:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;guardar el archivo.&quot;
+        )
+
+        logging.exception(
+            f&quot;Error guardando &quot;
+            f&quot;{archivo}: {error}&quot;
+        )
+
+        return False
+
+    else:
+
+        logging.info(
+            f&quot;Archivo guardado: &quot;
+            f&quot;{archivo}&quot;
+        )
+
+        return True
+
+
+# -----------------------------
+# Operaciones
+# -----------------------------
+
+def listar_usuarios():
+
+    url = (
+        f&quot;{URL_BASE}/users&quot;
+    )
+
+    usuarios = obtener_json(
+        url
+    )
+
+    if usuarios is None:
+
+        return
+
+    print()
+    print(&quot;USUARIOS&quot;)
+    print(&quot;========&quot;)
+    print()
+
+    for usuario in usuarios:
+
+        print(
+            f&quot;{usuario.get('id')} - &quot;
+            f&quot;{usuario.get('name')} - &quot;
+            f&quot;{usuario.get('email')}&quot;
+        )
+
+    print()
+
+    print(
+        f&quot;Total: {len(usuarios)}&quot;
+    )
+
+
+def consultar_usuario(
+    identificador
+):
+
+    url = (
+        f&quot;{URL_BASE}/users/&quot;
+        f&quot;{identificador}&quot;
+    )
+
+    usuario = obtener_json(
+        url
+    )
+
+    if usuario is None:
+
+        return
+
+    print()
+    print(&quot;USUARIO&quot;)
+    print(&quot;=======&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{usuario.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Nombre: &quot;
+        f&quot;{usuario.get('name')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{usuario.get('username')}&quot;
+    )
+
+    print(
+        f&quot;Email: &quot;
+        f&quot;{usuario.get('email')}&quot;
+    )
+
+    direccion = usuario.get(
+        &quot;address&quot;,
+        {}
+    )
+
+    print(
+        f&quot;Ciudad: &quot;
+        f&quot;{direccion.get('city')}&quot;
+    )
+
+    empresa = usuario.get(
+        &quot;company&quot;,
+        {}
+    )
+
+    print(
+        f&quot;Empresa: &quot;
+        f&quot;{empresa.get('name')}&quot;
+    )
+
+    nombre_archivo = (
+        f&quot;usuario_&quot;
+        f&quot;{identificador}.json&quot;
+    )
+
+    if guardar_json(
+        usuario,
+        nombre_archivo
+    ):
+
+        print()
+        print(
+            f&quot;Datos guardados en &quot;
+            f&quot;{nombre_archivo}&quot;
+        )
+
+
+def listar_publicaciones(
+    usuario=None
+):
+
+    url = (
+        f&quot;{URL_BASE}/posts&quot;
+    )
+
+    parametros = None
+
+    if usuario is not None:
+
+        parametros = {
+            &quot;userId&quot;: usuario
+        }
+
+    publicaciones = obtener_json(
+        url,
+        parametros
+    )
+
+    if publicaciones is None:
+
+        return
+
+    print()
+    print(&quot;PUBLICACIONES&quot;)
+    print(&quot;=============&quot;)
+    print()
+
+    for publicacion in publicaciones:
+
+        print(
+            f&quot;ID: &quot;
+            f&quot;{publicacion.get('id')}&quot;
+        )
+
+        print(
+            f&quot;Título: &quot;
+            f&quot;{publicacion.get('title')}&quot;
+        )
+
+        print(
+            &quot;-&quot; * 40
+        )
+
+    print()
+
+    print(
+        f&quot;Total: &quot;
+        f&quot;{len(publicaciones)}&quot;
+    )
+
+
+def crear_publicacion(
+    titulo,
+    contenido,
+    usuario
+):
+
+    url = (
+        f&quot;{URL_BASE}/posts&quot;
+    )
+
+    datos = {
+        &quot;title&quot;: titulo,
+        &quot;body&quot;: contenido,
+        &quot;userId&quot;: usuario
+    }
+
+    resultado = enviar_json(
+        url,
+        datos
+    )
+
+    if resultado is None:
+
+        return
+
+    print()
+    print(&quot;PUBLICACIÓN ENVIADA&quot;)
+    print(&quot;===================&quot;)
+    print()
+
+    print(
+        f&quot;ID: &quot;
+        f&quot;{resultado.get('id')}&quot;
+    )
+
+    print(
+        f&quot;Título: &quot;
+        f&quot;{resultado.get('title')}&quot;
+    )
+
+    print(
+        f&quot;Contenido: &quot;
+        f&quot;{resultado.get('body')}&quot;
+    )
+
+    print(
+        f&quot;Usuario: &quot;
+        f&quot;{resultado.get('userId')}&quot;
+    )
+
+    guardar_json(
+        resultado,
+        &quot;ultima_publicacion.json&quot;
+    )
+
+
+# -----------------------------
+# Argumentos
+# -----------------------------
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Cliente de API desarrollado &quot;
+        &quot;con Python y requests.&quot;
+    )
+)
+
+
+grupo = (
+    parser.add_mutually_exclusive_group(
+        required=True
+    )
+)
+
+
+grupo.add_argument(
+    &quot;--usuarios&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Lista los usuarios&quot;
+)
+
+
+grupo.add_argument(
+    &quot;--usuario&quot;,
+    type=int,
+    metavar=&quot;ID&quot;,
+    help=&quot;Consulta un usuario&quot;
+)
+
+
+grupo.add_argument(
+    &quot;--posts&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Lista publicaciones&quot;
+)
+
+
+grupo.add_argument(
+    &quot;--crear&quot;,
+    action=&quot;store_true&quot;,
+    help=&quot;Crea una publicación&quot;
+)
+
+
+parser.add_argument(
+    &quot;--titulo&quot;,
+    help=&quot;Título de la publicación&quot;
+)
+
+
+parser.add_argument(
+    &quot;--contenido&quot;,
+    help=&quot;Contenido de la publicación&quot;
+)
+
+
+parser.add_argument(
+    &quot;--autor&quot;,
+    type=int,
+    default=1,
+    help=(
+        &quot;ID del usuario. &quot;
+        &quot;Por defecto: 1&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;--filtrar-usuario&quot;,
+    type=int,
+    metavar=&quot;ID&quot;,
+    help=(
+        &quot;Filtra publicaciones &quot;
+        &quot;por usuario&quot;
+    )
+)
+
+
+args = parser.parse_args()
+
+
+# -----------------------------
+# Validación
+# -----------------------------
+
+if (
+    args.usuario is not None
+    and args.usuario &lt; 1
+):
+
+    parser.error(
+        &quot;El ID del usuario debe &quot;
+        &quot;ser mayor que cero.&quot;
+    )
+
+
+if (
+    args.filtrar_usuario is not None
+    and args.filtrar_usuario &lt; 1
+):
+
+    parser.error(
+        &quot;El ID para filtrar debe &quot;
+        &quot;ser mayor que cero.&quot;
+    )
+
+
+if args.crear:
+
+    if not args.titulo:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--titulo&quot;
+        )
+
+    if not args.contenido:
+
+        parser.error(
+            &quot;--crear necesita &quot;
+            &quot;--contenido&quot;
+        )
+
+    if args.autor &lt; 1:
+
+        parser.error(
+            &quot;--autor debe ser &quot;
+            &quot;mayor que cero&quot;
+        )
+
+
+# -----------------------------
+# Programa principal
+# -----------------------------
+
+logging.info(
+    &quot;Programa iniciado&quot;
+)
+
+
+if args.usuarios:
+
+    listar_usuarios()
+
+elif args.usuario is not None:
+
+    consultar_usuario(
+        args.usuario
+    )
+
+elif args.posts:
+
+    listar_publicaciones(
+        args.filtrar_usuario
+    )
+
+elif args.crear:
+
+    crear_publicacion(
+        args.titulo,
+        args.contenido,
+        args.autor
+    )
+
+
+logging.info(
+    &quot;Programa finalizado&quot;
+)
+</code></pre>
+<hr />
+<h3 id="127-practica-de-ampliacion">127. Práctica de ampliación<a class="headerlink" href="#127-practica-de-ampliacion" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">cliente_api_v2.py
+</code></pre>
+<p>y añade nuevas funciones progresivamente.</p>
+<h4 id="ampliacion-1">Ampliación 1<a class="headerlink" href="#ampliacion-1" title="Permanent link">&para;</a></h4>
+<p>Añade:</p>
+<pre><code class="language-text">--guardar-usuarios
+</code></pre>
+<p>para guardar la lista completa en:</p>
+<pre><code class="language-text">resultados/usuarios.json
+</code></pre>
+<h4 id="ampliacion-2">Ampliación 2<a class="headerlink" href="#ampliacion-2" title="Permanent link">&para;</a></h4>
+<p>Permite limitar el número de publicaciones mostradas:</p>
+<pre><code class="language-powershell">python cliente_api_v2.py --posts --limite 5
+</code></pre>
+<h4 id="ampliacion-3">Ampliación 3<a class="headerlink" href="#ampliacion-3" title="Permanent link">&para;</a></h4>
+<p>Añade una opción:</p>
+<pre><code class="language-text">--detallado
+</code></pre>
+<p>para mostrar:</p>
+<pre><code class="language-text">URL utilizada
+código HTTP
+tipo de contenido
+</code></pre>
+<h4 id="ampliacion-4">Ampliación 4<a class="headerlink" href="#ampliacion-4" title="Permanent link">&para;</a></h4>
+<p>Añade un contador de operaciones al log.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">INFO - 10 usuarios recibidos
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">INFO - 5 publicaciones mostradas
+</code></pre>
+<hr />
+<h3 id="128-reto-comprobador-de-servicios-web">128. Reto: comprobador de servicios web<a class="headerlink" href="#128-reto-comprobador-de-servicios-web" title="Permanent link">&para;</a></h3>
+<p>Desarrolla:</p>
+<pre><code class="language-text">monitor_web.py
+</code></pre>
+<p>El programa recibirá un archivo:</p>
+<pre><code class="language-text">datos/servicios.txt
+</code></pre>
+<p>con direcciones como:</p>
+<pre><code class="language-text">https://example.com
+https://www.python.org
+</code></pre>
+<p>El programa deberá:</p>
+<ol>
+<li>Leer las URLs desde el archivo.</li>
+<li>Realizar una petición GET a cada una.</li>
+<li>Utilizar <code>timeout</code>.</li>
+<li>Controlar errores de conexión.</li>
+<li>Mostrar el código HTTP.</li>
+<li>Registrar el resultado mediante <code>logging</code>.</li>
+<li>Generar un informe en:</li>
+</ol>
+<pre><code class="language-text">resultados/estado_servicios.txt
+</code></pre>
+<p>El resultado podría tener esta estructura:</p>
+<pre><code class="language-text">ESTADO DE SERVICIOS
+===================
+
+https://example.com
+HTTP: 200
+Estado: DISPONIBLE
+
+https://www.python.org
+HTTP: 200
+Estado: DISPONIBLE
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">HTTP y disponibilidad</p>
+<p>En esta práctica estamos comprobando la respuesta HTTP del servicio.</p>
+<p>Esto proporciona información diferente a una prueba de conectividad mediante <code>ping</code>.</p>
+</div>
+<hr />
+<h3 id="129-reto-final-del-capitulo">129. Reto final del capítulo<a class="headerlink" href="#129-reto-final-del-capitulo" title="Permanent link">&para;</a></h3>
+<p>Desarrolla una herramienta llamada:</p>
+<pre><code class="language-text">gestor_api.py
+</code></pre>
+<p>Deberá incluir como mínimo:</p>
+<pre><code class="language-text">1. argparse
+
+2. requests
+
+3. GET
+
+4. POST
+
+5. params
+
+6. json=
+
+7. respuesta.json()
+
+8. raise_for_status()
+
+9. timeout
+
+10. control de excepciones
+
+11. logging
+
+12. almacenamiento de algún
+    resultado en JSON
+</code></pre>
+<p>El programa deberá disponer de:</p>
+<pre><code class="language-powershell">python gestor_api.py --help
+</code></pre>
+<p>y permitir realizar al menos:</p>
+<pre><code class="language-text">una consulta GET
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">una operación POST
+</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Objetivo</p>
+<p>Si completas esta práctica, ya eres capaz de construir un cliente básico para una API HTTP utilizando Python.</p>
+</div>
+<hr />
+<h2 id="130-que-hemos-aprendido-en-el-capitulo-5">130. Qué hemos aprendido en el capítulo 5<a class="headerlink" href="#130-que-hemos-aprendido-en-el-capitulo-5" title="Permanent link">&para;</a></h2>
+<p>Comenzamos estudiando el modelo:</p>
+<pre><code class="language-text">CLIENTE
+   │
+   │ petición HTTP
+   ▼
+SERVIDOR
+   │
+   │ respuesta HTTP
+   ▼
+CLIENTE
+</code></pre>
+<p>Después instalamos:</p>
+<pre><code class="language-python">requests
+</code></pre>
+<p>y realizamos peticiones:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>Aprendimos a consultar:</p>
+<pre><code class="language-python">respuesta.status_code
+</code></pre>
+<pre><code class="language-python">respuesta.headers
+</code></pre>
+<pre><code class="language-python">respuesta.text
+</code></pre>
+<p>También aprendimos a comprobar errores mediante:</p>
+<pre><code class="language-python">respuesta.raise_for_status()
+</code></pre>
+<hr />
+<h3 id="131-apis-y-json">131. APIs y JSON<a class="headerlink" href="#131-apis-y-json" title="Permanent link">&para;</a></h3>
+<p>Después introdujimos el concepto de:</p>
+<pre><code class="language-text">API
+</code></pre>
+<p>y trabajamos con respuestas:</p>
+<pre><code class="language-text">JSON
+</code></pre>
+<p>Utilizamos:</p>
+<pre><code class="language-python">datos = respuesta.json()
+</code></pre>
+<p>para convertir el JSON recibido en estructuras Python.</p>
+<p>Podemos recibir:</p>
+<pre><code class="language-text">JSON
+ │
+ ▼
+dict
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">JSON
+ │
+ ▼
+list
+</code></pre>
+<p>y posteriormente utilizar las técnicas de Python que ya conocemos.</p>
+<hr />
+<h3 id="132-get">132. GET<a class="headerlink" href="#132-get" title="Permanent link">&para;</a></h3>
+<p>Utilizamos:</p>
+<pre><code class="language-python">requests.get()
+</code></pre>
+<p>para solicitar información.</p>
+<p>También aprendimos a enviar parámetros:</p>
+<pre><code class="language-python">parametros = {
+    &quot;userId&quot;: 1
+}
+</code></pre>
+<p>mediante:</p>
+<pre><code class="language-python">requests.get(
+    url,
+    params=parametros,
+    timeout=10
+)
+</code></pre>
+<hr />
+<h3 id="133-post">133. POST<a class="headerlink" href="#133-post" title="Permanent link">&para;</a></h3>
+<p>Después utilizamos:</p>
+<pre><code class="language-python">requests.post()
+</code></pre>
+<p>para enviar información.</p>
+<p>Preparamos un diccionario:</p>
+<pre><code class="language-python">datos = {
+    &quot;nombre&quot;: &quot;PC01&quot;,
+    &quot;ip&quot;: &quot;192.168.1.20&quot;
+}
+</code></pre>
+<p>y lo enviamos como JSON:</p>
+<pre><code class="language-python">requests.post(
+    url,
+    json=datos,
+    timeout=10
+)
+</code></pre>
+<hr />
+<h3 id="134-control-de-errores">134. Control de errores<a class="headerlink" href="#134-control-de-errores" title="Permanent link">&para;</a></h3>
+<p>También hemos aprendido que una comunicación de red puede fallar.</p>
+<p>Hemos trabajado con:</p>
+<pre><code class="language-text">Timeout
+ConnectionError
+HTTPError
+JSONDecodeError
+RequestException
+</code></pre>
+<p>y hemos combinado:</p>
+<pre><code class="language-python">try
+</code></pre>
+<pre><code class="language-python">except
+</code></pre>
+<p>con las operaciones HTTP.</p>
+<hr />
+<h3 id="135-integracion-con-capitulos-anteriores">135. Integración con capítulos anteriores<a class="headerlink" href="#135-integracion-con-capitulos-anteriores" title="Permanent link">&para;</a></h3>
+<p>Este capítulo no funciona de forma aislada.</p>
+<p>Hemos utilizado conocimientos anteriores:</p>
+<pre><code class="language-text">Capítulo 1
+archivos
+pathlib
+JSON en archivos
+
+        │
+        ▼
+
+Capítulo 2
+concepto de ejecución
+y diagnóstico
+
+        │
+        ▼
+
+Capítulo 3
+automatización
+bucles
+procesamiento repetitivo
+
+        │
+        ▼
+
+Capítulo 4
+argparse
+excepciones
+logging
+
+        │
+        ▼
+
+Capítulo 5
+HTTP
+requests
+APIs
+GET
+POST
+JSON
+</code></pre>
+<p>Ahora podemos construir programas que no trabajan únicamente con el ordenador local.</p>
+<p>También pueden intercambiar información con servicios disponibles a través de la red.</p>
+<hr />
+<h3 id="136-patron-general-aprendido">136. Patrón general aprendido<a class="headerlink" href="#136-patron-general-aprendido" title="Permanent link">&para;</a></h3>
+<p>Podemos resumir el capítulo mediante:</p>
+<pre><code class="language-text">          INICIO
+            │
+            ▼
+        argumentos
+            │
+            ▼
+         validar
+            │
+            ▼
+      preparar petición
+            │
+            ▼
+     ┌──────HTTP───────┐
+     │                 │
+     ▼                 ▼
+    GET               POST
+     │                 │
+     └────────┬────────┘
+              │
+              ▼
+          respuesta
+              │
+              ▼
+      código de estado
+              │
+              ▼
+           JSON
+              │
+              ▼
+        datos Python
+              │
+        ┌─────┼─────┐
+        │     │     │
+        ▼     ▼     ▼
+      mostrar guardar log
+        │     │     │
+        └─────┼─────┘
+              │
+              ▼
+             FIN
+</code></pre>
+<hr />
+<h3 id="137-buenas-practicas">137. Buenas prácticas<a class="headerlink" href="#137-buenas-practicas" title="Permanent link">&para;</a></h3>
+<p>Podemos establecer algunas reglas para nuestros clientes HTTP:</p>
+<ol>
+<li>
+<p>Utiliza <code>timeout</code> en las peticiones.</p>
+</li>
+<li>
+<p>Controla los errores de conexión.</p>
+</li>
+<li>
+<p>Comprueba los errores HTTP.</p>
+</li>
+<li>
+<p>No asumas que cualquier respuesta contiene JSON válido.</p>
+</li>
+<li>
+<p>Consulta la documentación de la API.</p>
+</li>
+<li>
+<p>Valida los datos antes de enviarlos.</p>
+</li>
+<li>
+<p>Utiliza <code>params=</code> para los parámetros de consulta.</p>
+</li>
+<li>
+<p>Utiliza <code>json=</code> cuando la API espere datos JSON.</p>
+</li>
+<li>
+<p>No publiques contraseñas, tokens ni claves de API.</p>
+</li>
+<li>
+<p>Utiliza logs cuando necesites conservar información sobre las operaciones realizadas.</p>
+</li>
+</ol>
+<hr />
+<h2 id="138-fin-del-capitulo">138. Fin del capítulo<a class="headerlink" href="#138-fin-del-capitulo" title="Permanent link">&para;</a></h2>
+<div class="admonition success">
+<p class="admonition-title">Capítulo 5 completado</p>
+<p>Has completado el capítulo dedicado a <strong>peticiones HTTP y consumo de APIs</strong>.</p>
+<p>Ya sabes:</p>
+<ul>
+<li>Realizar peticiones HTTP desde Python.</li>
+<li>Utilizar la biblioteca <code>requests</code>.</li>
+<li>Interpretar códigos de estado HTTP.</li>
+<li>Realizar peticiones GET.</li>
+<li>Enviar parámetros.</li>
+<li>Realizar peticiones POST.</li>
+<li>Enviar datos JSON.</li>
+<li>Procesar respuestas JSON.</li>
+<li>Controlar errores de comunicación.</li>
+<li>Utilizar tiempos de espera.</li>
+<li>Guardar respuestas en archivos.</li>
+<li>Registrar las operaciones mediante logs.</li>
+<li>Construir un cliente básico de una API.</li>
+</ul>
+</div>
+<p>El siguiente paso será utilizar Python para realizar <strong>diagnóstico de red directamente mediante sockets</strong>.</p>
+<p>Trabajaremos con:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>y aprenderemos a comprobar la conectividad a nivel de puerto y a realizar resolución de nombres DNS desde nuestros programas.</p></div>
 
 <div class="monlau-page-navigation">
 

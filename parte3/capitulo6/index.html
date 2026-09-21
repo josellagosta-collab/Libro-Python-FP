@@ -119,8 +119,16 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#depuracion-profesional-en-vs-code" class="nav-link">Depuración profesional en VS Code</a>
+            <li class="nav-item" data-bs-level="1"><a href="#capitulo-6-diagnostico-basico-de-red" class="nav-link">Capítulo 6. Diagnóstico básico de red</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#1-introduccion-a-los-sockets-y-puertos-tcp" class="nav-link">1. Introducción a los sockets y puertos TCP</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#resumen" class="nav-link">Resumen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -128,7 +136,1506 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="depuracion-profesional-en-vs-code">Depuración profesional en VS Code<a class="headerlink" href="#depuracion-profesional-en-vs-code" title="Permanent link">&para;</a></h1></div>
+<h1 id="capitulo-6-diagnostico-basico-de-red">Capítulo 6. Diagnóstico básico de red<a class="headerlink" href="#capitulo-6-diagnostico-basico-de-red" title="Permanent link">&para;</a></h1>
+<p>En los capítulos anteriores hemos utilizado Python para realizar tareas de administración y comunicarnos con servicios web.</p>
+<p>Hemos trabajado con:</p>
+<pre><code class="language-text">subprocess
+requests
+HTTP
+APIs
+JSON
+</code></pre>
+<p>Ahora vamos a trabajar a un nivel más cercano a la comunicación de red.</p>
+<p>Utilizaremos el módulo:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>que forma parte de la biblioteca estándar de Python.</p>
+<p>Con él podremos desarrollar herramientas capaces de:</p>
+<pre><code class="language-text">comprobar puertos TCP
+detectar servicios accesibles
+realizar diagnósticos básicos
+resolver nombres DNS
+</code></pre>
+<p>Nuestro objetivo no será construir herramientas complejas de análisis de redes.</p>
+<p>Utilizaremos <code>socket</code> para comprender cómo puede Python comprobar directamente la conectividad con determinados servicios de red.</p>
+<hr />
+<h2 id="1-introduccion-a-los-sockets-y-puertos-tcp">1. Introducción a los sockets y puertos TCP<a class="headerlink" href="#1-introduccion-a-los-sockets-y-puertos-tcp" title="Permanent link">&para;</a></h2>
+<p>Cuando dos aplicaciones se comunican mediante una red necesitamos identificar:</p>
+<pre><code class="language-text">equipo
++
+servicio
+</code></pre>
+<p>La dirección IP identifica el equipo.</p>
+<p>El puerto permite identificar un servicio o aplicación concreta.</p>
+<p>Podemos representarlo así:</p>
+<pre><code class="language-text">192.168.1.20
+     │
+     ├── puerto 22
+     │
+     ├── puerto 80
+     │
+     └── puerto 443
+</code></pre>
+<p>Por tanto, para comprobar un servicio no siempre es suficiente saber si el equipo está conectado a la red.</p>
+<p>También puede ser necesario comprobar si podemos establecer una conexión con el <strong>puerto utilizado por ese servicio</strong>.</p>
+<hr />
+<h3 id="2-recordatorio-direccion-ip">2. Recordatorio: dirección IP<a class="headerlink" href="#2-recordatorio-direccion-ip" title="Permanent link">&para;</a></h3>
+<p>Una dirección IPv4 puede tener este aspecto:</p>
+<pre><code class="language-text">192.168.1.20
+</code></pre>
+<p>La dirección identifica una interfaz de red dentro de una red IP.</p>
+<p>En capítulos anteriores ya hemos utilizado direcciones IP para realizar operaciones como:</p>
+<pre><code class="language-powershell">ping 192.168.1.20
+</code></pre>
+<p>Desde Python ejecutábamos el mismo comando mediante:</p>
+<pre><code class="language-python">subprocess.run()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">resultado = subprocess.run(
+    [
+        &quot;ping&quot;,
+        &quot;-n&quot;,
+        &quot;1&quot;,
+        &quot;192.168.1.20&quot;
+    ],
+    capture_output=True,
+    text=True,
+    timeout=10
+)
+</code></pre>
+<p>Pero <code>ping</code> y una conexión TCP no comprueban exactamente lo mismo.</p>
+<hr />
+<h3 id="3-que-es-un-puerto">3. ¿Qué es un puerto?<a class="headerlink" href="#3-que-es-un-puerto" title="Permanent link">&para;</a></h3>
+<p>Un ordenador puede ejecutar simultáneamente muchos servicios de red.</p>
+<p>Necesitamos alguna forma de distinguirlos.</p>
+<p>Para ello se utilizan los:</p>
+<pre><code class="language-text">puertos
+</code></pre>
+<p>Un puerto se identifica mediante un número.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">80
+443
+22
+</code></pre>
+<p>Podemos representar una comunicación como:</p>
+<pre><code class="language-text">        EQUIPO
+    192.168.1.20
+          │
+    ┌─────┼─────┐
+    │     │     │
+    ▼     ▼     ▼
+   22    80    443
+</code></pre>
+<p>La dirección IP nos permite localizar el equipo.</p>
+<p>El puerto nos permite dirigir la comunicación hacia un determinado servicio.</p>
+<hr />
+<h3 id="4-rango-de-puertos">4. Rango de puertos<a class="headerlink" href="#4-rango-de-puertos" title="Permanent link">&para;</a></h3>
+<p>Los números de puerto TCP y UDP pueden estar comprendidos entre:</p>
+<pre><code class="language-text">0
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">65535
+</code></pre>
+<p>Por tanto, un puerto válido deberá cumplir:</p>
+<pre><code class="language-text">0 &lt;= puerto &lt;= 65535
+</code></pre>
+<p>En nuestras herramientas validaremos normalmente los valores recibidos antes de intentar utilizarlos.</p>
+<hr />
+<h3 id="5-algunos-puertos-conocidos">5. Algunos puertos conocidos<a class="headerlink" href="#5-algunos-puertos-conocidos" title="Permanent link">&para;</a></h3>
+<p>Existen determinados números de puerto asociados habitualmente a servicios conocidos.</p>
+<p>Por ejemplo:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Puerto</th>
+<th>Servicio habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">22</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td>DNS</td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td style="text-align: right;">443</td>
+<td>HTTPS</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Puerto y servicio</p>
+<p>Un número de puerto no garantiza por sí mismo qué aplicación se está ejecutando.</p>
+<p>Estos números corresponden a asociaciones habituales.</p>
+<p>Un servicio puede configurarse para utilizar otro puerto.</p>
+</div>
+<hr />
+<h3 id="6-ip-y-puerto-forman-un-destino">6. IP y puerto forman un destino<a class="headerlink" href="#6-ip-y-puerto-forman-un-destino" title="Permanent link">&para;</a></h3>
+<p>Para intentar establecer una conexión TCP necesitaremos dos datos:</p>
+<pre><code class="language-text">dirección IP o nombre
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">puerto
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">192.168.1.20:80
+</code></pre>
+<p>Podemos interpretarlo como:</p>
+<pre><code class="language-text">192.168.1.20
+      │
+      └── equipo
+
+80
+ │
+ └── puerto
+</code></pre>
+<p>Otro ejemplo:</p>
+<pre><code class="language-text">192.168.1.20:22
+</code></pre>
+<p>indica el mismo equipo, pero un puerto diferente.</p>
+<hr />
+<h3 id="7-que-es-tcp">7. ¿Qué es TCP?<a class="headerlink" href="#7-que-es-tcp" title="Permanent link">&para;</a></h3>
+<p>TCP significa:</p>
+<pre><code class="language-text">Transmission Control Protocol
+</code></pre>
+<p>Es un protocolo de transporte orientado a conexión.</p>
+<p>De forma simplificada, antes de intercambiar datos se establece una conexión entre los extremos.</p>
+<p>Podemos representarlo así:</p>
+<pre><code class="language-text">CLIENTE
+   │
+   │ intento de conexión
+   ▼
+SERVIDOR
+   │
+   │ conexión establecida
+   ▼
+CLIENTE
+</code></pre>
+<p>En este capítulo utilizaremos esta característica para comprobar si podemos establecer una conexión TCP con un determinado puerto.</p>
+<hr />
+<h3 id="8-que-es-un-socket">8. ¿Qué es un socket?<a class="headerlink" href="#8-que-es-un-socket" title="Permanent link">&para;</a></h3>
+<p>Un <strong>socket</strong> es un mecanismo que permite a un programa comunicarse a través de una red.</p>
+<p>Python incluye el módulo:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>Podemos importarlo mediante:</p>
+<pre><code class="language-python">import socket
+</code></pre>
+<p>Con él podremos crear un socket y utilizarlo para intentar conectarnos a:</p>
+<pre><code class="language-text">host
++
+puerto
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">example.com
++
+443
+</code></pre>
+<hr />
+<h3 id="9-cliente-y-servidor">9. Cliente y servidor<a class="headerlink" href="#9-cliente-y-servidor" title="Permanent link">&para;</a></h3>
+<p>En nuestras primeras prácticas Python actuará como:</p>
+<pre><code class="language-text">CLIENTE
+</code></pre>
+<p>Nuestro programa intentará conectarse a un servicio que está actuando como:</p>
+<pre><code class="language-text">SERVIDOR
+</code></pre>
+<p>El modelo será:</p>
+<pre><code class="language-text">PROGRAMA PYTHON
+     cliente
+        │
+        │ conexión TCP
+        ▼
+      SERVIDOR
+        │
+        ▼
+      PUERTO
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Python
+   │
+   │ TCP
+   ▼
+example.com
+   │
+   ▼
+puerto 443
+</code></pre>
+<hr />
+<h3 id="10-ping-frente-a-comprobacion-de-puerto">10. <code>ping</code> frente a comprobación de puerto<a class="headerlink" href="#10-ping-frente-a-comprobacion-de-puerto" title="Permanent link">&para;</a></h3>
+<p>Esta diferencia es especialmente importante.</p>
+<p>Cuando utilizamos:</p>
+<pre><code class="language-text">ping
+</code></pre>
+<p>estamos realizando una prueba basada normalmente en ICMP.</p>
+<p>Cuando intentamos conectarnos mediante TCP a un puerto concreto estamos comprobando otra cosa.</p>
+<pre><code class="language-text">PING
+ │
+ ▼
+¿obtenemos respuesta ICMP?
+
+
+SOCKET TCP
+ │
+ ▼
+¿podemos establecer una
+conexión TCP con ese puerto?
+</code></pre>
+<p>Por tanto:</p>
+<pre><code class="language-text">equipo accesible
+</code></pre>
+<p>no significa necesariamente:</p>
+<pre><code class="language-text">servicio disponible
+</code></pre>
+<hr />
+<h3 id="11-ejemplo-de-la-diferencia">11. Ejemplo de la diferencia<a class="headerlink" href="#11-ejemplo-de-la-diferencia" title="Permanent link">&para;</a></h3>
+<p>Imaginemos un servidor:</p>
+<pre><code class="language-text">192.168.1.50
+</code></pre>
+<p>Podría responder correctamente:</p>
+<pre><code class="language-powershell">ping 192.168.1.50
+</code></pre>
+<p>pero su servidor web podría estar detenido.</p>
+<p>Tendríamos conceptualmente:</p>
+<pre><code class="language-text">PING
+192.168.1.50
+     │
+     └── responde
+
+
+TCP
+192.168.1.50:80
+     │
+     └── no acepta conexión
+</code></pre>
+<p>También puede ocurrir lo contrario.</p>
+<p>Un equipo puede tener restringidas las respuestas ICMP y, sin embargo, ofrecer un servicio TCP accesible.</p>
+<div class="admonition tip">
+<p class="admonition-title">Diagnóstico</p>
+<p>Para diagnosticar correctamente una red debemos distinguir entre:</p>
+<p><code>text
+conectividad con el equipo</code></p>
+<p>y:</p>
+<p><code>text
+conectividad con un servicio</code></p>
+</div>
+<hr />
+<h3 id="12-crear-nuestra-estructura-de-practicas">12. Crear nuestra estructura de prácticas<a class="headerlink" href="#12-crear-nuestra-estructura-de-practicas" title="Permanent link">&para;</a></h3>
+<p>Crearemos:</p>
+<pre><code class="language-text">practicas/
+└── capitulo6/
+    ├── datos/
+    ├── logs/
+    ├── programas/
+    └── resultados/
+</code></pre>
+<p>Nuestros programas estarán en:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+</code></pre>
+<p>Durante el capítulo utilizaremos los demás directorios para almacenar datos, logs y resultados.</p>
+<hr />
+<h3 id="13-nuestro-primer-programa-con-socket">13. Nuestro primer programa con <code>socket</code><a class="headerlink" href="#13-nuestro-primer-programa-con-socket" title="Permanent link">&para;</a></h3>
+<p>Dentro de:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+</code></pre>
+<p>crea:</p>
+<pre><code class="language-text">primer_socket.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+cliente = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+
+
+print(
+    &quot;Socket creado correctamente.&quot;
+)
+
+
+cliente.close()
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python primer_socket.py
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">Socket creado correctamente.
+</code></pre>
+<p>Aunque todavía no hemos realizado ninguna conexión, acabamos de crear nuestro primer socket.</p>
+<hr />
+<h3 id="14-analizar-socketsocket">14. Analizar <code>socket.socket()</code><a class="headerlink" href="#14-analizar-socketsocket" title="Permanent link">&para;</a></h3>
+<p>La instrucción:</p>
+<pre><code class="language-python">socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+</code></pre>
+<p>contiene dos elementos importantes.</p>
+<p>El primero es:</p>
+<pre><code class="language-python">socket.AF_INET
+</code></pre>
+<p>En nuestro ejemplo indica que trabajaremos con direcciones:</p>
+<pre><code class="language-text">IPv4
+</code></pre>
+<p>El segundo es:</p>
+<pre><code class="language-python">socket.SOCK_STREAM
+</code></pre>
+<p>Indica que utilizaremos un socket orientado a flujo, asociado normalmente con:</p>
+<pre><code class="language-text">TCP
+</code></pre>
+<p>Por tanto:</p>
+<pre><code class="language-python">socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+</code></pre>
+<p>puede interpretarse en esta práctica como:</p>
+<pre><code class="language-text">socket IPv4
++
+TCP
+</code></pre>
+<hr />
+<h3 id="15-cerrar-el-socket">15. Cerrar el socket<a class="headerlink" href="#15-cerrar-el-socket" title="Permanent link">&para;</a></h3>
+<p>Después de utilizar un socket debemos cerrarlo.</p>
+<p>Podemos hacerlo mediante:</p>
+<pre><code class="language-python">cliente.close()
+</code></pre>
+<p>El esquema básico sería:</p>
+<pre><code class="language-text">crear socket
+     │
+     ▼
+utilizar socket
+     │
+     ▼
+cerrar socket
+</code></pre>
+<p>Más adelante veremos una forma más cómoda de gestionar automáticamente su cierre.</p>
+<hr />
+<h3 id="16-intentar-nuestra-primera-conexion">16. Intentar nuestra primera conexión<a class="headerlink" href="#16-intentar-nuestra-primera-conexion" title="Permanent link">&para;</a></h3>
+<p>Vamos a intentar establecer una conexión TCP.</p>
+<p>Crea:</p>
+<pre><code class="language-text">conexion_tcp.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+host = &quot;example.com&quot;
+puerto = 443
+
+
+cliente = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+
+
+cliente.settimeout(
+    5
+)
+
+
+resultado = cliente.connect_ex(
+    (
+        host,
+        puerto
+    )
+)
+
+
+print(
+    f&quot;Resultado: {resultado}&quot;
+)
+
+
+cliente.close()
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python conexion_tcp.py
+</code></pre>
+<p>El programa intentará establecer una conexión TCP con:</p>
+<pre><code class="language-text">example.com:443
+</code></pre>
+<hr />
+<h3 id="17-el-metodo-connect_ex">17. El método <code>connect_ex()</code><a class="headerlink" href="#17-el-metodo-connect_ex" title="Permanent link">&para;</a></h3>
+<p>Hemos utilizado:</p>
+<pre><code class="language-python">cliente.connect_ex(
+    (
+        host,
+        puerto
+    )
+)
+</code></pre>
+<p>Observa que el destino se proporciona mediante:</p>
+<pre><code class="language-python">(
+    host,
+    puerto
+)
+</code></pre>
+<p>Es decir, una tupla con:</p>
+<pre><code class="language-text">host
+puerto
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">(
+    &quot;example.com&quot;,
+    443
+)
+</code></pre>
+<hr />
+<h3 id="18-interpretar-el-resultado">18. Interpretar el resultado<a class="headerlink" href="#18-interpretar-el-resultado" title="Permanent link">&para;</a></h3>
+<p><code>connect_ex()</code> devuelve un código.</p>
+<p>Si devuelve:</p>
+<pre><code class="language-text">0
+</code></pre>
+<p>la conexión se ha podido establecer correctamente.</p>
+<p>Por tanto podemos escribir:</p>
+<pre><code class="language-python">if resultado == 0:
+
+    print(
+        &quot;Puerto accesible.&quot;
+    )
+
+else:
+
+    print(
+        &quot;No se ha podido &quot;
+        &quot;establecer la conexión.&quot;
+    )
+</code></pre>
+<p>Programa:</p>
+<pre><code class="language-python">import socket
+
+
+host = &quot;example.com&quot;
+puerto = 443
+
+
+cliente = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+
+cliente.settimeout(
+    5
+)
+
+
+resultado = cliente.connect_ex(
+    (
+        host,
+        puerto
+    )
+)
+
+
+if resultado == 0:
+
+    print(
+        f&quot;{host}:{puerto} &quot;
+        f&quot;ACCESIBLE&quot;
+    )
+
+else:
+
+    print(
+        f&quot;{host}:{puerto} &quot;
+        f&quot;NO ACCESIBLE&quot;
+    )
+
+
+cliente.close()
+</code></pre>
+<hr />
+<h3 id="19-significa-que-el-puerto-esta-abierto">19. ¿Significa que el puerto está abierto?<a class="headerlink" href="#19-significa-que-el-puerto-esta-abierto" title="Permanent link">&para;</a></h3>
+<p>En herramientas sencillas es habitual describir un resultado correcto como:</p>
+<pre><code class="language-text">puerto abierto
+</code></pre>
+<p>Sin embargo, conviene comprender exactamente qué hemos comprobado.</p>
+<p>Si:</p>
+<pre><code class="language-python">connect_ex()
+</code></pre>
+<p>devuelve:</p>
+<pre><code class="language-text">0
+</code></pre>
+<p>significa que hemos podido establecer una conexión TCP con ese destino.</p>
+<p>Por eso en nuestras primeras herramientas utilizaremos preferentemente:</p>
+<pre><code class="language-text">ACCESIBLE
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">NO ACCESIBLE
+</code></pre>
+<p>Esto describe mejor lo que realmente ha comprobado nuestro programa.</p>
+<hr />
+<h3 id="20-utilizar-un-tiempo-de-espera">20. Utilizar un tiempo de espera<a class="headerlink" href="#20-utilizar-un-tiempo-de-espera" title="Permanent link">&para;</a></h3>
+<p>Hemos añadido:</p>
+<pre><code class="language-python">cliente.settimeout(
+    5
+)
+</code></pre>
+<p>Esto establece un tiempo máximo para determinadas operaciones del socket.</p>
+<p>Sin un tiempo de espera, una operación de red podría tardar demasiado dependiendo de las condiciones de la red.</p>
+<p>El patrón es parecido al utilizado anteriormente con:</p>
+<pre><code class="language-python">requests.get(
+    url,
+    timeout=10
+)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">subprocess.run(
+    comando,
+    timeout=10
+)
+</code></pre>
+<p>Podemos establecer una regla general:</p>
+<pre><code class="language-text">OPERACIÓN DE RED
+       │
+       ▼
+establecer timeout
+</code></pre>
+<hr />
+<h3 id="21-utilizar-with">21. Utilizar <code>with</code><a class="headerlink" href="#21-utilizar-with" title="Permanent link">&para;</a></h3>
+<p>Python permite utilizar un socket mediante:</p>
+<pre><code class="language-python">with
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">with socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+) as cliente:
+
+    cliente.settimeout(
+        5
+    )
+
+    resultado = cliente.connect_ex(
+        (
+            host,
+            puerto
+        )
+    )
+</code></pre>
+<p>Cuando termina el bloque:</p>
+<pre><code class="language-python">with
+</code></pre>
+<p>el socket se cierra automáticamente.</p>
+<p>Esto evita tener que escribir:</p>
+<pre><code class="language-python">cliente.close()
+</code></pre>
+<p>manualmente.</p>
+<hr />
+<h3 id="22-reescribir-el-programa-con-with">22. Reescribir el programa con <code>with</code><a class="headerlink" href="#22-reescribir-el-programa-con-with" title="Permanent link">&para;</a></h3>
+<p>Modifica:</p>
+<pre><code class="language-text">conexion_tcp.py
+</code></pre>
+<p>para utilizar:</p>
+<pre><code class="language-python">import socket
+
+
+host = &quot;example.com&quot;
+puerto = 443
+
+
+with socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+) as cliente:
+
+    cliente.settimeout(
+        5
+    )
+
+    resultado = cliente.connect_ex(
+        (
+            host,
+            puerto
+        )
+    )
+
+
+if resultado == 0:
+
+    print(
+        f&quot;{host}:{puerto} &quot;
+        f&quot;ACCESIBLE&quot;
+    )
+
+else:
+
+    print(
+        f&quot;{host}:{puerto} &quot;
+        f&quot;NO ACCESIBLE&quot;
+    )
+</code></pre>
+<p>Esta será la estructura que utilizaremos a partir de ahora.</p>
+<hr />
+<h3 id="23-crear-una-funcion-reutilizable">23. Crear una función reutilizable<a class="headerlink" href="#23-crear-una-funcion-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Vamos a encapsular la operación.</p>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_puerto.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+def comprobar_puerto(
+    host,
+    puerto
+):
+
+    with socket.socket(
+        socket.AF_INET,
+        socket.SOCK_STREAM
+    ) as cliente:
+
+        cliente.settimeout(
+            3
+        )
+
+        resultado = (
+            cliente.connect_ex(
+                (
+                    host,
+                    puerto
+                )
+            )
+        )
+
+    return resultado == 0
+</code></pre>
+<p>Ahora podemos utilizar:</p>
+<pre><code class="language-python">if comprobar_puerto(
+    &quot;example.com&quot;,
+    443
+):
+
+    print(
+        &quot;Puerto accesible.&quot;
+    )
+
+else:
+
+    print(
+        &quot;Puerto no accesible.&quot;
+    )
+</code></pre>
+<p>La función devuelve:</p>
+<pre><code class="language-python">True
+</code></pre>
+<p>si se puede establecer la conexión y:</p>
+<pre><code class="language-python">False
+</code></pre>
+<p>en caso contrario.</p>
+<hr />
+<h3 id="24-ventajas-de-utilizar-una-funcion">24. Ventajas de utilizar una función<a class="headerlink" href="#24-ventajas-de-utilizar-una-funcion" title="Permanent link">&para;</a></h3>
+<p>Ahora hemos separado:</p>
+<pre><code class="language-text">COMPROBACIÓN
+      │
+      ▼
+comprobar_puerto()
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">PRESENTACIÓN
+      │
+      ▼
+print()
+</code></pre>
+<p>Podemos reutilizar la función con diferentes destinos:</p>
+<pre><code class="language-python">comprobar_puerto(
+    &quot;example.com&quot;,
+    443
+)
+</code></pre>
+<pre><code class="language-python">comprobar_puerto(
+    &quot;192.168.1.20&quot;,
+    80
+)
+</code></pre>
+<pre><code class="language-python">comprobar_puerto(
+    &quot;192.168.1.30&quot;,
+    22
+)
+</code></pre>
+<hr />
+<h3 id="25-recibir-host-y-puerto-mediante-input">25. Recibir host y puerto mediante <code>input()</code><a class="headerlink" href="#25-recibir-host-y-puerto-mediante-input" title="Permanent link">&para;</a></h3>
+<p>Podemos hacer una primera versión interactiva:</p>
+<pre><code class="language-python">import socket
+
+
+host = input(
+    &quot;Host: &quot;
+)
+
+puerto = int(
+    input(
+        &quot;Puerto: &quot;
+    )
+)
+</code></pre>
+<p>Después utilizaremos:</p>
+<pre><code class="language-python">comprobar_puerto(
+    host,
+    puerto
+)
+</code></pre>
+<p>Sin embargo, ya conocemos una herramienta más adecuada para scripts reutilizables:</p>
+<pre><code class="language-text">argparse
+</code></pre>
+<hr />
+<h3 id="26-comprobador-mediante-argparse">26. Comprobador mediante <code>argparse</code><a class="headerlink" href="#26-comprobador-mediante-argparse" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">puerto_argparse.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+def comprobar_puerto(
+    host,
+    puerto
+):
+
+    with socket.socket(
+        socket.AF_INET,
+        socket.SOCK_STREAM
+    ) as cliente:
+
+        cliente.settimeout(
+            3
+        )
+
+        resultado = (
+            cliente.connect_ex(
+                (
+                    host,
+                    puerto
+                )
+            )
+        )
+
+    return resultado == 0
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Comprueba la conectividad &quot;
+        &quot;TCP con un puerto.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=(
+        &quot;Dirección IP o nombre &quot;
+        &quot;del equipo&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;puerto&quot;,
+    type=int,
+    help=&quot;Puerto TCP&quot;
+)
+
+
+args = parser.parse_args()
+
+
+if not 0 &lt;= args.puerto &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto debe estar &quot;
+        &quot;entre 0 y 65535.&quot;
+    )
+
+
+if comprobar_puerto(
+    args.host,
+    args.puerto
+):
+
+    print(
+        f&quot;{args.host}:&quot;
+        f&quot;{args.puerto} &quot;
+        f&quot;ACCESIBLE&quot;
+    )
+
+else:
+
+    print(
+        f&quot;{args.host}:&quot;
+        f&quot;{args.puerto} &quot;
+        f&quot;NO ACCESIBLE&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="27-probar-nuestro-comprobador">27. Probar nuestro comprobador<a class="headerlink" href="#27-probar-nuestro-comprobador" title="Permanent link">&para;</a></h3>
+<p>Podemos probar:</p>
+<pre><code class="language-powershell">python puerto_argparse.py example.com 443
+</code></pre>
+<p>Si podemos establecer la conexión obtendremos:</p>
+<pre><code class="language-text">example.com:443 ACCESIBLE
+</code></pre>
+<p>Podemos probar otro puerto:</p>
+<pre><code class="language-powershell">python puerto_argparse.py example.com 80
+</code></pre>
+<p>También podemos utilizar equipos de nuestro laboratorio cuando tengamos autorización para realizar las pruebas.</p>
+<div class="admonition warning">
+<p class="admonition-title">Realiza pruebas únicamente sobre sistemas autorizados</p>
+<p>Las herramientas de diagnóstico deben utilizarse únicamente sobre:</p>
+<ul>
+<li>Tus propios equipos.</li>
+<li>Los equipos del laboratorio.</li>
+<li>Sistemas para los que tengas autorización.</li>
+</ul>
+<p>En las prácticas del curso utilizaremos servicios públicos destinados a pruebas o equipos de nuestro entorno docente.</p>
+</div>
+<hr />
+<h3 id="28-validar-el-puerto">28. Validar el puerto<a class="headerlink" href="#28-validar-el-puerto" title="Permanent link">&para;</a></h3>
+<p>Gracias a:</p>
+<pre><code class="language-python">type=int
+</code></pre>
+<p><code>argparse</code> ya comprueba que el puerto pueda convertirse en un número entero.</p>
+<p>Si ejecutamos:</p>
+<pre><code class="language-powershell">python puerto_argparse.py example.com hola
+</code></pre>
+<p><code>argparse</code> mostrará un error.</p>
+<p>Además hemos añadido:</p>
+<pre><code class="language-python">if not 0 &lt;= args.puerto &lt;= 65535:
+</code></pre>
+<p>para comprobar el rango.</p>
+<p>Por tanto tenemos dos niveles de validación:</p>
+<pre><code class="language-text">¿es un entero?
+      │
+      ▼
+   argparse
+      │
+      ▼
+¿está entre 0 y 65535?
+      │
+      ▼
+validación propia
+</code></pre>
+<hr />
+<h3 id="29-que-errores-pueden-producirse">29. ¿Qué errores pueden producirse?<a class="headerlink" href="#29-que-errores-pueden-producirse" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos supuesto que el host recibido es válido.</p>
+<p>Pero pueden producirse situaciones como:</p>
+<pre><code class="language-text">nombre inexistente
+problema de resolución DNS
+dirección incorrecta
+problema de red
+timeout
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python puerto_argparse.py equipo-que-no-existe.local 80
+</code></pre>
+<p>puede producir un error relacionado con la resolución del nombre.</p>
+<p>Necesitamos recuperar lo aprendido sobre excepciones.</p>
+<hr />
+<h3 id="30-socketgaierror">30. <code>socket.gaierror</code><a class="headerlink" href="#30-socketgaierror" title="Permanent link">&para;</a></h3>
+<p>Una excepción especialmente importante es:</p>
+<pre><code class="language-python">socket.gaierror
+</code></pre>
+<p>Puede producirse cuando existe un problema al resolver un nombre.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">try:
+
+    resultado = cliente.connect_ex(
+        (
+            host,
+            puerto
+        )
+    )
+
+except socket.gaierror:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;resolver el nombre.&quot;
+    )
+</code></pre>
+<p>Más adelante estudiaremos específicamente la resolución DNS.</p>
+<hr />
+<h3 id="31-sockettimeout">31. <code>socket.timeout</code><a class="headerlink" href="#31-sockettimeout" title="Permanent link">&para;</a></h3>
+<p>También podemos controlar:</p>
+<pre><code class="language-python">socket.timeout
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">except socket.timeout:
+
+    print(
+        &quot;ERROR: tiempo de &quot;
+        &quot;espera agotado.&quot;
+    )
+</code></pre>
+<p>Podemos controlar otros problemas relacionados con sockets mediante:</p>
+<pre><code class="language-python">OSError
+</code></pre>
+<hr />
+<h3 id="32-crear-una-funcion-mas-robusta">32. Crear una función más robusta<a class="headerlink" href="#32-crear-una-funcion-mas-robusta" title="Permanent link">&para;</a></h3>
+<p>Podemos modificar nuestra función:</p>
+<pre><code class="language-python">def comprobar_puerto(
+    host,
+    puerto
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                3
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;resolver el host.&quot;
+        )
+
+        return False
+
+    except socket.timeout:
+
+        print(
+            &quot;ERROR: tiempo de &quot;
+            &quot;espera agotado.&quot;
+        )
+
+        return False
+
+    except OSError as error:
+
+        print(
+            f&quot;ERROR de red: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return False
+
+    else:
+
+        return resultado == 0
+</code></pre>
+<p>Ahora nuestra función está preparada para controlar algunos de los problemas más habituales.</p>
+<hr />
+<h3 id="33-un-detalle-importante-sobre-false">33. Un detalle importante sobre <code>False</code><a class="headerlink" href="#33-un-detalle-importante-sobre-false" title="Permanent link">&para;</a></h3>
+<p>Nuestra función devuelve:</p>
+<pre><code class="language-python">False
+</code></pre>
+<p>tanto cuando:</p>
+<pre><code class="language-text">no se establece la conexión
+</code></pre>
+<p>como cuando:</p>
+<pre><code class="language-text">se produce determinado error
+</code></pre>
+<p>Para una herramienta sencilla puede ser suficiente.</p>
+<p>Sin embargo, conceptualmente no son exactamente lo mismo.</p>
+<pre><code class="language-text">NO ACCESIBLE
+</code></pre>
+<p>puede significar que hemos realizado la prueba pero no hemos conseguido establecer la conexión.</p>
+<p>Mientras que:</p>
+<pre><code class="language-text">ERROR
+</code></pre>
+<p>puede significar que ni siquiera hemos podido realizar correctamente la comprobación.</p>
+<p>Más adelante mejoraremos esta situación.</p>
+<hr />
+<h3 id="34-devolver-diferentes-estados">34. Devolver diferentes estados<a class="headerlink" href="#34-devolver-diferentes-estados" title="Permanent link">&para;</a></h3>
+<p>Podemos hacer que la función devuelva textos diferentes.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">def comprobar_puerto(
+    host,
+    puerto
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                3
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        return &quot;ERROR_DNS&quot;
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError:
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">estado = comprobar_puerto(
+    args.host,
+    args.puerto
+)
+
+
+print(
+    f&quot;Estado: {estado}&quot;
+)
+</code></pre>
+<p>Ahora distinguimos diferentes resultados.</p>
+<hr />
+<h3 id="35-anadir-logging">35. Añadir <code>logging</code><a class="headerlink" href="#35-anadir-logging" title="Permanent link">&para;</a></h3>
+<p>Podemos registrar las comprobaciones.</p>
+<p>Añade:</p>
+<pre><code class="language-python">import logging
+</code></pre>
+<p>Configura:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=&quot;puertos.log&quot;,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<p>Antes de comprobar:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Comprobando &quot;
+    f&quot;{args.host}:{args.puerto}&quot;
+)
+</code></pre>
+<p>Si el puerto resulta accesible:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;{args.host}:{args.puerto} &quot;
+    f&quot;ACCESIBLE&quot;
+)
+</code></pre>
+<p>Si no:</p>
+<pre><code class="language-python">logging.warning(
+    f&quot;{args.host}:{args.puerto} &quot;
+    f&quot;NO ACCESIBLE&quot;
+)
+</code></pre>
+<hr />
+<h3 id="36-comprobador-completo-de-un-puerto">36. Comprobador completo de un puerto<a class="headerlink" href="#36-comprobador-completo-de-un-puerto" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">diagnostico_puerto.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import logging
+import socket
+
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;puertos.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+
+
+def comprobar_puerto(
+    host,
+    puerto
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                3
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        logging.error(
+            f&quot;No se puede resolver &quot;
+            f&quot;{host}&quot;
+        )
+
+        return &quot;ERROR_DNS&quot;
+
+    except socket.timeout:
+
+        logging.warning(
+            f&quot;Timeout en &quot;
+            f&quot;{host}:{puerto}&quot;
+        )
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;Error en &quot;
+            f&quot;{host}:{puerto}: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            logging.info(
+                f&quot;{host}:{puerto} &quot;
+                f&quot;ACCESIBLE&quot;
+            )
+
+            return &quot;ACCESIBLE&quot;
+
+        logging.warning(
+            f&quot;{host}:{puerto} &quot;
+            f&quot;NO ACCESIBLE&quot;
+        )
+
+        return &quot;NO_ACCESIBLE&quot;
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Comprueba la conectividad &quot;
+        &quot;TCP con un puerto.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=(
+        &quot;Dirección IP o nombre &quot;
+        &quot;del equipo&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;puerto&quot;,
+    type=int,
+    help=&quot;Puerto TCP&quot;
+)
+
+
+args = parser.parse_args()
+
+
+if not 0 &lt;= args.puerto &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto debe estar &quot;
+        &quot;entre 0 y 65535.&quot;
+    )
+
+
+print()
+print(&quot;DIAGNÓSTICO TCP&quot;)
+print(&quot;===============&quot;)
+print()
+
+print(
+    f&quot;Host: {args.host}&quot;
+)
+
+print(
+    f&quot;Puerto: {args.puerto}&quot;
+)
+
+
+estado = comprobar_puerto(
+    args.host,
+    args.puerto
+)
+
+
+print(
+    f&quot;Estado: {estado}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="37-probar-diferentes-situaciones">37. Probar diferentes situaciones<a class="headerlink" href="#37-probar-diferentes-situaciones" title="Permanent link">&para;</a></h3>
+<p>Podemos realizar varias pruebas.</p>
+<h4 id="servicio-accesible">Servicio accesible<a class="headerlink" href="#servicio-accesible" title="Permanent link">&para;</a></h4>
+<pre><code class="language-powershell">python diagnostico_puerto.py example.com 443
+</code></pre>
+<p>Podemos obtener:</p>
+<pre><code class="language-text">DIAGNÓSTICO TCP
+===============
+
+Host: example.com
+Puerto: 443
+Estado: ACCESIBLE
+</code></pre>
+<h4 id="puerto-diferente">Puerto diferente<a class="headerlink" href="#puerto-diferente" title="Permanent link">&para;</a></h4>
+<pre><code class="language-powershell">python diagnostico_puerto.py example.com 80
+</code></pre>
+<h4 id="nombre-incorrecto">Nombre incorrecto<a class="headerlink" href="#nombre-incorrecto" title="Permanent link">&para;</a></h4>
+<pre><code class="language-powershell">python diagnostico_puerto.py nombre-que-no-existe.invalid 80
+</code></pre>
+<p>Podremos obtener:</p>
+<pre><code class="language-text">Estado: ERROR_DNS
+</code></pre>
+<p>También podemos comprobar:</p>
+<pre><code class="language-text">logs/puertos.log
+</code></pre>
+<p>para consultar el historial de las operaciones.</p>
+<hr />
+<h3 id="38-practica-guiada">38. Práctica guiada<a class="headerlink" href="#38-practica-guiada" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_servicio.py
+</code></pre>
+<p>El programa deberá recibir:</p>
+<pre><code class="language-text">host
+puerto
+</code></pre>
+<p>mediante <code>argparse</code>.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python comprobar_servicio.py example.com 443
+</code></pre>
+<p>Deberá mostrar:</p>
+<pre><code class="language-text">COMPROBACIÓN DE SERVICIO
+========================
+
+Host: example.com
+Puerto: 443
+Protocolo: TCP
+Estado: ACCESIBLE
+</code></pre>
+<p>El programa deberá incluir:</p>
+<pre><code class="language-text">socket
+argparse
+timeout
+try / except
+logging
+</code></pre>
+<p>y validar que el puerto se encuentre en el rango correcto.</p>
+<hr />
+<h3 id="39-practica-propuesta-varios-servicios-conocidos">39. Práctica propuesta: varios servicios conocidos<a class="headerlink" href="#39-practica-propuesta-varios-servicios-conocidos" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">servicios_conocidos.py
+</code></pre>
+<p>Define:</p>
+<pre><code class="language-python">servicios = [
+    (&quot;example.com&quot;, 80),
+    (&quot;example.com&quot;, 443)
+]
+</code></pre>
+<p>Después recorre:</p>
+<pre><code class="language-python">for host, puerto in servicios:
+</code></pre>
+<p>y utiliza:</p>
+<pre><code class="language-python">comprobar_puerto(
+    host,
+    puerto
+)
+</code></pre>
+<p>El resultado podría ser:</p>
+<pre><code class="language-text">COMPROBACIÓN TCP
+================
+
+example.com:80
+ACCESIBLE
+
+example.com:443
+ACCESIBLE
+</code></pre>
+<p>Esta práctica prepara el siguiente paso: realizar varias comprobaciones automáticamente.</p>
+<hr />
+<h3 id="40-lo-que-todavia-no-estamos-haciendo">40. Lo que todavía no estamos haciendo<a class="headerlink" href="#40-lo-que-todavia-no-estamos-haciendo" title="Permanent link">&para;</a></h3>
+<p>Nuestra herramienta actual comprueba:</p>
+<pre><code class="language-text">un host
++
+un puerto
+</code></pre>
+<p>Todavía no estamos recorriendo automáticamente rangos de puertos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">20
+21
+22
+23
+...
+</code></pre>
+<p>Ese será el siguiente paso.</p>
+<p>Partiremos de:</p>
+<pre><code class="language-python">comprobar_puerto(
+    host,
+    puerto
+)
+</code></pre>
+<p>y utilizaremos:</p>
+<pre><code class="language-python">for
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>para automatizar las comprobaciones.</p>
+<div class="admonition warning">
+<p class="admonition-title">Escaneo autorizado</p>
+<p>Un programa que prueba múltiples puertos debe utilizarse únicamente sobre sistemas propios o sobre redes y equipos para los que exista autorización.</p>
+<p>En las prácticas trabajaremos con rangos pequeños y entornos controlados.</p>
+</div>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<p>En esta primera parte del capítulo hemos aprendido que una dirección IP identifica un equipo o interfaz, mientras que un puerto permite dirigir una comunicación hacia un determinado servicio.</p>
+<p>Podemos representar un destino como:</p>
+<pre><code class="language-text">HOST:PUERTO
+</code></pre>
+<p>por ejemplo:</p>
+<pre><code class="language-text">192.168.1.20:80
+</code></pre>
+<p>Hemos introducido:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>y creado sockets TCP/IPv4 mediante:</p>
+<pre><code class="language-python">socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+</code></pre>
+<p>Para comprobar una conexión hemos utilizado:</p>
+<pre><code class="language-python">connect_ex()
+</code></pre>
+<p>y aprendido que:</p>
+<pre><code class="language-text">resultado == 0
+</code></pre>
+<p>indica que se ha podido establecer la conexión TCP.</p>
+<p>También hemos utilizado:</p>
+<pre><code class="language-python">settimeout()
+</code></pre>
+<p>para evitar esperas excesivas.</p>
+<p>Hemos diferenciado:</p>
+<pre><code class="language-text">ping
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">conexión TCP a un puerto
+</code></pre>
+<p>y hemos integrado los nuevos conocimientos con:</p>
+<pre><code class="language-text">argparse
++
+excepciones
++
+logging
++
+socket
+</code></pre>
+<p>Nuestro patrón básico es ahora:</p>
+<pre><code class="language-text">       HOST
+        +
+      PUERTO
+        │
+        ▼
+ crear socket
+        │
+        ▼
+   establecer
+    timeout
+        │
+        ▼
+  connect_ex()
+        │
+   ┌────┴────┐
+   │         │
+   ▼         ▼
+conexión   sin conexión
+   │         │
+   ▼         ▼
+ACCESIBLE  NO ACCESIBLE
+        │
+        ▼
+       log
+</code></pre>
+<p>En la siguiente parte utilizaremos esta función para construir un <strong>comprobador de varios puertos y un pequeño escáner TCP</strong>, utilizando <code>range()</code>, listas, contadores, argumentos y generación de informes.</p></div>
 
 <div class="monlau-page-navigation">
 
