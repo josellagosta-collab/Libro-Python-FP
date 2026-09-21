@@ -1,0 +1,9 @@
+INFORME DE INVENTARIO
+=====================
+1. PC-AULA-01
+2. PC-AULA-02
+3. PC-AULA-03
+4. SERVIDOR-01
+5. ROUTER-01
+=====================
+Total de equipos: 5

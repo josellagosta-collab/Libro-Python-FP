@@ -33,5 +33,5 @@ markdown_extensions:
   - attr_list
 
 extra_css:
-  - stylesheets/extra.cs
+  - stylesheets/extra.css
 

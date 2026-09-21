@@ -1,0 +1,6 @@
+nombre,ip,sistema,ubicacion
+PC-AULA-01,192.168.1.101,Windows 11,Aula 1
+PC-AULA-02,192.168.1.102,Windows 11,Aula 1
+PC-AULA-03,192.168.1.103,Windows 11,Aula 1
+SERVIDOR-01,192.168.1.10,Ubuntu Server,CPD
+ROUTER-01,192.168.1.1,Cisco IOS,Armario comunicaciones
