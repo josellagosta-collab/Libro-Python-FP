@@ -129,6 +129,18 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#41-comprobacion-de-varios-puertos-y-escaner-tcp-basico" class="nav-link">41. Comprobación de varios puertos y escáner TCP básico</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#88-resolucion-dns-desde-python" class="nav-link">88. Resolución DNS desde Python</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#138-practica-integradora-herramienta-de-diagnostico-de-red" class="nav-link">138. Práctica integradora: herramienta de diagnóstico de red</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -1635,7 +1647,6082 @@ ACCESIBLE  NO ACCESIBLE
         ▼
        log
 </code></pre>
-<p>En la siguiente parte utilizaremos esta función para construir un <strong>comprobador de varios puertos y un pequeño escáner TCP</strong>, utilizando <code>range()</code>, listas, contadores, argumentos y generación de informes.</p></div>
+<p>En la siguiente parte utilizaremos esta función para construir un <strong>comprobador de varios puertos y un pequeño escáner TCP</strong>, utilizando <code>range()</code>, listas, contadores, argumentos y generación de informes.</p>
+<hr />
+<h2 id="41-comprobacion-de-varios-puertos-y-escaner-tcp-basico">41. Comprobación de varios puertos y escáner TCP básico<a class="headerlink" href="#41-comprobacion-de-varios-puertos-y-escaner-tcp-basico" title="Permanent link">&para;</a></h2>
+<p>En la primera parte del capítulo hemos creado una función capaz de comprobar un único puerto:</p>
+<pre><code class="language-python">comprobar_puerto(
+    host,
+    puerto
+)
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">example.com:443
+</code></pre>
+<p>Ahora vamos a automatizar esta operación.</p>
+<p>Nuestro objetivo será pasar de:</p>
+<pre><code class="language-text">un host
++
+un puerto
+</code></pre>
+<p>a:</p>
+<pre><code class="language-text">un host
++
+varios puertos
+</code></pre>
+<p>y posteriormente:</p>
+<pre><code class="language-text">un host
++
+un rango de puertos
+</code></pre>
+<p>El proceso será:</p>
+<pre><code class="language-text">      HOST
+       │
+       ▼
+lista o rango
+ de puertos
+       │
+       ▼
+      for
+       │
+       ▼
+comprobar_puerto()
+       │
+       ▼
+    resultado
+       │
+       ▼
+mostrar / guardar
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Uso autorizado</p>
+<p>Las herramientas desarrolladas en esta práctica deben utilizarse únicamente sobre:</p>
+<ul>
+<li>Equipos propios.</li>
+<li>Equipos del laboratorio.</li>
+<li>Máquinas virtuales preparadas para las prácticas.</li>
+<li>Sistemas para los que tengamos autorización.</li>
+</ul>
+<p>El objetivo es aprender programación y diagnóstico básico de red.</p>
+</div>
+<hr />
+<h3 id="42-comprobar-una-lista-de-puertos">42. Comprobar una lista de puertos<a class="headerlink" href="#42-comprobar-una-lista-de-puertos" title="Permanent link">&para;</a></h3>
+<p>No siempre necesitamos comprobar todos los puertos de un rango.</p>
+<p>Podemos comenzar utilizando una lista:</p>
+<pre><code class="language-python">puertos = [
+    22,
+    80,
+    443
+]
+</code></pre>
+<p>Después podemos recorrerla:</p>
+<pre><code class="language-python">for puerto in puertos:
+
+    print(
+        puerto
+    )
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">22
+80
+443
+</code></pre>
+<p>El siguiente paso consiste en realizar una comprobación TCP para cada uno.</p>
+<hr />
+<h3 id="43-primer-comprobador-multipuerto">43. Primer comprobador multipuerto<a class="headerlink" href="#43-primer-comprobador-multipuerto" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+varios_puertos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+def comprobar_puerto(
+    host,
+    puerto
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                2
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        return &quot;ERROR_DNS&quot;
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError:
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+
+
+host = &quot;example.com&quot;
+
+
+puertos = [
+    22,
+    80,
+    443
+]
+
+
+for puerto in puertos:
+
+    estado = comprobar_puerto(
+        host,
+        puerto
+    )
+
+    print(
+        f&quot;{host}:{puerto} &quot;
+        f&quot;{estado}&quot;
+    )
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python varios_puertos.py
+</code></pre>
+<p>El programa realizará una comprobación independiente para cada puerto.</p>
+<hr />
+<h3 id="44-que-ocurre-dentro-del-for">44. Qué ocurre dentro del <code>for</code><a class="headerlink" href="#44-que-ocurre-dentro-del-for" title="Permanent link">&para;</a></h3>
+<p>La parte fundamental es:</p>
+<pre><code class="language-python">for puerto in puertos:
+
+    estado = comprobar_puerto(
+        host,
+        puerto
+    )
+</code></pre>
+<p>En cada vuelta cambia:</p>
+<pre><code class="language-python">puerto
+</code></pre>
+<p>Podemos representarlo:</p>
+<pre><code class="language-text">puertos
+   │
+   ├── 22
+   │    │
+   │    ▼
+   │  comprobar
+   │
+   ├── 80
+   │    │
+   │    ▼
+   │  comprobar
+   │
+   └── 443
+        │
+        ▼
+      comprobar
+</code></pre>
+<p>Estamos reutilizando la misma función para diferentes puertos.</p>
+<hr />
+<h3 id="45-mostrar-unicamente-los-puertos-accesibles">45. Mostrar únicamente los puertos accesibles<a class="headerlink" href="#45-mostrar-unicamente-los-puertos-accesibles" title="Permanent link">&para;</a></h3>
+<p>En determinadas situaciones nos interesa mostrar únicamente las conexiones que se han podido establecer.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">if estado == &quot;ACCESIBLE&quot;:
+
+    print(
+        f&quot;Puerto {puerto}: &quot;
+        f&quot;ACCESIBLE&quot;
+    )
+</code></pre>
+<p>El programa podría quedar:</p>
+<pre><code class="language-python">for puerto in puertos:
+
+    estado = comprobar_puerto(
+        host,
+        puerto
+    )
+
+    if estado == &quot;ACCESIBLE&quot;:
+
+        print(
+            f&quot;Puerto {puerto}: &quot;
+            f&quot;ACCESIBLE&quot;
+        )
+</code></pre>
+<p>Ahora la salida será más reducida.</p>
+<hr />
+<h3 id="46-guardar-los-puertos-accesibles">46. Guardar los puertos accesibles<a class="headerlink" href="#46-guardar-los-puertos-accesibles" title="Permanent link">&para;</a></h3>
+<p>También podemos crear una lista:</p>
+<pre><code class="language-python">puertos_accesibles = []
+</code></pre>
+<p>Cuando encontremos uno:</p>
+<pre><code class="language-python">if estado == &quot;ACCESIBLE&quot;:
+
+    puertos_accesibles.append(
+        puerto
+    )
+</code></pre>
+<p>Después podemos mostrar:</p>
+<pre><code class="language-python">print(
+    puertos_accesibles
+)
+</code></pre>
+<p>Nuestro programa ya no se limita a mostrar información.</p>
+<p>También la almacena para utilizarla posteriormente.</p>
+<hr />
+<h3 id="47-contar-los-resultados">47. Contar los resultados<a class="headerlink" href="#47-contar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">len()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">print(
+    f&quot;Puertos comprobados: &quot;
+    f&quot;{len(puertos)}&quot;
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">print(
+    f&quot;Puertos accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+</code></pre>
+<p>Esto nos permitirá generar un pequeño resumen.</p>
+<hr />
+<h3 id="48-resumen-de-la-comprobacion">48. Resumen de la comprobación<a class="headerlink" href="#48-resumen-de-la-comprobacion" title="Permanent link">&para;</a></h3>
+<p>Podemos mostrar:</p>
+<pre><code class="language-python">print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print()
+
+print(
+    f&quot;Host: {host}&quot;
+)
+
+print(
+    f&quot;Puertos comprobados: &quot;
+    f&quot;{len(puertos)}&quot;
+)
+
+print(
+    f&quot;Puertos accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">RESUMEN
+=======
+
+Host: example.com
+Puertos comprobados: 3
+Puertos accesibles: 2
+</code></pre>
+<p>Los resultados reales dependerán del equipo y de los servicios disponibles.</p>
+<hr />
+<h3 id="49-de-una-lista-a-un-rango">49. De una lista a un rango<a class="headerlink" href="#49-de-una-lista-a-un-rango" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos definido:</p>
+<pre><code class="language-python">puertos = [
+    22,
+    80,
+    443
+]
+</code></pre>
+<p>Pero podemos generar automáticamente una secuencia mediante:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">for puerto in range(
+    20,
+    26
+):
+
+    print(
+        puerto
+    )
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">20
+21
+22
+23
+24
+25
+</code></pre>
+<p>Recordemos que el último valor de:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>no está incluido.</p>
+<hr />
+<h3 id="50-incluir-el-puerto-final">50. Incluir el puerto final<a class="headerlink" href="#50-incluir-el-puerto-final" title="Permanent link">&para;</a></h3>
+<p>Supongamos que queremos comprobar desde:</p>
+<pre><code class="language-text">20
+</code></pre>
+<p>hasta:</p>
+<pre><code class="language-text">25
+</code></pre>
+<p>ambos incluidos.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">range(
+    20,
+    25 + 1
+)
+</code></pre>
+<p>o:</p>
+<pre><code class="language-python">range(
+    20,
+    26
+)
+</code></pre>
+<p>Cuando los valores se encuentren en variables será especialmente útil:</p>
+<pre><code class="language-python">for puerto in range(
+    puerto_inicial,
+    puerto_final + 1
+):
+</code></pre>
+<p>Así incluiremos:</p>
+<pre><code class="language-text">puerto_inicial
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">puerto_final
+</code></pre>
+<hr />
+<h3 id="51-primer-escaner-de-un-rango">51. Primer escáner de un rango<a class="headerlink" href="#51-primer-escaner-de-un-rango" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">escaner_basico.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+def comprobar_puerto(
+    host,
+    puerto
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                1
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        return &quot;ERROR_DNS&quot;
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError:
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+
+
+host = &quot;example.com&quot;
+
+puerto_inicial = 80
+puerto_final = 85
+
+
+print()
+print(&quot;COMPROBACIÓN DE PUERTOS&quot;)
+print(&quot;=======================&quot;)
+print()
+
+
+for puerto in range(
+    puerto_inicial,
+    puerto_final + 1
+):
+
+    estado = comprobar_puerto(
+        host,
+        puerto
+    )
+
+    print(
+        f&quot;{puerto}: {estado}&quot;
+    )
+</code></pre>
+<p>Ahora estamos realizando automáticamente varias comprobaciones TCP.</p>
+<hr />
+<h3 id="52-por-que-hemos-reducido-el-timeout">52. ¿Por qué hemos reducido el timeout?<a class="headerlink" href="#52-por-que-hemos-reducido-el-timeout" title="Permanent link">&para;</a></h3>
+<p>En el programa anterior hemos utilizado:</p>
+<pre><code class="language-python">cliente.settimeout(
+    1
+)
+</code></pre>
+<p>Cuando comprobábamos un único puerto, esperar unos segundos no suponía un gran problema.</p>
+<p>Pero cuando realizamos muchas comprobaciones:</p>
+<pre><code class="language-text">puerto 1
+puerto 2
+puerto 3
+puerto 4
+...
+</code></pre>
+<p>los tiempos de espera pueden acumularse.</p>
+<p>Por ejemplo, si cada operación pudiera esperar:</p>
+<pre><code class="language-text">3 segundos
+</code></pre>
+<p>y realizamos:</p>
+<pre><code class="language-text">20 comprobaciones
+</code></pre>
+<p>el tiempo máximo teórico asociado a esas esperas podría crecer considerablemente.</p>
+<div class="admonition note">
+<p class="admonition-title">Timeout</p>
+<p>Un timeout muy pequeño puede producir resultados poco útiles en redes lentas.</p>
+<p>Un timeout demasiado grande puede hacer que una comprobación de muchos puertos tarde demasiado.</p>
+<p>En nuestras prácticas utilizaremos rangos pequeños y tiempos moderados.</p>
+</div>
+<hr />
+<h3 id="53-anadir-contadores">53. Añadir contadores<a class="headerlink" href="#53-anadir-contadores" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">total = 0
+accesibles = 0
+</code></pre>
+<p>Dentro del bucle:</p>
+<pre><code class="language-python">total += 1
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">if estado == &quot;ACCESIBLE&quot;:
+
+    accesibles += 1
+</code></pre>
+<p>Al terminar:</p>
+<pre><code class="language-python">print(
+    f&quot;Comprobados: {total}&quot;
+)
+
+print(
+    f&quot;Accesibles: {accesibles}&quot;
+)
+</code></pre>
+<p>Esto nos permite construir estadísticas básicas.</p>
+<hr />
+<h3 id="54-lista-de-puertos-accesibles">54. Lista de puertos accesibles<a class="headerlink" href="#54-lista-de-puertos-accesibles" title="Permanent link">&para;</a></h3>
+<p>Otra posibilidad consiste en utilizar:</p>
+<pre><code class="language-python">puertos_accesibles = []
+</code></pre>
+<p>Dentro del bucle:</p>
+<pre><code class="language-python">if estado == &quot;ACCESIBLE&quot;:
+
+    puertos_accesibles.append(
+        puerto
+    )
+</code></pre>
+<p>Al finalizar:</p>
+<pre><code class="language-python">print()
+print(&quot;PUERTOS ACCESIBLES&quot;)
+print(&quot;==================&quot;)
+print()
+
+
+for puerto in puertos_accesibles:
+
+    print(
+        puerto
+    )
+</code></pre>
+<p>Podemos obtener conceptualmente:</p>
+<pre><code class="language-text">PUERTOS ACCESIBLES
+==================
+
+80
+443
+</code></pre>
+<p>Los valores dependerán del host comprobado.</p>
+<hr />
+<h3 id="55-convertirlo-en-una-herramienta-reutilizable">55. Convertirlo en una herramienta reutilizable<a class="headerlink" href="#55-convertirlo-en-una-herramienta-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Nuestro programa todavía contiene valores escritos directamente:</p>
+<pre><code class="language-python">host = &quot;example.com&quot;
+
+puerto_inicial = 80
+puerto_final = 85
+</code></pre>
+<p>Queremos poder ejecutar:</p>
+<pre><code class="language-powershell">python escaner.py example.com 80 85
+</code></pre>
+<p>Por tanto utilizaremos:</p>
+<pre><code class="language-python">argparse
+</code></pre>
+<hr />
+<h3 id="56-argumentos-del-escaner">56. Argumentos del escáner<a class="headerlink" href="#56-argumentos-del-escaner" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">escaner.py
+</code></pre>
+<p>Comienza:</p>
+<pre><code class="language-python">import argparse
+import socket
+</code></pre>
+<p>Configura:</p>
+<pre><code class="language-python">parser = argparse.ArgumentParser(
+    description=(
+        &quot;Comprueba un rango &quot;
+        &quot;de puertos TCP.&quot;
+    )
+)
+</code></pre>
+<p>Añade el host:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;host&quot;,
+    help=(
+        &quot;Dirección IP o nombre &quot;
+        &quot;del equipo&quot;
+    )
+)
+</code></pre>
+<p>Puerto inicial:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;inicio&quot;,
+    type=int,
+    help=&quot;Puerto inicial&quot;
+)
+</code></pre>
+<p>Puerto final:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;fin&quot;,
+    type=int,
+    help=&quot;Puerto final&quot;
+)
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">args = parser.parse_args()
+</code></pre>
+<hr />
+<h3 id="57-validar-el-rango">57. Validar el rango<a class="headerlink" href="#57-validar-el-rango" title="Permanent link">&para;</a></h3>
+<p>Antes de realizar ninguna conexión debemos comprobar los argumentos.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">if not 0 &lt;= args.inicio &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto inicial debe &quot;
+        &quot;estar entre 0 y 65535.&quot;
+    )
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">if not 0 &lt;= args.fin &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto final debe &quot;
+        &quot;estar entre 0 y 65535.&quot;
+    )
+</code></pre>
+<p>También debemos comprobar:</p>
+<pre><code class="language-python">if args.inicio &gt; args.fin:
+
+    parser.error(
+        &quot;El puerto inicial no &quot;
+        &quot;puede ser mayor que &quot;
+        &quot;el puerto final.&quot;
+    )
+</code></pre>
+<p>Así evitamos rangos incorrectos.</p>
+<hr />
+<h3 id="58-limitar-el-tamano-de-las-practicas">58. Limitar el tamaño de las prácticas<a class="headerlink" href="#58-limitar-el-tamano-de-las-practicas" title="Permanent link">&para;</a></h3>
+<p>Para las primeras pruebas no necesitamos recorrer miles de puertos.</p>
+<p>Podemos limitar el rango:</p>
+<pre><code class="language-python">cantidad = (
+    args.fin
+    - args.inicio
+    + 1
+)
+</code></pre>
+<p>Y comprobar:</p>
+<pre><code class="language-python">if cantidad &gt; 100:
+
+    parser.error(
+        &quot;En esta práctica el rango &quot;
+        &quot;máximo es de 100 puertos.&quot;
+    )
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Rangos pequeños</p>
+<p>Limitar el rango hace que las prácticas sean más rápidas y facilita analizar qué está haciendo el programa.</p>
+<p>Nuestro objetivo es aprender el funcionamiento de <code>socket</code>, <code>range()</code>, los bucles y el control de errores.</p>
+</div>
+<hr />
+<h3 id="59-escaner-parametrizable">59. Escáner parametrizable<a class="headerlink" href="#59-escaner-parametrizable" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">for puerto in range(
+    args.inicio,
+    args.fin + 1
+):
+
+    estado = comprobar_puerto(
+        args.host,
+        puerto
+    )
+</code></pre>
+<p>Ahora el usuario decide:</p>
+<pre><code class="language-text">host
+puerto inicial
+puerto final
+</code></pre>
+<p>sin modificar el programa.</p>
+<hr />
+<h3 id="60-ejemplo-de-ejecucion">60. Ejemplo de ejecución<a class="headerlink" href="#60-ejemplo-de-ejecucion" title="Permanent link">&para;</a></h3>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python escaner.py example.com 80 85
+</code></pre>
+<p>La aplicación comprobará:</p>
+<pre><code class="language-text">80
+81
+82
+83
+84
+85
+</code></pre>
+<p>También podemos realizar pruebas sobre un equipo autorizado del laboratorio.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python escaner.py 192.168.1.20 20 30
+</code></pre>
+<p>si esa dirección corresponde a un equipo sobre el que tenemos permiso para realizar la práctica.</p>
+<hr />
+<h3 id="61-anadir-una-opcion-timeout">61. Añadir una opción <code>--timeout</code><a class="headerlink" href="#61-anadir-una-opcion-timeout" title="Permanent link">&para;</a></h3>
+<p>Podemos permitir que el usuario seleccione el tiempo máximo de espera.</p>
+<p>Añade:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--timeout&quot;,
+    type=float,
+    default=1.0,
+    help=(
+        &quot;Tiempo máximo de espera &quot;
+        &quot;en segundos. &quot;
+        &quot;Por defecto: 1&quot;
+    )
+)
+</code></pre>
+<p>Validamos:</p>
+<pre><code class="language-python">if args.timeout &lt;= 0:
+
+    parser.error(
+        &quot;El timeout debe ser &quot;
+        &quot;mayor que cero.&quot;
+    )
+</code></pre>
+<p>Ahora podemos ejecutar:</p>
+<pre><code class="language-powershell">python escaner.py example.com 80 85 --timeout 2
+</code></pre>
+<hr />
+<h3 id="62-modificar-la-funcion-para-recibir-el-timeout">62. Modificar la función para recibir el timeout<a class="headerlink" href="#62-modificar-la-funcion-para-recibir-el-timeout" title="Permanent link">&para;</a></h3>
+<p>Cambia la función:</p>
+<pre><code class="language-python">def comprobar_puerto(
+    host,
+    puerto,
+    timeout
+):
+</code></pre>
+<p>Y utiliza:</p>
+<pre><code class="language-python">cliente.settimeout(
+    timeout
+)
+</code></pre>
+<p>La llamada será:</p>
+<pre><code class="language-python">estado = comprobar_puerto(
+    args.host,
+    puerto,
+    args.timeout
+)
+</code></pre>
+<p>Así eliminamos otro valor fijo del programa.</p>
+<hr />
+<h3 id="63-medir-la-duracion-de-la-comprobacion">63. Medir la duración de la comprobación<a class="headerlink" href="#63-medir-la-duracion-de-la-comprobacion" title="Permanent link">&para;</a></h3>
+<p>Python incluye el módulo:</p>
+<pre><code class="language-python">time
+</code></pre>
+<p>Podemos importar:</p>
+<pre><code class="language-python">import time
+</code></pre>
+<p>Antes del bucle:</p>
+<pre><code class="language-python">inicio_tiempo = (
+    time.perf_counter()
+)
+</code></pre>
+<p>Después del bucle:</p>
+<pre><code class="language-python">fin_tiempo = (
+    time.perf_counter()
+)
+</code></pre>
+<p>Calculamos:</p>
+<pre><code class="language-python">duracion = (
+    fin_tiempo
+    - inicio_tiempo
+)
+</code></pre>
+<p>Y mostramos:</p>
+<pre><code class="language-python">print(
+    f&quot;Duración: &quot;
+    f&quot;{duracion:.2f} segundos&quot;
+)
+</code></pre>
+<p>Esto nos permitirá observar cómo influyen:</p>
+<pre><code class="language-text">número de puertos
+timeout
+respuesta de la red
+</code></pre>
+<p>en la duración del programa.</p>
+<hr />
+<h3 id="64-mostrar-un-resumen-final">64. Mostrar un resumen final<a class="headerlink" href="#64-mostrar-un-resumen-final" title="Permanent link">&para;</a></h3>
+<p>Al finalizar podemos mostrar:</p>
+<pre><code class="language-python">print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print()
+
+print(
+    f&quot;Host: {args.host}&quot;
+)
+
+print(
+    f&quot;Rango: &quot;
+    f&quot;{args.inicio}-&quot;
+    f&quot;{args.fin}&quot;
+)
+
+print(
+    f&quot;Puertos comprobados: &quot;
+    f&quot;{cantidad}&quot;
+)
+
+print(
+    f&quot;Puertos accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+
+print(
+    f&quot;Duración: &quot;
+    f&quot;{duracion:.2f} segundos&quot;
+)
+</code></pre>
+<p>Ahora nuestro programa proporciona un resultado más útil.</p>
+<hr />
+<h3 id="65-guardar-los-resultados">65. Guardar los resultados<a class="headerlink" href="#65-guardar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>Vamos a recuperar:</p>
+<pre><code class="language-python">pathlib
+</code></pre>
+<p>Importamos:</p>
+<pre><code class="language-python">from pathlib import Path
+</code></pre>
+<p>Definimos:</p>
+<pre><code class="language-python">DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+</code></pre>
+<p>Creamos el directorio:</p>
+<pre><code class="language-python">DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+</code></pre>
+<p>Y definimos:</p>
+<pre><code class="language-python">ARCHIVO_RESULTADOS = (
+    DIRECTORIO_RESULTADOS
+    / &quot;resultado_puertos.txt&quot;
+)
+</code></pre>
+<hr />
+<h3 id="66-generar-un-informe">66. Generar un informe<a class="headerlink" href="#66-generar-un-informe" title="Permanent link">&para;</a></h3>
+<p>Podemos construir:</p>
+<pre><code class="language-python">lineas = []
+
+lineas.append(
+    &quot;INFORME DE PUERTOS&quot;
+)
+
+lineas.append(
+    &quot;==================&quot;
+)
+
+lineas.append(
+    &quot;&quot;
+)
+
+lineas.append(
+    f&quot;Host: {args.host}&quot;
+)
+
+lineas.append(
+    f&quot;Rango: &quot;
+    f&quot;{args.inicio}-{args.fin}&quot;
+)
+
+lineas.append(
+    &quot;&quot;
+)
+
+lineas.append(
+    &quot;Puertos accesibles:&quot;
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">for puerto in puertos_accesibles:
+
+    lineas.append(
+        f&quot;- {puerto}&quot;
+    )
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">contenido = &quot;\n&quot;.join(
+    lineas
+)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">ARCHIVO_RESULTADOS.write_text(
+    contenido,
+    encoding=&quot;utf-8&quot;
+)
+</code></pre>
+<hr />
+<h3 id="67-que-ocurre-si-no-encontramos-ninguno">67. ¿Qué ocurre si no encontramos ninguno?<a class="headerlink" href="#67-que-ocurre-si-no-encontramos-ninguno" title="Permanent link">&para;</a></h3>
+<p>Debemos contemplar esta situación.</p>
+<p>Podemos hacer:</p>
+<pre><code class="language-python">if puertos_accesibles:
+
+    for puerto in puertos_accesibles:
+
+        lineas.append(
+            f&quot;- {puerto}&quot;
+        )
+
+else:
+
+    lineas.append(
+        &quot;Ninguno&quot;
+    )
+</code></pre>
+<p>Recordemos que una lista vacía:</p>
+<pre><code class="language-python">[]
+</code></pre>
+<p>se evalúa como falsa en una condición.</p>
+<hr />
+<h3 id="68-anadir-fecha-y-hora-al-informe">68. Añadir fecha y hora al informe<a class="headerlink" href="#68-anadir-fecha-y-hora-al-informe" title="Permanent link">&para;</a></h3>
+<p>Podemos importar:</p>
+<pre><code class="language-python">from datetime import datetime
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">ahora = datetime.now()
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">fecha = ahora.strftime(
+    &quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<p>Añadimos:</p>
+<pre><code class="language-python">lineas.append(
+    f&quot;Fecha: {fecha}&quot;
+)
+</code></pre>
+<p>Nuestro informe contendrá información sobre cuándo se realizó la comprobación.</p>
+<hr />
+<h3 id="69-crear-nombres-de-informe-unicos">69. Crear nombres de informe únicos<a class="headerlink" href="#69-crear-nombres-de-informe-unicos" title="Permanent link">&para;</a></h3>
+<p>Si utilizamos siempre:</p>
+<pre><code class="language-text">resultado_puertos.txt
+</code></pre>
+<p>cada ejecución sustituirá el informe anterior.</p>
+<p>Podemos crear un nombre con fecha y hora:</p>
+<pre><code class="language-python">marca_tiempo = (
+    datetime.now().strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">nombre_archivo = (
+    f&quot;puertos_&quot;
+    f&quot;{marca_tiempo}.txt&quot;
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">archivo_resultados = (
+    DIRECTORIO_RESULTADOS
+    / nombre_archivo
+)
+</code></pre>
+<p>Podremos obtener:</p>
+<pre><code class="language-text">puertos_2026-09-21_11-30-25.txt
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Nombres compatibles con Windows</p>
+<p>Evitamos utilizar:</p>
+<p><code>text
+:</code></p>
+<p>en la parte horaria del nombre porque este carácter no puede utilizarse normalmente en nombres de archivo de Windows.</p>
+<p>Por eso usamos:</p>
+<p><code>text
+11-30-25</code></p>
+<p>en lugar de:</p>
+<p><code>text
+11:30:25</code></p>
+</div>
+<hr />
+<h3 id="70-anadir-logging">70. Añadir <code>logging</code><a class="headerlink" href="#70-anadir-logging" title="Permanent link">&para;</a></h3>
+<p>Nuestra herramienta también puede registrar su actividad.</p>
+<p>Definimos:</p>
+<pre><code class="language-python">DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+</code></pre>
+<p>Creamos:</p>
+<pre><code class="language-python">DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;escaner.log&quot;
+)
+</code></pre>
+<p>Configuramos:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<hr />
+<h3 id="71-registrar-el-inicio">71. Registrar el inicio<a class="headerlink" href="#71-registrar-el-inicio" title="Permanent link">&para;</a></h3>
+<p>Antes de comenzar:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Iniciando comprobación &quot;
+    f&quot;de {args.host} &quot;
+    f&quot;puertos &quot;
+    f&quot;{args.inicio}-&quot;
+    f&quot;{args.fin}&quot;
+)
+</code></pre>
+<p>Cuando encontremos una conexión:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;{args.host}:{puerto} &quot;
+    f&quot;ACCESIBLE&quot;
+)
+</code></pre>
+<p>Al terminar:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Comprobación terminada. &quot;
+    f&quot;Accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="72-no-llenar-innecesariamente-el-log">72. No llenar innecesariamente el log<a class="headerlink" href="#72-no-llenar-innecesariamente-el-log" title="Permanent link">&para;</a></h3>
+<p>Si comprobamos muchos puertos, registrar todos los resultados:</p>
+<pre><code class="language-text">NO_ACCESIBLE
+</code></pre>
+<p>puede producir un archivo muy grande.</p>
+<p>En una herramienta sencilla podemos registrar:</p>
+<pre><code class="language-text">inicio
+errores
+puertos accesibles
+resumen final
+</code></pre>
+<p>en lugar de guardar cada resultado negativo.</p>
+<div class="admonition tip">
+<p class="admonition-title">Logs útiles</p>
+<p>Un buen log no consiste en guardar absolutamente todo.</p>
+<p>Debe conservar la información que resulte útil para comprender qué ha ocurrido durante la ejecución.</p>
+</div>
+<hr />
+<h3 id="73-programa-completo">73. Programa completo<a class="headerlink" href="#73-programa-completo" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">escaner_puertos.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import logging
+import socket
+import time
+
+from datetime import datetime
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;escaner.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+
+
+def comprobar_puerto(
+    host,
+    puerto,
+    timeout
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                timeout
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        host,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.gaierror:
+
+        return &quot;ERROR_DNS&quot;
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError:
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Comprueba un rango &quot;
+        &quot;de puertos TCP.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=(
+        &quot;Dirección IP o nombre &quot;
+        &quot;del equipo&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;inicio&quot;,
+    type=int,
+    help=&quot;Puerto inicial&quot;
+)
+
+
+parser.add_argument(
+    &quot;fin&quot;,
+    type=int,
+    help=&quot;Puerto final&quot;
+)
+
+
+parser.add_argument(
+    &quot;--timeout&quot;,
+    type=float,
+    default=1.0,
+    help=(
+        &quot;Tiempo máximo de espera &quot;
+        &quot;por puerto. &quot;
+        &quot;Por defecto: 1 segundo&quot;
+    )
+)
+
+
+args = parser.parse_args()
+
+
+if not 0 &lt;= args.inicio &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto inicial debe &quot;
+        &quot;estar entre 0 y 65535.&quot;
+    )
+
+
+if not 0 &lt;= args.fin &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto final debe &quot;
+        &quot;estar entre 0 y 65535.&quot;
+    )
+
+
+if args.inicio &gt; args.fin:
+
+    parser.error(
+        &quot;El puerto inicial no &quot;
+        &quot;puede ser mayor que &quot;
+        &quot;el puerto final.&quot;
+    )
+
+
+if args.timeout &lt;= 0:
+
+    parser.error(
+        &quot;El timeout debe ser &quot;
+        &quot;mayor que cero.&quot;
+    )
+
+
+cantidad = (
+    args.fin
+    - args.inicio
+    + 1
+)
+
+
+if cantidad &gt; 100:
+
+    parser.error(
+        &quot;En esta práctica se permite &quot;
+        &quot;un máximo de 100 puertos.&quot;
+    )
+
+
+logging.info(
+    f&quot;Iniciando comprobación &quot;
+    f&quot;de {args.host} &quot;
+    f&quot;puertos &quot;
+    f&quot;{args.inicio}-{args.fin}&quot;
+)
+
+
+print()
+print(&quot;ESCÁNER TCP BÁSICO&quot;)
+print(&quot;==================&quot;)
+print()
+
+print(
+    f&quot;Host: {args.host}&quot;
+)
+
+print(
+    f&quot;Rango: &quot;
+    f&quot;{args.inicio}-{args.fin}&quot;
+)
+
+print(
+    f&quot;Timeout: &quot;
+    f&quot;{args.timeout} segundos&quot;
+)
+
+print()
+
+
+puertos_accesibles = []
+
+
+inicio_tiempo = (
+    time.perf_counter()
+)
+
+
+for puerto in range(
+    args.inicio,
+    args.fin + 1
+):
+
+    estado = comprobar_puerto(
+        args.host,
+        puerto,
+        args.timeout
+    )
+
+    if estado == &quot;ACCESIBLE&quot;:
+
+        print(
+            f&quot;{puerto}: ACCESIBLE&quot;
+        )
+
+        puertos_accesibles.append(
+            puerto
+        )
+
+        logging.info(
+            f&quot;{args.host}:{puerto} &quot;
+            f&quot;ACCESIBLE&quot;
+        )
+
+    elif estado == &quot;ERROR_DNS&quot;:
+
+        print(
+            &quot;ERROR: no se puede &quot;
+            &quot;resolver el host.&quot;
+        )
+
+        logging.error(
+            f&quot;No se puede resolver &quot;
+            f&quot;{args.host}&quot;
+        )
+
+        break
+
+    elif estado == &quot;ERROR&quot;:
+
+        print(
+            f&quot;{puerto}: &quot;
+            f&quot;ERROR&quot;
+        )
+
+
+fin_tiempo = (
+    time.perf_counter()
+)
+
+
+duracion = (
+    fin_tiempo
+    - inicio_tiempo
+)
+
+
+print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print()
+
+print(
+    f&quot;Puertos comprobados: &quot;
+    f&quot;{cantidad}&quot;
+)
+
+print(
+    f&quot;Puertos accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+
+print(
+    f&quot;Duración: &quot;
+    f&quot;{duracion:.2f} segundos&quot;
+)
+
+
+marca_tiempo = (
+    datetime.now().strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+)
+
+
+nombre_archivo = (
+    f&quot;puertos_&quot;
+    f&quot;{marca_tiempo}.txt&quot;
+)
+
+
+archivo_resultados = (
+    DIRECTORIO_RESULTADOS
+    / nombre_archivo
+)
+
+
+lineas = [
+    &quot;INFORME DE PUERTOS&quot;,
+    &quot;==================&quot;,
+    &quot;&quot;,
+    (
+        f&quot;Fecha: &quot;
+        f&quot;{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}&quot;
+    ),
+    f&quot;Host: {args.host}&quot;,
+    (
+        f&quot;Rango: &quot;
+        f&quot;{args.inicio}-{args.fin}&quot;
+    ),
+    (
+        f&quot;Timeout: &quot;
+        f&quot;{args.timeout} segundos&quot;
+    ),
+    &quot;&quot;,
+    &quot;Puertos accesibles:&quot;
+]
+
+
+if puertos_accesibles:
+
+    for puerto in puertos_accesibles:
+
+        lineas.append(
+            f&quot;- {puerto}&quot;
+        )
+
+else:
+
+    lineas.append(
+        &quot;Ninguno&quot;
+    )
+
+
+lineas.append(
+    &quot;&quot;
+)
+
+lineas.append(
+    f&quot;Total comprobados: &quot;
+    f&quot;{cantidad}&quot;
+)
+
+lineas.append(
+    f&quot;Total accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+
+lineas.append(
+    f&quot;Duración: &quot;
+    f&quot;{duracion:.2f} segundos&quot;
+)
+
+
+contenido = &quot;\n&quot;.join(
+    lineas
+)
+
+
+try:
+
+    archivo_resultados.write_text(
+        contenido,
+        encoding=&quot;utf-8&quot;
+    )
+
+except OSError as error:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;guardar el informe.&quot;
+    )
+
+    logging.error(
+        f&quot;Error guardando informe: &quot;
+        f&quot;{error}&quot;
+    )
+
+else:
+
+    print()
+
+    print(
+        f&quot;Informe guardado en:&quot;
+    )
+
+    print(
+        archivo_resultados
+    )
+
+
+logging.info(
+    f&quot;Comprobación terminada. &quot;
+    f&quot;Puertos accesibles: &quot;
+    f&quot;{len(puertos_accesibles)}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="74-probar-el-programa">74. Probar el programa<a class="headerlink" href="#74-probar-el-programa" title="Permanent link">&para;</a></h3>
+<p>Primero podemos consultar:</p>
+<pre><code class="language-powershell">python escaner_puertos.py --help
+</code></pre>
+<p>Después podemos realizar una prueba pequeña:</p>
+<pre><code class="language-powershell">python escaner_puertos.py example.com 80 85
+</code></pre>
+<p>También podemos modificar el timeout:</p>
+<pre><code class="language-powershell">python escaner_puertos.py example.com 80 85 --timeout 2
+</code></pre>
+<p>En el laboratorio podremos utilizar una dirección de un equipo autorizado:</p>
+<pre><code class="language-powershell">python escaner_puertos.py 192.168.1.20 20 30
+</code></pre>
+<hr />
+<h3 id="75-comprobar-el-informe">75. Comprobar el informe<a class="headerlink" href="#75-comprobar-el-informe" title="Permanent link">&para;</a></h3>
+<p>Después de ejecutar el programa entra en:</p>
+<pre><code class="language-text">practicas/capitulo6/resultados/
+</code></pre>
+<p>Encontrarás un archivo similar a:</p>
+<pre><code class="language-text">puertos_2026-09-21_11-30-25.txt
+</code></pre>
+<p>Su contenido tendrá una estructura parecida a:</p>
+<pre><code class="language-text">INFORME DE PUERTOS
+==================
+
+Fecha: 2026-09-21 11:30:25
+Host: example.com
+Rango: 80-85
+Timeout: 1.0 segundos
+
+Puertos accesibles:
+- 80
+
+Total comprobados: 6
+Total accesibles: 1
+Duración: 1.24 segundos
+</code></pre>
+<p>Los resultados concretos dependerán del destino y de las condiciones de red.</p>
+<hr />
+<h3 id="76-comprobar-el-log">76. Comprobar el log<a class="headerlink" href="#76-comprobar-el-log" title="Permanent link">&para;</a></h3>
+<p>También tendremos:</p>
+<pre><code class="language-text">practicas/capitulo6/logs/
+escaner.log
+</code></pre>
+<p>Podemos encontrar registros como:</p>
+<pre><code class="language-text">2026-09-21 11:30:24 - INFO - Iniciando comprobación de example.com puertos 80-85
+2026-09-21 11:30:24 - INFO - example.com:80 ACCESIBLE
+2026-09-21 11:30:25 - INFO - Comprobación terminada. Puertos accesibles: 1
+</code></pre>
+<p>Estamos diferenciando dos tipos de salida:</p>
+<pre><code class="language-text">INFORME
+   │
+   └── resultado de la operación
+
+
+LOG
+   │
+   └── registro de la ejecución
+</code></pre>
+<hr />
+<h3 id="77-identificar-servicios-conocidos">77. Identificar servicios conocidos<a class="headerlink" href="#77-identificar-servicios-conocidos" title="Permanent link">&para;</a></h3>
+<p>Podemos asociar algunos puertos conocidos con nombres de servicios.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">servicios = {
+    22: &quot;SSH&quot;,
+    53: &quot;DNS&quot;,
+    80: &quot;HTTP&quot;,
+    443: &quot;HTTPS&quot;
+}
+</code></pre>
+<p>Podemos consultar:</p>
+<pre><code class="language-python">servicio = servicios.get(
+    puerto,
+    &quot;Desconocido&quot;
+)
+</code></pre>
+<p>Si:</p>
+<pre><code class="language-python">puerto = 443
+</code></pre>
+<p>obtendremos:</p>
+<pre><code class="language-text">HTTPS
+</code></pre>
+<hr />
+<h3 id="78-mostrar-puerto-y-servicio">78. Mostrar puerto y servicio<a class="headerlink" href="#78-mostrar-puerto-y-servicio" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">if estado == &quot;ACCESIBLE&quot;:
+
+    servicio = servicios.get(
+        puerto,
+        &quot;Desconocido&quot;
+    )
+
+    print(
+        f&quot;{puerto}: &quot;
+        f&quot;ACCESIBLE &quot;
+        f&quot;({servicio})&quot;
+    )
+</code></pre>
+<p>Podríamos obtener:</p>
+<pre><code class="language-text">80: ACCESIBLE (HTTP)
+443: ACCESIBLE (HTTPS)
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Identificación orientativa</p>
+<p>Asociar un número de puerto con un nombre de servicio no demuestra que ese servicio concreto esté funcionando realmente en el puerto.</p>
+<p>Por ejemplo, encontrar accesible el puerto:</p>
+<p><code>text
+80</code></p>
+<p>indica que podemos establecer una conexión TCP.</p>
+<p>El nombre:</p>
+<p><code>text
+HTTP</code></p>
+<p>corresponde al servicio habitualmente asociado con ese puerto.</p>
+</div>
+<hr />
+<h3 id="79-practica-propuesta-puertos-conocidos">79. Práctica propuesta: puertos conocidos<a class="headerlink" href="#79-practica-propuesta-puertos-conocidos" title="Permanent link">&para;</a></h3>
+<p>Modifica:</p>
+<pre><code class="language-text">escaner_puertos.py
+</code></pre>
+<p>para incluir:</p>
+<pre><code class="language-python">servicios = {
+    21: &quot;FTP&quot;,
+    22: &quot;SSH&quot;,
+    25: &quot;SMTP&quot;,
+    53: &quot;DNS&quot;,
+    80: &quot;HTTP&quot;,
+    110: &quot;POP3&quot;,
+    143: &quot;IMAP&quot;,
+    443: &quot;HTTPS&quot;
+}
+</code></pre>
+<p>Cuando un puerto resulte accesible deberá mostrar:</p>
+<pre><code class="language-text">22: ACCESIBLE (SSH)
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">443: ACCESIBLE (HTTPS)
+</code></pre>
+<p>Si no se encuentra en el diccionario:</p>
+<pre><code class="language-text">8080: ACCESIBLE (Desconocido)
+</code></pre>
+<hr />
+<h3 id="80-practica-propuesta-leer-los-puertos-desde-un-archivo">80. Práctica propuesta: leer los puertos desde un archivo<a class="headerlink" href="#80-practica-propuesta-leer-los-puertos-desde-un-archivo" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">datos/puertos.txt
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">22
+80
+443
+</code></pre>
+<p>Después crea:</p>
+<pre><code class="language-text">escaner_lista.py
+</code></pre>
+<p>El programa deberá:</p>
+<ol>
+<li>Recibir un host mediante <code>argparse</code>.</li>
+<li>Leer <code>puertos.txt</code>.</li>
+<li>Convertir cada línea a <code>int</code>.</li>
+<li>Validar el puerto.</li>
+<li>Comprobar cada puerto.</li>
+<li>Mostrar los accesibles.</li>
+<li>Generar un informe.</li>
+<li>Registrar errores mediante <code>logging</code>.</li>
+</ol>
+<p>El flujo será:</p>
+<pre><code class="language-text">puertos.txt
+     │
+     ▼
+   Path
+     │
+     ▼
+read_text()
+     │
+     ▼
+splitlines()
+     │
+     ▼
+    int()
+     │
+     ▼
+lista de puertos
+     │
+     ▼
+    socket
+     │
+     ▼
+ resultados
+</code></pre>
+<p>Esta práctica recupera directamente los conocimientos sobre archivos del <strong>Capítulo 1</strong>.</p>
+<hr />
+<h3 id="81-practica-propuesta-inventario-de-servicios">81. Práctica propuesta: inventario de servicios<a class="headerlink" href="#81-practica-propuesta-inventario-de-servicios" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">datos/servicios.csv
+</code></pre>
+<p>con:</p>
+<pre><code class="language-csv">nombre,host,puerto
+Web principal,example.com,443
+Web HTTP,example.com,80
+Servidor SSH,192.168.1.20,22
+</code></pre>
+<p>Crea:</p>
+<pre><code class="language-text">comprobar_servicios.py
+</code></pre>
+<p>El programa deberá:</p>
+<ol>
+<li>Leer el archivo CSV.</li>
+<li>Recorrer todos los servicios.</li>
+<li>Comprobar cada combinación <code>host:puerto</code>.</li>
+<li>Mostrar el estado.</li>
+<li>Generar un informe.</li>
+<li>Registrar los errores.</li>
+</ol>
+<p>Conceptualmente:</p>
+<pre><code class="language-text">servicios.csv
+      │
+      ▼
+  csv.DictReader
+      │
+      ▼
+     fila
+      │
+      ├── nombre
+      ├── host
+      └── puerto
+            │
+            ▼
+     comprobar_puerto()
+            │
+            ▼
+          estado
+</code></pre>
+<div class="admonition example">
+<p class="admonition-title">Resultado</p>
+<p>La salida podría tener este aspecto:</p>
+<p>```text
+COMPROBACIÓN DE SERVICIOS
+=========================</p>
+<p>Web principal
+example.com:443
+Estado: ACCESIBLE</p>
+<p>Web HTTP
+example.com:80
+Estado: ACCESIBLE</p>
+<p>Servidor SSH
+192.168.1.20:22
+Estado: NO ACCESIBLE
+```</p>
+</div>
+<hr />
+<h3 id="82-que-hemos-construido">82. Qué hemos construido<a class="headerlink" href="#82-que-hemos-construido" title="Permanent link">&para;</a></h3>
+<p>Nuestro primer programa comprobaba:</p>
+<pre><code class="language-text">HOST
+ │
+ ▼
+PUERTO
+</code></pre>
+<p>Ahora hemos evolucionado hasta:</p>
+<pre><code class="language-text">             HOST
+              │
+              ▼
+      rango de puertos
+              │
+              ▼
+             for
+              │
+              ▼
+     comprobar_puerto()
+              │
+              ▼
+     ┌────────┴────────┐
+     │                 │
+     ▼                 ▼
+ ACCESIBLE       NO ACCESIBLE
+     │
+     ▼
+lista de resultados
+     │
+     ├── pantalla
+     ├── informe
+     └── logging
+</code></pre>
+<p>Esto constituye un <strong>escáner TCP básico y secuencial</strong>.</p>
+<hr />
+<h3 id="83-escaneo-secuencial">83. Escaneo secuencial<a class="headerlink" href="#83-escaneo-secuencial" title="Permanent link">&para;</a></h3>
+<p>Nuestro programa realiza las comprobaciones una detrás de otra:</p>
+<pre><code class="language-text">puerto 80
+   │
+   ▼
+esperar resultado
+   │
+   ▼
+puerto 81
+   │
+   ▼
+esperar resultado
+   │
+   ▼
+puerto 82
+   │
+   ▼
+...
+</code></pre>
+<p>A este comportamiento podemos denominarlo:</p>
+<pre><code class="language-text">secuencial
+</code></pre>
+<p>Para los objetivos de esta unidad es suficiente y además permite comprender claramente el funcionamiento del programa.</p>
+<p>No necesitamos introducir todavía técnicas más avanzadas de concurrencia.</p>
+<hr />
+<h3 id="84-interpretar-correctamente-los-resultados">84. Interpretar correctamente los resultados<a class="headerlink" href="#84-interpretar-correctamente-los-resultados" title="Permanent link">&para;</a></h3>
+<p>Un resultado:</p>
+<pre><code class="language-text">ACCESIBLE
+</code></pre>
+<p>indica que nuestro programa ha podido establecer una conexión TCP con ese puerto.</p>
+<p>Un resultado:</p>
+<pre><code class="language-text">NO ACCESIBLE
+</code></pre>
+<p>puede deberse a diferentes circunstancias:</p>
+<pre><code class="language-text">no existe un servicio escuchando
+la conexión ha sido rechazada
+un dispositivo intermedio la bloquea
+la red no permite alcanzar el servicio
+</code></pre>
+<p>Por tanto, nuestra herramienta proporciona una <strong>evidencia de conectividad TCP</strong>, pero no explica automáticamente la causa de todos los resultados negativos.</p>
+<hr />
+<h3 id="85-relacion-con-las-herramientas-tradicionales">85. Relación con las herramientas tradicionales<a class="headerlink" href="#85-relacion-con-las-herramientas-tradicionales" title="Permanent link">&para;</a></h3>
+<p>En administración de sistemas podemos combinar diferentes pruebas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">        DIAGNÓSTICO
+             │
+      ┌──────┴──────┐
+      │             │
+      ▼             ▼
+    ping          socket
+      │             │
+      ▼             ▼
+respuesta ICMP   conexión TCP
+                  a un puerto
+</code></pre>
+<p>Esto nos proporciona información diferente.</p>
+<p>Un buen diagnóstico puede necesitar varias pruebas antes de obtener una conclusión.</p>
+<hr />
+<h3 id="86-practica-de-consolidacion">86. Práctica de consolidación<a class="headerlink" href="#86-practica-de-consolidacion" title="Permanent link">&para;</a></h3>
+<p>Desarrolla:</p>
+<pre><code class="language-text">diagnostico_tcp.py
+</code></pre>
+<p>El programa deberá aceptar:</p>
+<pre><code class="language-powershell">python diagnostico_tcp.py HOST INICIO FIN
+</code></pre>
+<p>y opcionalmente:</p>
+<pre><code class="language-text">--timeout
+</code></pre>
+<p>Deberá:</p>
+<ol>
+<li>Validar los argumentos.</li>
+<li>Limitar la práctica a un máximo de 100 puertos.</li>
+<li>Comprobar el rango.</li>
+<li>Mostrar únicamente los puertos accesibles.</li>
+<li>Identificar servicios conocidos mediante un diccionario.</li>
+<li>Contar los puertos comprobados.</li>
+<li>Contar los puertos accesibles.</li>
+<li>Medir la duración.</li>
+<li>Crear un informe con fecha y hora.</li>
+<li>Registrar la ejecución mediante <code>logging</code>.</li>
+</ol>
+<p>El programa deberá utilizar como mínimo:</p>
+<pre><code class="language-text">argparse
+socket
+Path
+datetime
+time
+logging
+try / except
+for
+range
+listas
+diccionarios
+</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Objetivo de la práctica</p>
+<p>Esta práctica integra contenidos estudiados desde los primeros capítulos del libro.</p>
+<p>El objetivo no es únicamente comprobar puertos, sino aprender a construir una herramienta de administración estructurada, reutilizable y capaz de gestionar errores.</p>
+</div>
+<hr />
+<h3 id="87-resumen-de-esta-parte">87. Resumen de esta parte<a class="headerlink" href="#87-resumen-de-esta-parte" title="Permanent link">&para;</a></h3>
+<p>En esta parte hemos pasado de comprobar:</p>
+<pre><code class="language-text">un puerto
+</code></pre>
+<p>a comprobar:</p>
+<pre><code class="language-text">varios puertos
+</code></pre>
+<p>mediante:</p>
+<pre><code class="language-python">for
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">range()
+</code></pre>
+<p>Hemos construido un escáner TCP básico utilizando:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">connect_ex()
+</code></pre>
+<p>También hemos utilizado:</p>
+<pre><code class="language-text">listas
+contadores
+diccionarios
+argparse
+timeout
+Path
+datetime
+time
+logging
+</code></pre>
+<p>para transformar una prueba sencilla en una herramienta más completa.</p>
+<p>El patrón principal es:</p>
+<pre><code class="language-text">HOST
+ │
+ ▼
+RANGO DE PUERTOS
+ │
+ ▼
+VALIDACIÓN
+ │
+ ▼
+for + range()
+ │
+ ▼
+socket
+ │
+ ▼
+connect_ex()
+ │
+ ▼
+RESULTADO
+ │
+ ├── mostrar
+ ├── almacenar
+ ├── informar
+ └── registrar
+</code></pre>
+<p>Ya somos capaces de comprobar la conectividad TCP con servicios concretos y con pequeños rangos de puertos.</p>
+<p>En la siguiente parte estudiaremos otro elemento fundamental del diagnóstico de red:</p>
+<pre><code class="language-text">DNS
+</code></pre>
+<p>Aprenderemos a convertir:</p>
+<pre><code class="language-text">nombre de host
+        │
+        ▼
+   dirección IP
+</code></pre>
+<p>y también a consultar información asociada a direcciones mediante el módulo:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>Esto nos permitirá construir posteriormente una herramienta de diagnóstico que combine:</p>
+<pre><code class="language-text">resolución DNS
++
+comprobación TCP
++
+informes
++
+logging
+</code></pre>
+<hr />
+<h2 id="88-resolucion-dns-desde-python">88. Resolución DNS desde Python<a class="headerlink" href="#88-resolucion-dns-desde-python" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora hemos utilizado indistintamente direcciones IP y nombres de host.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">192.168.1.20
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">example.com
+</code></pre>
+<p>Cuando utilizamos un nombre como:</p>
+<pre><code class="language-text">example.com
+</code></pre>
+<p>nuestro ordenador necesita averiguar qué dirección IP corresponde a ese nombre.</p>
+<p>Aquí interviene:</p>
+<pre><code class="language-text">DNS
+</code></pre>
+<p>En esta parte aprenderemos a utilizar Python para realizar operaciones básicas de resolución de nombres.</p>
+<hr />
+<h3 id="89-que-es-dns">89. ¿Qué es DNS?<a class="headerlink" href="#89-que-es-dns" title="Permanent link">&para;</a></h3>
+<p>DNS significa:</p>
+<pre><code class="language-text">Domain Name System
+</code></pre>
+<p>Su función principal es permitir relacionar nombres con direcciones IP.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">example.com
+     │
+     ▼
+    DNS
+     │
+     ▼
+dirección IP
+</code></pre>
+<p>Los usuarios normalmente prefieren trabajar con nombres:</p>
+<pre><code class="language-text">www.ejemplo.com
+</code></pre>
+<p>en lugar de recordar direcciones IP.</p>
+<hr />
+<h3 id="90-nombres-y-direcciones-ip">90. Nombres y direcciones IP<a class="headerlink" href="#90-nombres-y-direcciones-ip" title="Permanent link">&para;</a></h3>
+<p>Podemos imaginar DNS como un sistema que mantiene relaciones del tipo:</p>
+<pre><code class="language-text">servidor.local
+      │
+      ▼
+192.168.1.20
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">www.ejemplo.com
+      │
+      ▼
+dirección IP
+</code></pre>
+<p>Cuando escribimos en un navegador:</p>
+<pre><code class="language-text">https://www.ejemplo.com
+</code></pre>
+<p>antes de poder establecer la comunicación es necesario obtener una dirección IP asociada al nombre.</p>
+<p>De forma simplificada:</p>
+<pre><code class="language-text">NOMBRE
+  │
+  ▼
+ DNS
+  │
+  ▼
+DIRECCIÓN IP
+  │
+  ▼
+CONEXIÓN
+</code></pre>
+<hr />
+<h3 id="91-dns-dentro-del-diagnostico-de-red">91. DNS dentro del diagnóstico de red<a class="headerlink" href="#91-dns-dentro-del-diagnostico-de-red" title="Permanent link">&para;</a></h3>
+<p>Imaginemos que intentamos acceder a:</p>
+<pre><code class="language-text">servidor.empresa.local
+</code></pre>
+<p>y no funciona.</p>
+<p>Podemos plantearnos diferentes preguntas:</p>
+<pre><code class="language-text">¿Se puede resolver el nombre?
+          │
+          ▼
+¿Obtenemos una dirección IP?
+          │
+          ▼
+¿Existe conectividad?
+          │
+          ▼
+¿Está accesible el servicio?
+</code></pre>
+<p>Por tanto, la resolución DNS es otra herramienta importante dentro del diagnóstico.</p>
+<hr />
+<h3 id="92-herramientas-del-sistema-para-consultar-dns">92. Herramientas del sistema para consultar DNS<a class="headerlink" href="#92-herramientas-del-sistema-para-consultar-dns" title="Permanent link">&para;</a></h3>
+<p>En Windows podemos utilizar herramientas como:</p>
+<pre><code class="language-powershell">nslookup example.com
+</code></pre>
+<p>También podemos utilizar:</p>
+<pre><code class="language-powershell">Resolve-DnsName example.com
+</code></pre>
+<p>desde PowerShell.</p>
+<p>Hasta ahora podríamos ejecutar estos comandos desde Python utilizando:</p>
+<pre><code class="language-python">subprocess
+</code></pre>
+<p>Pero el módulo:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>también proporciona funciones para realizar determinadas operaciones de resolución.</p>
+<hr />
+<h3 id="93-socketgethostbyname">93. <code>socket.gethostbyname()</code><a class="headerlink" href="#93-socketgethostbyname" title="Permanent link">&para;</a></h3>
+<p>Una de las funciones más sencillas es:</p>
+<pre><code class="language-python">socket.gethostbyname()
+</code></pre>
+<p>Permite obtener una dirección IPv4 asociada a un nombre.</p>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+resolver_nombre.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import socket
+
+
+host = &quot;example.com&quot;
+
+
+ip = socket.gethostbyname(
+    host
+)
+
+
+print(
+    f&quot;Host: {host}&quot;
+)
+
+print(
+    f&quot;IP: {ip}&quot;
+)
+</code></pre>
+<p>Ejecuta:</p>
+<pre><code class="language-powershell">python resolver_nombre.py
+</code></pre>
+<p>Obtendremos una dirección IP asociada al nombre.</p>
+<div class="admonition note">
+<p class="admonition-title">La dirección puede variar</p>
+<p>Un mismo nombre de Internet puede resolver a diferentes direcciones IP dependiendo del servicio, la infraestructura utilizada, la ubicación o el momento de la consulta.</p>
+<p>Por tanto, no debemos asumir que un nombre siempre devolverá una única dirección fija.</p>
+</div>
+<hr />
+<h3 id="94-flujo-de-gethostbyname">94. Flujo de <code>gethostbyname()</code><a class="headerlink" href="#94-flujo-de-gethostbyname" title="Permanent link">&para;</a></h3>
+<p>Nuestro programa realiza conceptualmente:</p>
+<pre><code class="language-text">Python
+  │
+  │ example.com
+  ▼
+gethostbyname()
+  │
+  ▼
+resolución
+  │
+  ▼
+dirección IPv4
+  │
+  ▼
+variable ip
+</code></pre>
+<p>Después podemos utilizar:</p>
+<pre><code class="language-python">ip
+</code></pre>
+<p>en otras operaciones de diagnóstico.</p>
+<hr />
+<h3 id="95-recibir-el-nombre-mediante-input">95. Recibir el nombre mediante <code>input()</code><a class="headerlink" href="#95-recibir-el-nombre-mediante-input" title="Permanent link">&para;</a></h3>
+<p>Podemos modificar:</p>
+<pre><code class="language-text">resolver_nombre.py
+</code></pre>
+<p>para escribir:</p>
+<pre><code class="language-python">import socket
+
+
+host = input(
+    &quot;Nombre del host: &quot;
+)
+
+
+ip = socket.gethostbyname(
+    host
+)
+
+
+print(
+    f&quot;{host} -&gt; {ip}&quot;
+)
+</code></pre>
+<p>Ahora podemos consultar diferentes nombres sin modificar el código.</p>
+<p>Sin embargo, para nuestras herramientas utilizaremos nuevamente:</p>
+<pre><code class="language-text">argparse
+</code></pre>
+<hr />
+<h3 id="96-resolver-nombres-mediante-argparse">96. Resolver nombres mediante <code>argparse</code><a class="headerlink" href="#96-resolver-nombres-mediante-argparse" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">dns_basico.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Resuelve un nombre &quot;
+        &quot;a una dirección IPv4.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=(
+        &quot;Nombre que se desea &quot;
+        &quot;resolver&quot;
+    )
+)
+
+
+args = parser.parse_args()
+
+
+ip = socket.gethostbyname(
+    args.host
+)
+
+
+print()
+print(&quot;RESOLUCIÓN DNS&quot;)
+print(&quot;==============&quot;)
+print()
+
+print(
+    f&quot;Host: {args.host}&quot;
+)
+
+print(
+    f&quot;IP: {ip}&quot;
+)
+</code></pre>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python dns_basico.py example.com
+</code></pre>
+<hr />
+<h3 id="97-que-ocurre-si-el-nombre-no-existe">97. ¿Qué ocurre si el nombre no existe?<a class="headerlink" href="#97-que-ocurre-si-el-nombre-no-existe" title="Permanent link">&para;</a></h3>
+<p>Prueba un nombre incorrecto:</p>
+<pre><code class="language-powershell">python dns_basico.py nombre-que-no-existe.invalid
+</code></pre>
+<p>La resolución no podrá completarse.</p>
+<p>Python puede generar una excepción:</p>
+<pre><code class="language-python">socket.gaierror
+</code></pre>
+<p>Ya habíamos encontrado esta excepción durante las comprobaciones TCP.</p>
+<p>Ahora podemos comprender mejor su significado.</p>
+<hr />
+<h3 id="98-controlar-socketgaierror">98. Controlar <code>socket.gaierror</code><a class="headerlink" href="#98-controlar-socketgaierror" title="Permanent link">&para;</a></h3>
+<p>Modifica el programa:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Resuelve un nombre &quot;
+        &quot;a una dirección IPv4.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=&quot;Nombre del host&quot;
+)
+
+
+args = parser.parse_args()
+
+
+try:
+
+    ip = socket.gethostbyname(
+        args.host
+    )
+
+except socket.gaierror as error:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;resolver el nombre.&quot;
+    )
+
+    print(
+        f&quot;Detalle: {error}&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;RESOLUCIÓN DNS&quot;)
+    print(&quot;==============&quot;)
+    print()
+
+    print(
+        f&quot;Host: {args.host}&quot;
+    )
+
+    print(
+        f&quot;IP: {ip}&quot;
+    )
+</code></pre>
+<p>Ahora nuestro programa puede controlar correctamente un error de resolución.</p>
+<hr />
+<h3 id="99-crear-una-funcion-reutilizable">99. Crear una función reutilizable<a class="headerlink" href="#99-crear-una-funcion-reutilizable" title="Permanent link">&para;</a></h3>
+<p>Vamos a separar la resolución del resto del programa.</p>
+<pre><code class="language-python">def resolver_host(
+    host
+):
+
+    try:
+
+        ip = socket.gethostbyname(
+            host
+        )
+
+    except socket.gaierror:
+
+        return None
+
+    else:
+
+        return ip
+</code></pre>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">ip = resolver_host(
+    &quot;example.com&quot;
+)
+
+
+if ip is None:
+
+    print(
+        &quot;No se ha podido &quot;
+        &quot;resolver el host.&quot;
+    )
+
+else:
+
+    print(
+        f&quot;IP: {ip}&quot;
+    )
+</code></pre>
+<p>Este diseño será útil para integrar DNS con nuestras herramientas anteriores.</p>
+<hr />
+<h3 id="100-un-nombre-puede-tener-varias-direcciones">100. Un nombre puede tener varias direcciones<a class="headerlink" href="#100-un-nombre-puede-tener-varias-direcciones" title="Permanent link">&para;</a></h3>
+<p>La función:</p>
+<pre><code class="language-python">socket.gethostbyname()
+</code></pre>
+<p>devuelve una dirección IPv4.</p>
+<p>Pero un nombre puede estar asociado a más de una dirección.</p>
+<p>Por ejemplo, algunos servicios utilizan varios servidores:</p>
+<pre><code class="language-text">       servicio
+          │
+    ┌─────┼─────┐
+    │     │     │
+    ▼     ▼     ▼
+   IP1   IP2   IP3
+</code></pre>
+<p>Esto puede utilizarse para:</p>
+<pre><code class="language-text">redundancia
+distribución de carga
+infraestructuras distribuidas
+</code></pre>
+<p>Por tanto, en algunas situaciones necesitaremos obtener más información que una única dirección.</p>
+<hr />
+<h3 id="101-socketgethostbyname_ex">101. <code>socket.gethostbyname_ex()</code><a class="headerlink" href="#101-socketgethostbyname_ex" title="Permanent link">&para;</a></h3>
+<p>Python proporciona:</p>
+<pre><code class="language-python">socket.gethostbyname_ex()
+</code></pre>
+<p>Podemos probar:</p>
+<pre><code class="language-python">import socket
+
+
+resultado = (
+    socket.gethostbyname_ex(
+        &quot;example.com&quot;
+    )
+)
+
+
+print(
+    resultado
+)
+</code></pre>
+<p>Esta función devuelve una tupla con diferentes elementos.</p>
+<p>Conceptualmente:</p>
+<pre><code class="language-text">(
+    nombre oficial,
+    alias,
+    lista de direcciones IP
+)
+</code></pre>
+<hr />
+<h3 id="102-separar-los-valores-recibidos">102. Separar los valores recibidos<a class="headerlink" href="#102-separar-los-valores-recibidos" title="Permanent link">&para;</a></h3>
+<p>Podemos escribir:</p>
+<pre><code class="language-python">nombre, alias, ips = (
+    socket.gethostbyname_ex(
+        &quot;example.com&quot;
+    )
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">print(
+    f&quot;Nombre: {nombre}&quot;
+)
+
+print(
+    f&quot;Alias: {alias}&quot;
+)
+
+print(
+    f&quot;Direcciones: {ips}&quot;
+)
+</code></pre>
+<p>La variable:</p>
+<pre><code class="language-python">ips
+</code></pre>
+<p>es una lista.</p>
+<p>Por tanto podemos recorrerla:</p>
+<pre><code class="language-python">for ip in ips:
+
+    print(
+        ip
+    )
+</code></pre>
+<hr />
+<h3 id="103-programa-para-mostrar-todas-las-ipv4">103. Programa para mostrar todas las IPv4<a class="headerlink" href="#103-programa-para-mostrar-todas-las-ipv4" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">resolver_ips.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Obtiene direcciones IPv4 &quot;
+        &quot;asociadas a un nombre.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=&quot;Nombre del host&quot;
+)
+
+
+args = parser.parse_args()
+
+
+try:
+
+    nombre, alias, ips = (
+        socket.gethostbyname_ex(
+            args.host
+        )
+    )
+
+except socket.gaierror:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;resolver el nombre.&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;INFORMACIÓN DNS&quot;)
+    print(&quot;===============&quot;)
+    print()
+
+    print(
+        f&quot;Consulta: {args.host}&quot;
+    )
+
+    print(
+        f&quot;Nombre: {nombre}&quot;
+    )
+
+    print()
+
+    print(
+        &quot;Direcciones IPv4:&quot;
+    )
+
+    for ip in ips:
+
+        print(
+            f&quot;- {ip}&quot;
+        )
+</code></pre>
+<p>Ahora nuestro programa puede mostrar varias direcciones si están disponibles.</p>
+<hr />
+<h3 id="104-evitar-direcciones-repetidas">104. Evitar direcciones repetidas<a class="headerlink" href="#104-evitar-direcciones-repetidas" title="Permanent link">&para;</a></h3>
+<p>En determinadas situaciones podríamos querer evitar duplicados.</p>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">set()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">ips_unicas = set(
+    ips
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">for ip in ips_unicas:
+
+    print(
+        ip
+    )
+</code></pre>
+<p>Un:</p>
+<pre><code class="language-text">set
+</code></pre>
+<p>es una colección que no mantiene elementos duplicados.</p>
+<div class="admonition note">
+<p class="admonition-title">Orden</p>
+<p>Un conjunto (<code>set</code>) no debe utilizarse cuando necesitemos conservar necesariamente el mismo orden de los elementos.</p>
+<p>En esta práctica lo utilizaríamos únicamente para mostrar el concepto de eliminación de duplicados.</p>
+</div>
+<hr />
+<h3 id="105-socketgetaddrinfo">105. <code>socket.getaddrinfo()</code><a class="headerlink" href="#105-socketgetaddrinfo" title="Permanent link">&para;</a></h3>
+<p>Existe otra función más completa:</p>
+<pre><code class="language-python">socket.getaddrinfo()
+</code></pre>
+<p>Puede proporcionar información necesaria para establecer conexiones utilizando diferentes familias y tipos de socket.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">resultado = socket.getaddrinfo(
+    &quot;example.com&quot;,
+    443
+)
+</code></pre>
+<p>El resultado contiene varias estructuras.</p>
+<p>En este nivel no necesitamos estudiar todos sus campos.</p>
+<p>Nos interesa principalmente observar que puede proporcionar información tanto para IPv4 como, dependiendo del sistema y del nombre consultado, para IPv6.</p>
+<hr />
+<h3 id="106-ipv4-e-ipv6">106. IPv4 e IPv6<a class="headerlink" href="#106-ipv4-e-ipv6" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos trabajado principalmente con:</p>
+<pre><code class="language-python">socket.AF_INET
+</code></pre>
+<p>que corresponde a IPv4.</p>
+<p>También existe:</p>
+<pre><code class="language-python">socket.AF_INET6
+</code></pre>
+<p>para IPv6.</p>
+<p>Podemos representar:</p>
+<pre><code class="language-text">AF_INET
+   │
+   └── IPv4
+
+
+AF_INET6
+   │
+   └── IPv6
+</code></pre>
+<p>La función:</p>
+<pre><code class="language-python">socket.getaddrinfo()
+</code></pre>
+<p>puede ayudarnos a obtener información sobre ambas familias.</p>
+<hr />
+<h3 id="107-consultar-informacion-de-direcciones">107. Consultar información de direcciones<a class="headerlink" href="#107-consultar-informacion-de-direcciones" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">info_direcciones.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Consulta información &quot;
+        &quot;de direcciones de un host.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=&quot;Nombre del host&quot;
+)
+
+
+args = parser.parse_args()
+
+
+try:
+
+    resultados = (
+        socket.getaddrinfo(
+            args.host,
+            None
+        )
+    )
+
+except socket.gaierror:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;resolver el nombre.&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;DIRECCIONES&quot;)
+    print(&quot;===========&quot;)
+    print()
+
+    for resultado in resultados:
+
+        familia = resultado[0]
+
+        direccion = (
+            resultado[4][0]
+        )
+
+        if familia == socket.AF_INET:
+
+            tipo = &quot;IPv4&quot;
+
+        elif familia == socket.AF_INET6:
+
+            tipo = &quot;IPv6&quot;
+
+        else:
+
+            tipo = &quot;Otro&quot;
+
+        print(
+            f&quot;{tipo}: {direccion}&quot;
+        )
+</code></pre>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python info_direcciones.py example.com
+</code></pre>
+<hr />
+<h3 id="108-eliminar-resultados-repetidos">108. Eliminar resultados repetidos<a class="headerlink" href="#108-eliminar-resultados-repetidos" title="Permanent link">&para;</a></h3>
+<p><code>getaddrinfo()</code> puede devolver varias entradas relacionadas con una misma dirección.</p>
+<p>Para mostrar una salida más sencilla podemos utilizar un conjunto:</p>
+<pre><code class="language-python">direcciones = set()
+</code></pre>
+<p>Dentro del bucle:</p>
+<pre><code class="language-python">direcciones.add(
+    (
+        tipo,
+        direccion
+    )
+)
+</code></pre>
+<p>Después:</p>
+<pre><code class="language-python">for tipo, direccion in direcciones:
+
+    print(
+        f&quot;{tipo}: {direccion}&quot;
+    )
+</code></pre>
+<p>Estamos almacenando tuplas:</p>
+<pre><code class="language-text">(
+    tipo,
+    dirección
+)
+</code></pre>
+<p>dentro de un conjunto.</p>
+<hr />
+<h3 id="109-resolucion-inversa">109. Resolución inversa<a class="headerlink" href="#109-resolucion-inversa" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora hemos realizado:</p>
+<pre><code class="language-text">nombre
+  │
+  ▼
+ IP
+</code></pre>
+<p>También podemos intentar el proceso contrario:</p>
+<pre><code class="language-text"> IP
+  │
+  ▼
+nombre
+</code></pre>
+<p>Esto se conoce como:</p>
+<pre><code class="language-text">resolución inversa
+</code></pre>
+<p>Python proporciona:</p>
+<pre><code class="language-python">socket.gethostbyaddr()
+</code></pre>
+<hr />
+<h3 id="110-socketgethostbyaddr">110. <code>socket.gethostbyaddr()</code><a class="headerlink" href="#110-socketgethostbyaddr" title="Permanent link">&para;</a></h3>
+<p>Podemos escribir:</p>
+<pre><code class="language-python">import socket
+
+
+resultado = socket.gethostbyaddr(
+    &quot;8.8.8.8&quot;
+)
+
+
+print(
+    resultado
+)
+</code></pre>
+<p>La función intenta obtener información asociada a la dirección.</p>
+<div class="admonition note">
+<p class="admonition-title">Resolución inversa</p>
+<p>No todas las direcciones IP tienen necesariamente configurada una resolución inversa útil.</p>
+<p>Por tanto, una consulta inversa puede fallar aunque la dirección IP sea válida y el equipo sea accesible.</p>
+</div>
+<hr />
+<h3 id="111-controlar-errores-en-la-resolucion-inversa">111. Controlar errores en la resolución inversa<a class="headerlink" href="#111-controlar-errores-en-la-resolucion-inversa" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">try:
+
+    resultado = socket.gethostbyaddr(
+        ip
+    )
+
+except socket.herror:
+
+    print(
+        &quot;No existe información &quot;
+        &quot;de resolución inversa.&quot;
+    )
+</code></pre>
+<p>En determinadas situaciones también puede producirse:</p>
+<pre><code class="language-python">socket.gaierror
+</code></pre>
+<p>Por tanto, podemos controlar ambas:</p>
+<pre><code class="language-python">except (
+    socket.herror,
+    socket.gaierror
+):
+
+    print(
+        &quot;No se ha podido realizar &quot;
+        &quot;la resolución inversa.&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="112-programa-de-resolucion-inversa">112. Programa de resolución inversa<a class="headerlink" href="#112-programa-de-resolucion-inversa" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">dns_inverso.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Realiza una resolución &quot;
+        &quot;inversa de una IP.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;ip&quot;,
+    help=&quot;Dirección IP&quot;
+)
+
+
+args = parser.parse_args()
+
+
+try:
+
+    nombre, alias, direcciones = (
+        socket.gethostbyaddr(
+            args.ip
+        )
+    )
+
+except (
+    socket.herror,
+    socket.gaierror
+):
+
+    print(
+        &quot;No se ha podido obtener &quot;
+        &quot;un nombre para la IP.&quot;
+    )
+
+else:
+
+    print()
+    print(&quot;RESOLUCIÓN INVERSA&quot;)
+    print(&quot;==================&quot;)
+    print()
+
+    print(
+        f&quot;IP: {args.ip}&quot;
+    )
+
+    print(
+        f&quot;Nombre: {nombre}&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="113-validar-una-direccion-ip">113. Validar una dirección IP<a class="headerlink" href="#113-validar-una-direccion-ip" title="Permanent link">&para;</a></h3>
+<p>Hasta ahora el usuario puede introducir cualquier texto:</p>
+<pre><code class="language-powershell">python dns_inverso.py hola
+</code></pre>
+<p>Podemos comprobar si una cadena representa una dirección IPv4 válida utilizando:</p>
+<pre><code class="language-python">socket.inet_aton()
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-python">try:
+
+    socket.inet_aton(
+        args.ip
+    )
+
+except OSError:
+
+    parser.error(
+        &quot;La dirección IPv4 &quot;
+        &quot;no es válida.&quot;
+    )
+</code></pre>
+<p>Esto nos permite introducir otra capa de validación.</p>
+<hr />
+<h3 id="114-dns-directo-e-inverso">114. DNS directo e inverso<a class="headerlink" href="#114-dns-directo-e-inverso" title="Permanent link">&para;</a></h3>
+<p>Podemos resumir:</p>
+<pre><code class="language-text">RESOLUCIÓN DIRECTA
+
+nombre
+  │
+  ▼
+ DNS
+  │
+  ▼
+ IP
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">RESOLUCIÓN INVERSA
+
+ IP
+  │
+  ▼
+ DNS
+  │
+  ▼
+nombre
+</code></pre>
+<p>No debemos asumir que ambas operaciones producirán siempre resultados equivalentes.</p>
+<p>La configuración DNS puede hacer que:</p>
+<pre><code class="language-text">nombre → IP
+</code></pre>
+<p>funcione y que:</p>
+<pre><code class="language-text">IP → nombre
+</code></pre>
+<p>no proporcione un resultado útil.</p>
+<hr />
+<h3 id="115-crear-una-herramienta-dns">115. Crear una herramienta DNS<a class="headerlink" href="#115-crear-una-herramienta-dns" title="Permanent link">&para;</a></h3>
+<p>Ahora construiremos:</p>
+<pre><code class="language-text">diagnostico_dns.py
+</code></pre>
+<p>Permitirá realizar dos operaciones:</p>
+<pre><code class="language-text">--resolver
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">--inversa
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python diagnostico_dns.py --resolver example.com
+</code></pre>
+<p>o:</p>
+<pre><code class="language-powershell">python diagnostico_dns.py --inversa 8.8.8.8
+</code></pre>
+<hr />
+<h3 id="116-crear-los-argumentos">116. Crear los argumentos<a class="headerlink" href="#116-crear-los-argumentos" title="Permanent link">&para;</a></h3>
+<p>Comenzamos:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Herramienta básica &quot;
+        &quot;de diagnóstico DNS.&quot;
+    )
+)
+
+
+grupo = (
+    parser.add_mutually_exclusive_group(
+        required=True
+    )
+)
+
+
+grupo.add_argument(
+    &quot;--resolver&quot;,
+    metavar=&quot;HOST&quot;,
+    help=(
+        &quot;Resuelve un nombre &quot;
+        &quot;de host&quot;
+    )
+)
+
+
+grupo.add_argument(
+    &quot;--inversa&quot;,
+    metavar=&quot;IP&quot;,
+    help=(
+        &quot;Realiza resolución &quot;
+        &quot;inversa&quot;
+    )
+)
+
+
+args = parser.parse_args()
+</code></pre>
+<hr />
+<h3 id="117-funcion-de-resolucion-directa">117. Función de resolución directa<a class="headerlink" href="#117-funcion-de-resolucion-directa" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">def resolver_nombre(
+    host
+):
+
+    try:
+
+        nombre, alias, ips = (
+            socket.gethostbyname_ex(
+                host
+            )
+        )
+
+    except socket.gaierror:
+
+        return None
+
+    else:
+
+        return {
+            &quot;consulta&quot;: host,
+            &quot;nombre&quot;: nombre,
+            &quot;ips&quot;: ips
+        }
+</code></pre>
+<p>Observa que estamos devolviendo un:</p>
+<pre><code class="language-python">dict
+</code></pre>
+<p>Esto facilitará procesar posteriormente el resultado.</p>
+<hr />
+<h3 id="118-funcion-de-resolucion-inversa">118. Función de resolución inversa<a class="headerlink" href="#118-funcion-de-resolucion-inversa" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">def resolver_ip(
+    ip
+):
+
+    try:
+
+        nombre, alias, direcciones = (
+            socket.gethostbyaddr(
+                ip
+            )
+        )
+
+    except (
+        socket.herror,
+        socket.gaierror
+    ):
+
+        return None
+
+    else:
+
+        return {
+            &quot;ip&quot;: ip,
+            &quot;nombre&quot;: nombre,
+            &quot;alias&quot;: alias,
+            &quot;direcciones&quot;: direcciones
+        }
+</code></pre>
+<p>Nuevamente devolvemos un diccionario.</p>
+<p>Estamos separando:</p>
+<pre><code class="language-text">obtener información
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">mostrar información
+</code></pre>
+<hr />
+<h3 id="119-programa-principal">119. Programa principal<a class="headerlink" href="#119-programa-principal" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">if args.resolver:
+
+    resultado = resolver_nombre(
+        args.resolver
+    )
+
+    if resultado is None:
+
+        print(
+            &quot;ERROR: no se ha podido &quot;
+            &quot;resolver el nombre.&quot;
+        )
+
+    else:
+
+        print()
+        print(&quot;RESOLUCIÓN DNS&quot;)
+        print(&quot;==============&quot;)
+        print()
+
+        print(
+            f&quot;Nombre: &quot;
+            f&quot;{resultado['nombre']}&quot;
+        )
+
+        print(
+            &quot;Direcciones:&quot;
+        )
+
+        for ip in resultado[&quot;ips&quot;]:
+
+            print(
+                f&quot;- {ip}&quot;
+            )
+</code></pre>
+<p>Para la resolución inversa:</p>
+<pre><code class="language-python">elif args.inversa:
+
+    resultado = resolver_ip(
+        args.inversa
+    )
+
+    if resultado is None:
+
+        print(
+            &quot;No se ha podido realizar &quot;
+            &quot;la resolución inversa.&quot;
+        )
+
+    else:
+
+        print()
+        print(&quot;RESOLUCIÓN INVERSA&quot;)
+        print(&quot;==================&quot;)
+        print()
+
+        print(
+            f&quot;IP: &quot;
+            f&quot;{resultado['ip']}&quot;
+        )
+
+        print(
+            f&quot;Nombre: &quot;
+            f&quot;{resultado['nombre']}&quot;
+        )
+</code></pre>
+<hr />
+<h3 id="120-anadir-logging">120. Añadir <code>logging</code><a class="headerlink" href="#120-anadir-logging" title="Permanent link">&para;</a></h3>
+<p>Como en nuestras herramientas anteriores, podemos crear:</p>
+<pre><code class="language-text">practicas/capitulo6/logs/
+</code></pre>
+<p>y almacenar:</p>
+<pre><code class="language-text">dns.log
+</code></pre>
+<p>Configuramos:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;
+)
+</code></pre>
+<p>Podemos registrar:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;Resolviendo {host}&quot;
+)
+</code></pre>
+<p>Si falla:</p>
+<pre><code class="language-python">logging.error(
+    f&quot;No se puede resolver &quot;
+    f&quot;{host}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="121-guardar-los-resultados">121. Guardar los resultados<a class="headerlink" href="#121-guardar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>También podemos utilizar:</p>
+<pre><code class="language-text">resultados/
+</code></pre>
+<p>para almacenar un informe.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">dns_example.com.txt
+</code></pre>
+<p>con:</p>
+<pre><code class="language-text">INFORME DNS
+===========
+
+Consulta: example.com
+
+Direcciones IPv4:
+- ...
+- ...
+</code></pre>
+<p>Así recuperamos nuevamente los conocimientos de:</p>
+<pre><code class="language-text">Path
+archivos
+try / except
+</code></pre>
+<hr />
+<h3 id="122-combinar-dns-y-comprobacion-tcp">122. Combinar DNS y comprobación TCP<a class="headerlink" href="#122-combinar-dns-y-comprobacion-tcp" title="Permanent link">&para;</a></h3>
+<p>Ahora tenemos dos herramientas:</p>
+<pre><code class="language-text">resolver_host()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">comprobar_puerto()
+</code></pre>
+<p>Podemos combinarlas.</p>
+<p>El flujo será:</p>
+<pre><code class="language-text">       HOST
+        │
+        ▼
+resolver DNS
+        │
+   ┌────┴────┐
+   │         │
+ error       IP
+             │
+             ▼
+      comprobar puerto
+             │
+        ┌────┴────┐
+        │         │
+        ▼         ▼
+    ACCESIBLE   NO ACCESIBLE
+</code></pre>
+<p>Esta combinación es mucho más útil para diagnóstico.</p>
+<hr />
+<h3 id="123-programa-dns-tcp">123. Programa DNS + TCP<a class="headerlink" href="#123-programa-dns-tcp" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">dns_tcp.py
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-python">import argparse
+import socket
+
+
+def resolver_host(
+    host
+):
+
+    try:
+
+        return socket.gethostbyname(
+            host
+        )
+
+    except socket.gaierror:
+
+        return None
+
+
+def comprobar_puerto(
+    ip,
+    puerto,
+    timeout=2
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                timeout
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        ip,
+                        puerto
+                    )
+                )
+            )
+
+    except OSError:
+
+        return False
+
+    else:
+
+        return resultado == 0
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Resuelve un host y &quot;
+        &quot;comprueba un puerto TCP.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;host&quot;,
+    help=&quot;Nombre del host&quot;
+)
+
+
+parser.add_argument(
+    &quot;puerto&quot;,
+    type=int,
+    help=&quot;Puerto TCP&quot;
+)
+
+
+args = parser.parse_args()
+
+
+if not 0 &lt;= args.puerto &lt;= 65535:
+
+    parser.error(
+        &quot;El puerto debe estar &quot;
+        &quot;entre 0 y 65535.&quot;
+    )
+
+
+print()
+print(&quot;DIAGNÓSTICO DNS + TCP&quot;)
+print(&quot;====================&quot;)
+print()
+
+print(
+    f&quot;Host: {args.host}&quot;
+)
+
+
+ip = resolver_host(
+    args.host
+)
+
+
+if ip is None:
+
+    print(
+        &quot;DNS: ERROR&quot;
+    )
+
+else:
+
+    print(
+        &quot;DNS: CORRECTO&quot;
+    )
+
+    print(
+        f&quot;IP: {ip}&quot;
+    )
+
+    print(
+        f&quot;Puerto: {args.puerto}&quot;
+    )
+
+    accesible = comprobar_puerto(
+        ip,
+        args.puerto
+    )
+
+    if accesible:
+
+        print(
+            &quot;TCP: ACCESIBLE&quot;
+        )
+
+    else:
+
+        print(
+            &quot;TCP: NO ACCESIBLE&quot;
+        )
+</code></pre>
+<hr />
+<h3 id="124-probar-el-diagnostico">124. Probar el diagnóstico<a class="headerlink" href="#124-probar-el-diagnostico" title="Permanent link">&para;</a></h3>
+<p>Podemos ejecutar:</p>
+<pre><code class="language-powershell">python dns_tcp.py example.com 443
+</code></pre>
+<p>La salida podría ser:</p>
+<pre><code class="language-text">DIAGNÓSTICO DNS + TCP
+====================
+
+Host: example.com
+DNS: CORRECTO
+IP: ...
+Puerto: 443
+TCP: ACCESIBLE
+</code></pre>
+<p>También podemos probar:</p>
+<pre><code class="language-powershell">python dns_tcp.py nombre-que-no-existe.invalid 443
+</code></pre>
+<p>Obtendremos:</p>
+<pre><code class="language-text">DNS: ERROR
+</code></pre>
+<p>y el programa no intentará realizar la conexión TCP.</p>
+<hr />
+<h3 id="125-por-que-no-continuamos-si-dns-falla">125. ¿Por qué no continuamos si DNS falla?<a class="headerlink" href="#125-por-que-no-continuamos-si-dns-falla" title="Permanent link">&para;</a></h3>
+<p>Si el usuario ha proporcionado:</p>
+<pre><code class="language-text">servidor.empresa.local
+</code></pre>
+<p>pero no podemos convertir ese nombre en una dirección IP, no tenemos todavía un destino IPv4 con el que realizar nuestra comprobación.</p>
+<p>Por tanto:</p>
+<pre><code class="language-text">DNS falla
+   │
+   ▼
+detener diagnóstico TCP
+</code></pre>
+<p>Esto muestra una idea importante del diagnóstico:</p>
+<pre><code class="language-text">comprobar primero
+las dependencias anteriores
+</code></pre>
+<p>antes de continuar.</p>
+<hr />
+<h3 id="126-interpretar-los-resultados">126. Interpretar los resultados<a class="headerlink" href="#126-interpretar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>Podemos encontrarnos con diferentes situaciones.</p>
+<h4 id="caso-1">Caso 1<a class="headerlink" href="#caso-1" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">DNS: CORRECTO
+TCP: ACCESIBLE
+</code></pre>
+<p>Hemos podido resolver el nombre y establecer una conexión TCP.</p>
+<h4 id="caso-2">Caso 2<a class="headerlink" href="#caso-2" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">DNS: CORRECTO
+TCP: NO ACCESIBLE
+</code></pre>
+<p>La resolución funciona, pero no hemos podido establecer la conexión TCP con el puerto indicado.</p>
+<h4 id="caso-3">Caso 3<a class="headerlink" href="#caso-3" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">DNS: ERROR
+</code></pre>
+<p>El problema aparece antes de intentar la conexión TCP.</p>
+<p>Este análisis nos permite localizar mejor en qué etapa se produce el problema.</p>
+<hr />
+<h3 id="127-comparacion-con-el-capitulo-anterior">127. Comparación con el capítulo anterior<a class="headerlink" href="#127-comparacion-con-el-capitulo-anterior" title="Permanent link">&para;</a></h3>
+<p>En el capítulo 5 trabajábamos:</p>
+<pre><code class="language-text">URL
+ │
+ ▼
+HTTP
+ │
+ ▼
+respuesta
+</code></pre>
+<p>Ahora podemos observar algunas operaciones que se producen a niveles anteriores:</p>
+<pre><code class="language-text">https://example.com
+        │
+        ▼
+      nombre
+        │
+        ▼
+       DNS
+        │
+        ▼
+        IP
+        │
+        ▼
+    conexión TCP
+        │
+        ▼
+      puerto
+        │
+        ▼
+       HTTP
+</code></pre>
+<p>Esto ayuda a comprender que una petición HTTP depende de otros mecanismos de red.</p>
+<hr />
+<h3 id="128-practica-guiada-diagnostico-de-un-servicio">128. Práctica guiada: diagnóstico de un servicio<a class="headerlink" href="#128-practica-guiada-diagnostico-de-un-servicio" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">diagnostico_servicio.py
+</code></pre>
+<p>El programa deberá recibir:</p>
+<pre><code class="language-powershell">python diagnostico_servicio.py HOST PUERTO
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-powershell">python diagnostico_servicio.py example.com 443
+</code></pre>
+<p>Deberá:</p>
+<ol>
+<li>Validar el puerto.</li>
+<li>Resolver el nombre.</li>
+<li>Mostrar la dirección IPv4 obtenida.</li>
+<li>Comprobar el puerto TCP.</li>
+<li>Mostrar el resultado.</li>
+<li>Registrar las operaciones mediante <code>logging</code>.</li>
+</ol>
+<p>La salida tendrá una estructura similar a:</p>
+<pre><code class="language-text">DIAGNÓSTICO DE SERVICIO
+=======================
+
+Host: example.com
+DNS: CORRECTO
+IP: ...
+Puerto: 443
+TCP: ACCESIBLE
+</code></pre>
+<hr />
+<h3 id="129-practica-propuesta-varios-servicios">129. Práctica propuesta: varios servicios<a class="headerlink" href="#129-practica-propuesta-varios-servicios" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">datos/servicios_dns.csv
+</code></pre>
+<p>con:</p>
+<pre><code class="language-csv">nombre,host,puerto
+Web principal,example.com,443
+Web HTTP,example.com,80
+</code></pre>
+<p>Después crea:</p>
+<pre><code class="language-text">diagnostico_servicios.py
+</code></pre>
+<p>El programa deberá:</p>
+<pre><code class="language-text">leer CSV
+   │
+   ▼
+obtener servicio
+   │
+   ▼
+resolver host
+   │
+   ▼
+obtener IP
+   │
+   ▼
+comprobar puerto
+   │
+   ▼
+guardar resultado
+</code></pre>
+<p>La salida podría ser:</p>
+<pre><code class="language-text">SERVICIO: Web principal
+Host: example.com
+IP: ...
+Puerto: 443
+DNS: CORRECTO
+TCP: ACCESIBLE
+</code></pre>
+<hr />
+<h3 id="130-practica-propuesta-generar-informe">130. Práctica propuesta: generar informe<a class="headerlink" href="#130-practica-propuesta-generar-informe" title="Permanent link">&para;</a></h3>
+<p>Amplía:</p>
+<pre><code class="language-text">diagnostico_servicios.py
+</code></pre>
+<p>para generar:</p>
+<pre><code class="language-text">resultados/
+diagnostico_servicios.txt
+</code></pre>
+<p>El informe deberá contener para cada servicio:</p>
+<pre><code class="language-text">nombre
+host
+IP resuelta
+puerto
+estado DNS
+estado TCP
+</code></pre>
+<p>También deberá incluir:</p>
+<pre><code class="language-text">fecha y hora
+total de servicios
+servicios accesibles
+errores DNS
+</code></pre>
+<p>Esto nos permitirá integrar:</p>
+<pre><code class="language-text">CSV
++
+DNS
++
+TCP
++
+Path
++
+datetime
++
+logging
+</code></pre>
+<hr />
+<h3 id="131-practica-de-investigacion">131. Práctica de investigación<a class="headerlink" href="#131-practica-de-investigacion" title="Permanent link">&para;</a></h3>
+<p>Utiliza desde PowerShell:</p>
+<pre><code class="language-powershell">nslookup example.com
+</code></pre>
+<p>Después ejecuta:</p>
+<pre><code class="language-powershell">python resolver_ips.py example.com
+</code></pre>
+<p>Compara la información mostrada por ambas herramientas.</p>
+<p>Responde:</p>
+<ol>
+<li>¿Aparece alguna dirección IP?</li>
+<li>¿Aparecen varias?</li>
+<li>¿Coinciden todos los resultados?</li>
+<li>¿Qué herramienta proporciona más información?</li>
+<li>¿Qué ventaja tiene realizar la consulta desde Python?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Objetivo</p>
+<p>No buscamos sustituir herramientas como <code>nslookup</code>.</p>
+<p>Nuestro objetivo es aprender a incorporar la resolución de nombres dentro de nuestros propios scripts de administración.</p>
+</div>
+<hr />
+<h3 id="132-practica-de-consolidacion">132. Práctica de consolidación<a class="headerlink" href="#132-practica-de-consolidacion" title="Permanent link">&para;</a></h3>
+<p>Desarrolla:</p>
+<pre><code class="language-text">analizador_host.py
+</code></pre>
+<p>El programa recibirá:</p>
+<pre><code class="language-powershell">python analizador_host.py HOST
+</code></pre>
+<p>y deberá mostrar:</p>
+<pre><code class="language-text">ANÁLISIS DEL HOST
+=================
+
+Host: ...
+
+IPv4:
+- ...
+
+IPv6:
+- ...
+
+Resolución inversa:
+...
+
+Puertos comprobados:
+22  → ...
+80  → ...
+443 → ...
+</code></pre>
+<p>Los puertos que debe comprobar serán:</p>
+<pre><code class="language-python">puertos = [
+    22,
+    80,
+    443
+]
+</code></pre>
+<p>El programa deberá utilizar:</p>
+<pre><code class="language-text">socket.getaddrinfo()
+socket.gethostbyaddr()
+socket.socket()
+connect_ex()
+timeout
+argparse
+try / except
+logging
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Entorno autorizado</p>
+<p>Realiza las comprobaciones TCP únicamente sobre sistemas propios, equipos del laboratorio o servicios para los que exista autorización.</p>
+</div>
+<hr />
+<h3 id="133-patron-de-diagnostico-aprendido">133. Patrón de diagnóstico aprendido<a class="headerlink" href="#133-patron-de-diagnostico-aprendido" title="Permanent link">&para;</a></h3>
+<p>Ahora disponemos de un patrón más completo:</p>
+<pre><code class="language-text">             HOST
+              │
+              ▼
+        resolución DNS
+              │
+       ┌──────┴──────┐
+       │             │
+       ▼             ▼
+     ERROR           IP
+                      │
+                      ▼
+                puerto TCP
+                      │
+                      ▼
+                connect_ex()
+                      │
+                ┌─────┴─────┐
+                │           │
+                ▼           ▼
+            ACCESIBLE   NO ACCESIBLE
+                │           │
+                └─────┬─────┘
+                      │
+                      ▼
+              informe + log
+</code></pre>
+<p>Este modelo nos permite identificar mejor dónde se produce un problema.</p>
+<hr />
+<h3 id="134-dns-no-garantiza-conectividad">134. DNS no garantiza conectividad<a class="headerlink" href="#134-dns-no-garantiza-conectividad" title="Permanent link">&para;</a></h3>
+<p>Es importante recordar:</p>
+<pre><code class="language-text">DNS CORRECTO
+</code></pre>
+<p>significa que hemos podido obtener información de resolución.</p>
+<p>No significa necesariamente que:</p>
+<pre><code class="language-text">el equipo esté disponible
+</code></pre>
+<p>ni que:</p>
+<pre><code class="language-text">un servicio esté accesible
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">DNS
+ │
+ ▼
+CORRECTO
+ │
+ ▼
+IP obtenida
+ │
+ ▼
+TCP
+ │
+ ▼
+NO ACCESIBLE
+</code></pre>
+<p>es una situación perfectamente posible.</p>
+<hr />
+<h3 id="135-tcp-accesible-tampoco-identifica-completamente-el-servicio">135. TCP accesible tampoco identifica completamente el servicio<a class="headerlink" href="#135-tcp-accesible-tampoco-identifica-completamente-el-servicio" title="Permanent link">&para;</a></h3>
+<p>Si conseguimos conectarnos a:</p>
+<pre><code class="language-text">host:80
+</code></pre>
+<p>sabemos que se ha podido establecer una conexión TCP con ese puerto.</p>
+<p>Pero eso no demuestra por sí solo qué aplicación concreta está escuchando.</p>
+<p>Por tanto debemos diferenciar:</p>
+<pre><code class="language-text">conectividad TCP
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">identificación del servicio
+</code></pre>
+<p>En nuestro nivel utilizaremos los puertos conocidos únicamente como referencia orientativa.</p>
+<hr />
+<h3 id="136-relacion-entre-las-herramientas-estudiadas">136. Relación entre las herramientas estudiadas<a class="headerlink" href="#136-relacion-entre-las-herramientas-estudiadas" title="Permanent link">&para;</a></h3>
+<p>A estas alturas podemos combinar diferentes herramientas:</p>
+<pre><code class="language-text">             DIAGNÓSTICO
+                  │
+       ┌──────────┼──────────┐
+       │          │          │
+       ▼          ▼          ▼
+     ping        DNS       socket
+       │          │          │
+       ▼          ▼          ▼
+     ICMP       nombre      TCP
+                  ↕          │
+                  IP       puerto
+</code></pre>
+<p>Y en el capítulo anterior añadimos:</p>
+<pre><code class="language-text">HTTP
+ │
+ ▼
+servicio web
+</code></pre>
+<p>Esto nos permite construir diagnósticos progresivamente más completos.</p>
+<hr />
+<h3 id="137-resumen-de-esta-parte">137. Resumen de esta parte<a class="headerlink" href="#137-resumen-de-esta-parte" title="Permanent link">&para;</a></h3>
+<p>En esta parte hemos aprendido a realizar operaciones básicas de resolución DNS desde Python utilizando:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>Hemos utilizado:</p>
+<pre><code class="language-python">socket.gethostbyname()
+</code></pre>
+<p>para obtener una dirección IPv4.</p>
+<p>También:</p>
+<pre><code class="language-python">socket.gethostbyname_ex()
+</code></pre>
+<p>para obtener información adicional y varias direcciones IPv4.</p>
+<p>Hemos introducido:</p>
+<pre><code class="language-python">socket.getaddrinfo()
+</code></pre>
+<p>para consultar información de direcciones IPv4 e IPv6.</p>
+<p>También hemos trabajado con:</p>
+<pre><code class="language-python">socket.gethostbyaddr()
+</code></pre>
+<p>para realizar resolución inversa.</p>
+<p>Hemos controlado errores como:</p>
+<pre><code class="language-python">socket.gaierror
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">socket.herror
+</code></pre>
+<p>Finalmente hemos combinado:</p>
+<pre><code class="language-text">DNS
++
+TCP
+</code></pre>
+<p>para crear un diagnóstico por etapas:</p>
+<pre><code class="language-text">nombre
+  │
+  ▼
+DNS
+  │
+  ▼
+IP
+  │
+  ▼
+socket TCP
+  │
+  ▼
+puerto
+  │
+  ▼
+resultado
+</code></pre>
+<p>En la siguiente parte realizaremos la <strong>práctica integradora y cierre del Capítulo 6</strong>, construyendo una herramienta de diagnóstico de red que combine los conocimientos trabajados:</p>
+<pre><code class="language-text">DNS
++
+comprobación TCP
++
+varios servicios
++
+CSV
++
+argparse
++
+excepciones
++
+logging
++
+informes
+</code></pre>
+<p>Con ella quedará completada la unidad dedicada al <strong>diagnóstico básico de red con Python</strong>.</p>
+<hr />
+<h2 id="138-practica-integradora-herramienta-de-diagnostico-de-red">138. Práctica integradora: herramienta de diagnóstico de red<a class="headerlink" href="#138-practica-integradora-herramienta-de-diagnostico-de-red" title="Permanent link">&para;</a></h2>
+<p>Durante este capítulo hemos desarrollado pequeñas herramientas capaces de realizar tareas concretas:</p>
+<pre><code class="language-text">resolver nombres DNS
+        │
+        ▼
+obtener direcciones IP
+
+comprobar puertos TCP
+        │
+        ▼
+determinar accesibilidad
+
+leer inventarios
+        │
+        ▼
+automatizar comprobaciones
+</code></pre>
+<p>Ahora integraremos todos estos elementos en una única aplicación.</p>
+<p>Crearemos:</p>
+<pre><code class="language-text">diagnostico_red.py
+</code></pre>
+<p>La herramienta será capaz de:</p>
+<pre><code class="language-text">leer un inventario CSV
+        │
+        ▼
+resolver cada host
+        │
+        ▼
+obtener su dirección IP
+        │
+        ▼
+comprobar un puerto TCP
+        │
+        ▼
+clasificar el resultado
+        │
+        ▼
+mostrar resumen
+        │
+        ├── generar informe
+        │
+        └── generar log
+</code></pre>
+<p>Esta práctica servirá también para repasar muchos de los conceptos estudiados durante el libro.</p>
+<hr />
+<h3 id="139-objetivos-de-la-practica">139. Objetivos de la práctica<a class="headerlink" href="#139-objetivos-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Nuestra aplicación deberá:</p>
+<ol>
+<li>Recibir un archivo CSV mediante <code>argparse</code>.</li>
+<li>Comprobar que el archivo existe.</li>
+<li>Leer una lista de servicios.</li>
+<li>Validar los datos.</li>
+<li>Resolver los nombres mediante DNS.</li>
+<li>Comprobar la conectividad TCP.</li>
+<li>Mostrar los resultados en pantalla.</li>
+<li>Contabilizar los diferentes estados.</li>
+<li>Generar un informe.</li>
+<li>Registrar la ejecución mediante <code>logging</code>.</li>
+<li>Controlar los errores más habituales.</li>
+</ol>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">argparse
+csv
+socket
+logging
+datetime
+pathlib
+try / except
+funciones
+listas
+diccionarios
+bucles
+condicionales
+</code></pre>
+<hr />
+<h3 id="140-estructura-de-la-practica">140. Estructura de la práctica<a class="headerlink" href="#140-estructura-de-la-practica" title="Permanent link">&para;</a></h3>
+<p>Utilizaremos:</p>
+<pre><code class="language-text">practicas/
+└── capitulo6/
+    ├── datos/
+    │   └── servicios.csv
+    │
+    ├── logs/
+    │   └── diagnostico_red.log
+    │
+    ├── programas/
+    │   └── diagnostico_red.py
+    │
+    └── resultados/
+        └── diagnostico_....txt
+</code></pre>
+<p>Si los directorios:</p>
+<pre><code class="language-text">logs
+resultados
+</code></pre>
+<p>no existen, nuestro programa los creará automáticamente.</p>
+<hr />
+<h3 id="141-crear-el-inventario">141. Crear el inventario<a class="headerlink" href="#141-crear-el-inventario" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo6/datos/servicios.csv
+</code></pre>
+<p>Escribe:</p>
+<pre><code class="language-csv">nombre,host,puerto
+Web de pruebas,example.com,443
+Web HTTP,example.com,80
+</code></pre>
+<p>En el laboratorio podremos añadir nuestros propios equipos.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-csv">nombre,host,puerto
+Servidor web,192.168.1.20,80
+Servidor seguro,192.168.1.30,443
+Servidor SSH,192.168.1.40,22
+</code></pre>
+<div class="admonition warning">
+<p class="admonition-title">Equipos autorizados</p>
+<p>Las comprobaciones TCP deben realizarse únicamente sobre equipos propios, sistemas del laboratorio o dispositivos para los que exista autorización.</p>
+</div>
+<hr />
+<h3 id="142-estructura-del-csv">142. Estructura del CSV<a class="headerlink" href="#142-estructura-del-csv" title="Permanent link">&para;</a></h3>
+<p>Nuestro archivo contiene tres columnas:</p>
+<pre><code class="language-text">nombre
+host
+puerto
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-csv">Web de pruebas,example.com,443
+</code></pre>
+<p>representa:</p>
+<pre><code class="language-text">nombre
+  │
+  └── Web de pruebas
+
+host
+  │
+  └── example.com
+
+puerto
+  │
+  └── 443
+</code></pre>
+<p>Cada fila representa un servicio que queremos comprobar.</p>
+<hr />
+<h3 id="143-flujo-general-del-programa">143. Flujo general del programa<a class="headerlink" href="#143-flujo-general-del-programa" title="Permanent link">&para;</a></h3>
+<p>La aplicación seguirá este proceso:</p>
+<pre><code class="language-text">INICIO
+  │
+  ▼
+leer argumentos
+  │
+  ▼
+validar CSV
+  │
+  ▼
+leer inventario
+  │
+  ▼
+recorrer servicios
+  │
+  ▼
+resolver DNS
+  │
+  ├── ERROR
+  │
+  └── IP
+       │
+       ▼
+ comprobar TCP
+       │
+   ┌───┴────┐
+   │        │
+   ▼        ▼
+accesible  no accesible
+   │        │
+   └───┬────┘
+       ▼
+guardar resultado
+       │
+       ▼
+generar informe
+       │
+       ▼
+mostrar resumen
+       │
+       ▼
+      FIN
+</code></pre>
+<hr />
+<h3 id="144-crear-el-programa">144. Crear el programa<a class="headerlink" href="#144-crear-el-programa" title="Permanent link">&para;</a></h3>
+<p>Crea:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+diagnostico_red.py
+</code></pre>
+<p>Comenzaremos con los módulos necesarios:</p>
+<pre><code class="language-python">import argparse
+import csv
+import logging
+import socket
+
+from datetime import datetime
+from pathlib import Path
+</code></pre>
+<p>Todos los módulos utilizados en esta práctica forman parte de la biblioteca estándar de Python.</p>
+<hr />
+<h3 id="145-definir-los-directorios">145. Definir los directorios<a class="headerlink" href="#145-definir-los-directorios" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<pre><code class="language-python">DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+</code></pre>
+<p>Creamos los directorios:</p>
+<pre><code class="language-python">DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+</code></pre>
+<p>Este patrón ya lo hemos utilizado anteriormente.</p>
+<hr />
+<h3 id="146-configurar-el-log">146. Configurar el log<a class="headerlink" href="#146-configurar-el-log" title="Permanent link">&para;</a></h3>
+<p>Definimos:</p>
+<pre><code class="language-python">ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;diagnostico_red.log&quot;
+)
+</code></pre>
+<p>Configuramos:</p>
+<pre><code class="language-python">logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;,
+    encoding=&quot;utf-8&quot;
+)
+</code></pre>
+<p>En este caso hemos añadido:</p>
+<pre><code class="language-python">encoding=&quot;utf-8&quot;
+</code></pre>
+<p>para establecer explícitamente la codificación del archivo.</p>
+<hr />
+<h3 id="147-crear-los-argumentos">147. Crear los argumentos<a class="headerlink" href="#147-crear-los-argumentos" title="Permanent link">&para;</a></h3>
+<p>Queremos ejecutar:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv
+</code></pre>
+<p>Por tanto necesitamos un argumento:</p>
+<pre><code class="language-text">inventario
+</code></pre>
+<p>Configuramos:</p>
+<pre><code class="language-python">parser = argparse.ArgumentParser(
+    description=(
+        &quot;Realiza un diagnóstico &quot;
+        &quot;DNS y TCP de varios servicios.&quot;
+    )
+)
+</code></pre>
+<p>Añadimos:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;inventario&quot;,
+    help=(
+        &quot;Archivo CSV con &quot;
+        &quot;los servicios&quot;
+    )
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--timeout&quot;,
+    type=float,
+    default=2.0,
+    help=(
+        &quot;Timeout TCP en segundos. &quot;
+        &quot;Por defecto: 2&quot;
+    )
+)
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">args = parser.parse_args()
+</code></pre>
+<hr />
+<h3 id="148-validar-el-timeout">148. Validar el timeout<a class="headerlink" href="#148-validar-el-timeout" title="Permanent link">&para;</a></h3>
+<p>Comprobamos:</p>
+<pre><code class="language-python">if args.timeout &lt;= 0:
+
+    parser.error(
+        &quot;El timeout debe ser &quot;
+        &quot;mayor que cero.&quot;
+    )
+</code></pre>
+<p>Esto evita valores como:</p>
+<pre><code class="language-text">0
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">-5
+</code></pre>
+<hr />
+<h3 id="149-convertir-el-argumento-en-un-path">149. Convertir el argumento en un <code>Path</code><a class="headerlink" href="#149-convertir-el-argumento-en-un-path" title="Permanent link">&para;</a></h3>
+<p>Podemos hacer:</p>
+<pre><code class="language-python">archivo_inventario = Path(
+    args.inventario
+)
+</code></pre>
+<p>Después comprobamos:</p>
+<pre><code class="language-python">if not archivo_inventario.exists():
+
+    parser.error(
+        &quot;El archivo indicado &quot;
+        &quot;no existe.&quot;
+    )
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">if not archivo_inventario.is_file():
+
+    parser.error(
+        &quot;La ruta indicada &quot;
+        &quot;no es un archivo.&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="150-crear-la-funcion-para-resolver-dns">150. Crear la función para resolver DNS<a class="headerlink" href="#150-crear-la-funcion-para-resolver-dns" title="Permanent link">&para;</a></h3>
+<p>Definimos:</p>
+<pre><code class="language-python">def resolver_host(
+    host
+):
+
+    try:
+
+        ip = socket.gethostbyname(
+            host
+        )
+
+    except socket.gaierror:
+
+        logging.error(
+            f&quot;Error DNS: {host}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;DNS correcto: &quot;
+            f&quot;{host} -&gt; {ip}&quot;
+        )
+
+        return ip
+</code></pre>
+<p>La función devuelve:</p>
+<pre><code class="language-text">dirección IP
+</code></pre>
+<p>si la resolución funciona.</p>
+<p>Si falla devuelve:</p>
+<pre><code class="language-python">None
+</code></pre>
+<hr />
+<h3 id="151-crear-la-funcion-para-comprobar-tcp">151. Crear la función para comprobar TCP<a class="headerlink" href="#151-crear-la-funcion-para-comprobar-tcp" title="Permanent link">&para;</a></h3>
+<p>Definimos:</p>
+<pre><code class="language-python">def comprobar_tcp(
+    ip,
+    puerto,
+    timeout
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                timeout
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        ip,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;Error TCP &quot;
+            f&quot;{ip}:{puerto}: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+</code></pre>
+<p>Ahora hemos separado:</p>
+<pre><code class="language-text">DNS
+</code></pre>
+<p>de:</p>
+<pre><code class="language-text">TCP
+</code></pre>
+<p>en dos funciones diferentes.</p>
+<hr />
+<h3 id="152-leer-el-archivo-csv">152. Leer el archivo CSV<a class="headerlink" href="#152-leer-el-archivo-csv" title="Permanent link">&para;</a></h3>
+<p>Creamos:</p>
+<pre><code class="language-python">def cargar_inventario(
+    archivo
+):
+
+    servicios = []
+
+    try:
+
+        with archivo.open(
+            &quot;r&quot;,
+            encoding=&quot;utf-8&quot;,
+            newline=&quot;&quot;
+        ) as fichero:
+
+            lector = csv.DictReader(
+                fichero
+            )
+
+            for fila in lector:
+
+                servicios.append(
+                    fila
+                )
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;Error leyendo CSV: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return None
+
+    else:
+
+        return servicios
+</code></pre>
+<p>La función devolverá una:</p>
+<pre><code class="language-text">lista de diccionarios
+</code></pre>
+<hr />
+<h3 id="153-resultado-de-dictreader">153. Resultado de <code>DictReader</code><a class="headerlink" href="#153-resultado-de-dictreader" title="Permanent link">&para;</a></h3>
+<p>Una fila como:</p>
+<pre><code class="language-csv">Web de pruebas,example.com,443
+</code></pre>
+<p>se convertirá aproximadamente en:</p>
+<pre><code class="language-python">{
+    &quot;nombre&quot;: &quot;Web de pruebas&quot;,
+    &quot;host&quot;: &quot;example.com&quot;,
+    &quot;puerto&quot;: &quot;443&quot;
+}
+</code></pre>
+<p>Observa que:</p>
+<pre><code class="language-python">fila[&quot;puerto&quot;]
+</code></pre>
+<p>es inicialmente un texto.</p>
+<p>Necesitaremos convertirlo mediante:</p>
+<pre><code class="language-python">int()
+</code></pre>
+<hr />
+<h3 id="154-validar-cada-fila">154. Validar cada fila<a class="headerlink" href="#154-validar-cada-fila" title="Permanent link">&para;</a></h3>
+<p>Podemos crear:</p>
+<pre><code class="language-python">def validar_servicio(
+    fila
+):
+
+    try:
+
+        nombre = fila[&quot;nombre&quot;].strip()
+        host = fila[&quot;host&quot;].strip()
+
+        puerto = int(
+            fila[&quot;puerto&quot;]
+        )
+
+    except (
+        KeyError,
+        ValueError,
+        AttributeError
+    ):
+
+        return None
+</code></pre>
+<p>Después validamos:</p>
+<pre><code class="language-python">    if not nombre or not host:
+
+        return None
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">    if not 0 &lt;= puerto &lt;= 65535:
+
+        return None
+</code></pre>
+<p>Finalmente:</p>
+<pre><code class="language-python">    return {
+        &quot;nombre&quot;: nombre,
+        &quot;host&quot;: host,
+        &quot;puerto&quot;: puerto
+    }
+</code></pre>
+<hr />
+<h3 id="155-funcion-completa-de-validacion">155. Función completa de validación<a class="headerlink" href="#155-funcion-completa-de-validacion" title="Permanent link">&para;</a></h3>
+<p>La función será:</p>
+<pre><code class="language-python">def validar_servicio(
+    fila
+):
+
+    try:
+
+        nombre = fila[&quot;nombre&quot;].strip()
+        host = fila[&quot;host&quot;].strip()
+
+        puerto = int(
+            fila[&quot;puerto&quot;]
+        )
+
+    except (
+        KeyError,
+        ValueError,
+        AttributeError
+    ):
+
+        return None
+
+    if not nombre or not host:
+
+        return None
+
+    if not 0 &lt;= puerto &lt;= 65535:
+
+        return None
+
+    return {
+        &quot;nombre&quot;: nombre,
+        &quot;host&quot;: host,
+        &quot;puerto&quot;: puerto
+    }
+</code></pre>
+<p>Estamos aplicando una idea importante:</p>
+<pre><code class="language-text">DATOS EXTERNOS
+      │
+      ▼
+   validar
+      │
+      ▼
+    utilizar
+</code></pre>
+<p>Nunca debemos asumir automáticamente que los datos de un archivo son correctos.</p>
+<hr />
+<h3 id="156-diagnosticar-un-servicio">156. Diagnosticar un servicio<a class="headerlink" href="#156-diagnosticar-un-servicio" title="Permanent link">&para;</a></h3>
+<p>Ahora podemos crear una función que combine las anteriores:</p>
+<pre><code class="language-python">def diagnosticar_servicio(
+    servicio,
+    timeout
+):
+
+    nombre = servicio[&quot;nombre&quot;]
+    host = servicio[&quot;host&quot;]
+    puerto = servicio[&quot;puerto&quot;]
+
+    ip = resolver_host(
+        host
+    )
+</code></pre>
+<p>Si DNS falla:</p>
+<pre><code class="language-python">    if ip is None:
+
+        return {
+            &quot;nombre&quot;: nombre,
+            &quot;host&quot;: host,
+            &quot;ip&quot;: &quot;-&quot;,
+            &quot;puerto&quot;: puerto,
+            &quot;dns&quot;: &quot;ERROR&quot;,
+            &quot;tcp&quot;: &quot;NO_COMPROBADO&quot;
+        }
+</code></pre>
+<p>Si funciona:</p>
+<pre><code class="language-python">    estado_tcp = comprobar_tcp(
+        ip,
+        puerto,
+        timeout
+    )
+</code></pre>
+<p>Y devolvemos:</p>
+<pre><code class="language-python">    return {
+        &quot;nombre&quot;: nombre,
+        &quot;host&quot;: host,
+        &quot;ip&quot;: ip,
+        &quot;puerto&quot;: puerto,
+        &quot;dns&quot;: &quot;CORRECTO&quot;,
+        &quot;tcp&quot;: estado_tcp
+    }
+</code></pre>
+<hr />
+<h3 id="157-ventaja-de-devolver-un-diccionario">157. Ventaja de devolver un diccionario<a class="headerlink" href="#157-ventaja-de-devolver-un-diccionario" title="Permanent link">&para;</a></h3>
+<p>Nuestra función devuelve una estructura como:</p>
+<pre><code class="language-python">{
+    &quot;nombre&quot;: &quot;Web de pruebas&quot;,
+    &quot;host&quot;: &quot;example.com&quot;,
+    &quot;ip&quot;: &quot;...&quot;,
+    &quot;puerto&quot;: 443,
+    &quot;dns&quot;: &quot;CORRECTO&quot;,
+    &quot;tcp&quot;: &quot;ACCESIBLE&quot;
+}
+</code></pre>
+<p>Esto facilita:</p>
+<pre><code class="language-text">mostrar
+guardar
+contar
+generar informes
+</code></pre>
+<p>sin repetir la operación de diagnóstico.</p>
+<hr />
+<h3 id="158-cargar-el-inventario">158. Cargar el inventario<a class="headerlink" href="#158-cargar-el-inventario" title="Permanent link">&para;</a></h3>
+<p>En el programa principal:</p>
+<pre><code class="language-python">servicios = cargar_inventario(
+    archivo_inventario
+)
+</code></pre>
+<p>Comprobamos:</p>
+<pre><code class="language-python">if servicios is None:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;leer el inventario.&quot;
+    )
+
+    raise SystemExit(1)
+</code></pre>
+<p>También:</p>
+<pre><code class="language-python">if not servicios:
+
+    print(
+        &quot;El inventario está vacío.&quot;
+    )
+
+    raise SystemExit(1)
+</code></pre>
+<hr />
+<h3 id="159-crear-la-lista-de-resultados">159. Crear la lista de resultados<a class="headerlink" href="#159-crear-la-lista-de-resultados" title="Permanent link">&para;</a></h3>
+<p>Definimos:</p>
+<pre><code class="language-python">resultados = []
+</code></pre>
+<p>Después recorremos:</p>
+<pre><code class="language-python">for fila in servicios:
+</code></pre>
+<p>Validamos:</p>
+<pre><code class="language-python">servicio = validar_servicio(
+    fila
+)
+</code></pre>
+<p>Si no es válido:</p>
+<pre><code class="language-python">if servicio is None:
+
+    logging.warning(
+        f&quot;Fila incorrecta: {fila}&quot;
+    )
+
+    continue
+</code></pre>
+<p>Si es válido:</p>
+<pre><code class="language-python">resultado = (
+    diagnosticar_servicio(
+        servicio,
+        args.timeout
+    )
+)
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-python">resultados.append(
+    resultado
+)
+</code></pre>
+<hr />
+<h3 id="160-mostrar-cada-resultado">160. Mostrar cada resultado<a class="headerlink" href="#160-mostrar-cada-resultado" title="Permanent link">&para;</a></h3>
+<p>Podemos mostrar:</p>
+<pre><code class="language-python">print()
+print(
+    resultado[&quot;nombre&quot;]
+)
+
+print(
+    &quot;-&quot; * len(
+        resultado[&quot;nombre&quot;]
+    )
+)
+
+print(
+    f&quot;Host: &quot;
+    f&quot;{resultado['host']}&quot;
+)
+
+print(
+    f&quot;IP: &quot;
+    f&quot;{resultado['ip']}&quot;
+)
+
+print(
+    f&quot;Puerto: &quot;
+    f&quot;{resultado['puerto']}&quot;
+)
+
+print(
+    f&quot;DNS: &quot;
+    f&quot;{resultado['dns']}&quot;
+)
+
+print(
+    f&quot;TCP: &quot;
+    f&quot;{resultado['tcp']}&quot;
+)
+</code></pre>
+<p>Obtendremos algo parecido a:</p>
+<pre><code class="language-text">Web de pruebas
+--------------
+
+Host: example.com
+IP: ...
+Puerto: 443
+DNS: CORRECTO
+TCP: ACCESIBLE
+</code></pre>
+<hr />
+<h3 id="161-registrar-los-resultados">161. Registrar los resultados<a class="headerlink" href="#161-registrar-los-resultados" title="Permanent link">&para;</a></h3>
+<p>Podemos registrar:</p>
+<pre><code class="language-python">logging.info(
+    f&quot;{resultado['nombre']} - &quot;
+    f&quot;{resultado['host']}:&quot;
+    f&quot;{resultado['puerto']} - &quot;
+    f&quot;DNS={resultado['dns']} - &quot;
+    f&quot;TCP={resultado['tcp']}&quot;
+)
+</code></pre>
+<p>De esta manera el log mantiene un historial técnico de las comprobaciones.</p>
+<hr />
+<h3 id="162-crear-contadores">162. Crear contadores<a class="headerlink" href="#162-crear-contadores" title="Permanent link">&para;</a></h3>
+<p>Al terminar tendremos:</p>
+<pre><code class="language-python">resultados
+</code></pre>
+<p>Podemos calcular:</p>
+<pre><code class="language-python">total = len(
+    resultados
+)
+</code></pre>
+<p>Servicios TCP accesibles:</p>
+<pre><code class="language-python">accesibles = sum(
+    1
+    for resultado in resultados
+    if resultado[&quot;tcp&quot;]
+    == &quot;ACCESIBLE&quot;
+)
+</code></pre>
+<p>Errores DNS:</p>
+<pre><code class="language-python">errores_dns = sum(
+    1
+    for resultado in resultados
+    if resultado[&quot;dns&quot;]
+    == &quot;ERROR&quot;
+)
+</code></pre>
+<hr />
+<h3 id="163-comprender-sum-con-una-expresion-generadora">163. Comprender <code>sum()</code> con una expresión generadora<a class="headerlink" href="#163-comprender-sum-con-una-expresion-generadora" title="Permanent link">&para;</a></h3>
+<p>La expresión:</p>
+<pre><code class="language-python">sum(
+    1
+    for resultado in resultados
+    if resultado[&quot;tcp&quot;]
+    == &quot;ACCESIBLE&quot;
+)
+</code></pre>
+<p>puede interpretarse como:</p>
+<pre><code class="language-text">recorrer resultados
+        │
+        ▼
+¿TCP == ACCESIBLE?
+        │
+       sí
+        │
+        ▼
+       +1
+</code></pre>
+<p>También podríamos realizarlo con un bucle tradicional.</p>
+<p>Ambas soluciones son válidas.</p>
+<hr />
+<h3 id="164-mostrar-el-resumen">164. Mostrar el resumen<a class="headerlink" href="#164-mostrar-el-resumen" title="Permanent link">&para;</a></h3>
+<p>Podemos utilizar:</p>
+<pre><code class="language-python">print()
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print()
+
+print(
+    f&quot;Servicios analizados: &quot;
+    f&quot;{total}&quot;
+)
+
+print(
+    f&quot;TCP accesibles: &quot;
+    f&quot;{accesibles}&quot;
+)
+
+print(
+    f&quot;Errores DNS: &quot;
+    f&quot;{errores_dns}&quot;
+)
+</code></pre>
+<p>Esto proporciona una visión rápida del diagnóstico.</p>
+<hr />
+<h3 id="165-generar-el-informe">165. Generar el informe<a class="headerlink" href="#165-generar-el-informe" title="Permanent link">&para;</a></h3>
+<p>Crearemos una función:</p>
+<pre><code class="language-python">def generar_informe(
+    resultados
+):
+</code></pre>
+<p>Primero generamos una marca temporal:</p>
+<pre><code class="language-python">    ahora = datetime.now()
+
+    marca = ahora.strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+</code></pre>
+<p>Nombre:</p>
+<pre><code class="language-python">    nombre_archivo = (
+        f&quot;diagnostico_&quot;
+        f&quot;{marca}.txt&quot;
+    )
+</code></pre>
+<p>Ruta:</p>
+<pre><code class="language-python">    archivo = (
+        DIRECTORIO_RESULTADOS
+        / nombre_archivo
+    )
+</code></pre>
+<hr />
+<h3 id="166-crear-el-contenido-del-informe">166. Crear el contenido del informe<a class="headerlink" href="#166-crear-el-contenido-del-informe" title="Permanent link">&para;</a></h3>
+<p>Podemos comenzar:</p>
+<pre><code class="language-python">    lineas = [
+        &quot;INFORME DE DIAGNÓSTICO DE RED&quot;,
+        &quot;==============================&quot;,
+        &quot;&quot;,
+        (
+            &quot;Fecha: &quot;
+            + ahora.strftime(
+                &quot;%Y-%m-%d %H:%M:%S&quot;
+            )
+        ),
+        &quot;&quot;
+    ]
+</code></pre>
+<p>Después recorremos:</p>
+<pre><code class="language-python">    for resultado in resultados:
+
+        lineas.append(
+            resultado[&quot;nombre&quot;]
+        )
+
+        lineas.append(
+            &quot;-&quot; * len(
+                resultado[&quot;nombre&quot;]
+            )
+        )
+
+        lineas.append(
+            f&quot;Host: &quot;
+            f&quot;{resultado['host']}&quot;
+        )
+
+        lineas.append(
+            f&quot;IP: &quot;
+            f&quot;{resultado['ip']}&quot;
+        )
+
+        lineas.append(
+            f&quot;Puerto: &quot;
+            f&quot;{resultado['puerto']}&quot;
+        )
+
+        lineas.append(
+            f&quot;DNS: &quot;
+            f&quot;{resultado['dns']}&quot;
+        )
+
+        lineas.append(
+            f&quot;TCP: &quot;
+            f&quot;{resultado['tcp']}&quot;
+        )
+
+        lineas.append(
+            &quot;&quot;
+        )
+</code></pre>
+<hr />
+<h3 id="167-anadir-el-resumen-al-informe">167. Añadir el resumen al informe<a class="headerlink" href="#167-anadir-el-resumen-al-informe" title="Permanent link">&para;</a></h3>
+<p>Calculamos:</p>
+<pre><code class="language-python">    total = len(
+        resultados
+    )
+</code></pre>
+<pre><code class="language-python">    accesibles = sum(
+        1
+        for resultado in resultados
+        if resultado[&quot;tcp&quot;]
+        == &quot;ACCESIBLE&quot;
+    )
+</code></pre>
+<pre><code class="language-python">    errores_dns = sum(
+        1
+        for resultado in resultados
+        if resultado[&quot;dns&quot;]
+        == &quot;ERROR&quot;
+    )
+</code></pre>
+<p>Añadimos:</p>
+<pre><code class="language-python">    lineas.append(
+        &quot;RESUMEN&quot;
+    )
+
+    lineas.append(
+        &quot;=======&quot;
+    )
+
+    lineas.append(
+        &quot;&quot;
+    )
+
+    lineas.append(
+        f&quot;Servicios analizados: &quot;
+        f&quot;{total}&quot;
+    )
+
+    lineas.append(
+        f&quot;TCP accesibles: &quot;
+        f&quot;{accesibles}&quot;
+    )
+
+    lineas.append(
+        f&quot;Errores DNS: &quot;
+        f&quot;{errores_dns}&quot;
+    )
+</code></pre>
+<hr />
+<h3 id="168-guardar-el-informe">168. Guardar el informe<a class="headerlink" href="#168-guardar-el-informe" title="Permanent link">&para;</a></h3>
+<p>Convertimos la lista en texto:</p>
+<pre><code class="language-python">    contenido = &quot;\n&quot;.join(
+        lineas
+    )
+</code></pre>
+<p>Guardamos:</p>
+<pre><code class="language-python">    try:
+
+        archivo.write_text(
+            contenido,
+            encoding=&quot;utf-8&quot;
+        )
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;No se puede guardar &quot;
+            f&quot;el informe: {error}&quot;
+        )
+
+        return None
+
+    else:
+
+        return archivo
+</code></pre>
+<p>La función devolverá la ruta del informe si se ha creado correctamente.</p>
+<hr />
+<h3 id="169-programa-completo-diagnostico_redpy">169. Programa completo <code>diagnostico_red.py</code><a class="headerlink" href="#169-programa-completo-diagnostico_redpy" title="Permanent link">&para;</a></h3>
+<p>El programa completo queda:</p>
+<pre><code class="language-python">import argparse
+import csv
+import logging
+import socket
+
+from datetime import datetime
+from pathlib import Path
+
+
+DIRECTORIO_PROGRAMA = (
+    Path(__file__).resolve().parent
+)
+
+DIRECTORIO_CAPITULO = (
+    DIRECTORIO_PROGRAMA.parent
+)
+
+DIRECTORIO_LOGS = (
+    DIRECTORIO_CAPITULO
+    / &quot;logs&quot;
+)
+
+DIRECTORIO_RESULTADOS = (
+    DIRECTORIO_CAPITULO
+    / &quot;resultados&quot;
+)
+
+
+DIRECTORIO_LOGS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DIRECTORIO_RESULTADOS.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+ARCHIVO_LOG = (
+    DIRECTORIO_LOGS
+    / &quot;diagnostico_red.log&quot;
+)
+
+
+logging.basicConfig(
+    filename=ARCHIVO_LOG,
+    level=logging.INFO,
+    format=(
+        &quot;%(asctime)s - &quot;
+        &quot;%(levelname)s - &quot;
+        &quot;%(message)s&quot;
+    ),
+    datefmt=&quot;%Y-%m-%d %H:%M:%S&quot;,
+    encoding=&quot;utf-8&quot;
+)
+
+
+def resolver_host(
+    host
+):
+
+    try:
+
+        ip = socket.gethostbyname(
+            host
+        )
+
+    except socket.gaierror:
+
+        logging.error(
+            f&quot;Error DNS: {host}&quot;
+        )
+
+        return None
+
+    else:
+
+        logging.info(
+            f&quot;DNS correcto: &quot;
+            f&quot;{host} -&gt; {ip}&quot;
+        )
+
+        return ip
+
+
+def comprobar_tcp(
+    ip,
+    puerto,
+    timeout
+):
+
+    try:
+
+        with socket.socket(
+            socket.AF_INET,
+            socket.SOCK_STREAM
+        ) as cliente:
+
+            cliente.settimeout(
+                timeout
+            )
+
+            resultado = (
+                cliente.connect_ex(
+                    (
+                        ip,
+                        puerto
+                    )
+                )
+            )
+
+    except socket.timeout:
+
+        return &quot;TIMEOUT&quot;
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;Error TCP &quot;
+            f&quot;{ip}:{puerto}: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return &quot;ERROR&quot;
+
+    else:
+
+        if resultado == 0:
+
+            return &quot;ACCESIBLE&quot;
+
+        return &quot;NO_ACCESIBLE&quot;
+
+
+def cargar_inventario(
+    archivo
+):
+
+    servicios = []
+
+    try:
+
+        with archivo.open(
+            &quot;r&quot;,
+            encoding=&quot;utf-8&quot;,
+            newline=&quot;&quot;
+        ) as fichero:
+
+            lector = csv.DictReader(
+                fichero
+            )
+
+            for fila in lector:
+
+                servicios.append(
+                    fila
+                )
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;Error leyendo CSV: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return None
+
+    else:
+
+        return servicios
+
+
+def validar_servicio(
+    fila
+):
+
+    try:
+
+        nombre = fila[&quot;nombre&quot;].strip()
+        host = fila[&quot;host&quot;].strip()
+
+        puerto = int(
+            fila[&quot;puerto&quot;]
+        )
+
+    except (
+        KeyError,
+        ValueError,
+        AttributeError
+    ):
+
+        return None
+
+    if not nombre or not host:
+
+        return None
+
+    if not 0 &lt;= puerto &lt;= 65535:
+
+        return None
+
+    return {
+        &quot;nombre&quot;: nombre,
+        &quot;host&quot;: host,
+        &quot;puerto&quot;: puerto
+    }
+
+
+def diagnosticar_servicio(
+    servicio,
+    timeout
+):
+
+    nombre = servicio[&quot;nombre&quot;]
+    host = servicio[&quot;host&quot;]
+    puerto = servicio[&quot;puerto&quot;]
+
+    ip = resolver_host(
+        host
+    )
+
+    if ip is None:
+
+        return {
+            &quot;nombre&quot;: nombre,
+            &quot;host&quot;: host,
+            &quot;ip&quot;: &quot;-&quot;,
+            &quot;puerto&quot;: puerto,
+            &quot;dns&quot;: &quot;ERROR&quot;,
+            &quot;tcp&quot;: &quot;NO_COMPROBADO&quot;
+        }
+
+    estado_tcp = comprobar_tcp(
+        ip,
+        puerto,
+        timeout
+    )
+
+    return {
+        &quot;nombre&quot;: nombre,
+        &quot;host&quot;: host,
+        &quot;ip&quot;: ip,
+        &quot;puerto&quot;: puerto,
+        &quot;dns&quot;: &quot;CORRECTO&quot;,
+        &quot;tcp&quot;: estado_tcp
+    }
+
+
+def generar_informe(
+    resultados
+):
+
+    ahora = datetime.now()
+
+    marca = ahora.strftime(
+        &quot;%Y-%m-%d_%H-%M-%S&quot;
+    )
+
+    nombre_archivo = (
+        f&quot;diagnostico_&quot;
+        f&quot;{marca}.txt&quot;
+    )
+
+    archivo = (
+        DIRECTORIO_RESULTADOS
+        / nombre_archivo
+    )
+
+    lineas = [
+        &quot;INFORME DE DIAGNÓSTICO DE RED&quot;,
+        &quot;==============================&quot;,
+        &quot;&quot;,
+        (
+            &quot;Fecha: &quot;
+            + ahora.strftime(
+                &quot;%Y-%m-%d %H:%M:%S&quot;
+            )
+        ),
+        &quot;&quot;
+    ]
+
+    for resultado in resultados:
+
+        lineas.append(
+            resultado[&quot;nombre&quot;]
+        )
+
+        lineas.append(
+            &quot;-&quot; * len(
+                resultado[&quot;nombre&quot;]
+            )
+        )
+
+        lineas.append(
+            f&quot;Host: &quot;
+            f&quot;{resultado['host']}&quot;
+        )
+
+        lineas.append(
+            f&quot;IP: &quot;
+            f&quot;{resultado['ip']}&quot;
+        )
+
+        lineas.append(
+            f&quot;Puerto: &quot;
+            f&quot;{resultado['puerto']}&quot;
+        )
+
+        lineas.append(
+            f&quot;DNS: &quot;
+            f&quot;{resultado['dns']}&quot;
+        )
+
+        lineas.append(
+            f&quot;TCP: &quot;
+            f&quot;{resultado['tcp']}&quot;
+        )
+
+        lineas.append(
+            &quot;&quot;
+        )
+
+    total = len(
+        resultados
+    )
+
+    accesibles = sum(
+        1
+        for resultado in resultados
+        if resultado[&quot;tcp&quot;]
+        == &quot;ACCESIBLE&quot;
+    )
+
+    errores_dns = sum(
+        1
+        for resultado in resultados
+        if resultado[&quot;dns&quot;]
+        == &quot;ERROR&quot;
+    )
+
+    lineas.append(
+        &quot;RESUMEN&quot;
+    )
+
+    lineas.append(
+        &quot;=======&quot;
+    )
+
+    lineas.append(
+        &quot;&quot;
+    )
+
+    lineas.append(
+        f&quot;Servicios analizados: &quot;
+        f&quot;{total}&quot;
+    )
+
+    lineas.append(
+        f&quot;TCP accesibles: &quot;
+        f&quot;{accesibles}&quot;
+    )
+
+    lineas.append(
+        f&quot;Errores DNS: &quot;
+        f&quot;{errores_dns}&quot;
+    )
+
+    contenido = &quot;\n&quot;.join(
+        lineas
+    )
+
+    try:
+
+        archivo.write_text(
+            contenido,
+            encoding=&quot;utf-8&quot;
+        )
+
+    except OSError as error:
+
+        logging.error(
+            f&quot;No se puede guardar &quot;
+            f&quot;el informe: {error}&quot;
+        )
+
+        return None
+
+    else:
+
+        return archivo
+
+
+parser = argparse.ArgumentParser(
+    description=(
+        &quot;Realiza un diagnóstico &quot;
+        &quot;DNS y TCP de varios servicios.&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;inventario&quot;,
+    help=(
+        &quot;Archivo CSV con &quot;
+        &quot;los servicios&quot;
+    )
+)
+
+
+parser.add_argument(
+    &quot;--timeout&quot;,
+    type=float,
+    default=2.0,
+    help=(
+        &quot;Timeout TCP en segundos. &quot;
+        &quot;Por defecto: 2&quot;
+    )
+)
+
+
+args = parser.parse_args()
+
+
+if args.timeout &lt;= 0:
+
+    parser.error(
+        &quot;El timeout debe ser &quot;
+        &quot;mayor que cero.&quot;
+    )
+
+
+archivo_inventario = Path(
+    args.inventario
+)
+
+
+if not archivo_inventario.exists():
+
+    parser.error(
+        &quot;El archivo indicado &quot;
+        &quot;no existe.&quot;
+    )
+
+
+if not archivo_inventario.is_file():
+
+    parser.error(
+        &quot;La ruta indicada &quot;
+        &quot;no es un archivo.&quot;
+    )
+
+
+logging.info(
+    &quot;Inicio del diagnóstico&quot;
+)
+
+
+servicios = cargar_inventario(
+    archivo_inventario
+)
+
+
+if servicios is None:
+
+    print(
+        &quot;ERROR: no se ha podido &quot;
+        &quot;leer el inventario.&quot;
+    )
+
+    raise SystemExit(1)
+
+
+if not servicios:
+
+    print(
+        &quot;El inventario está vacío.&quot;
+    )
+
+    raise SystemExit(1)
+
+
+resultados = []
+
+
+print()
+print(&quot;DIAGNÓSTICO DE RED&quot;)
+print(&quot;==================&quot;)
+print()
+
+
+for fila in servicios:
+
+    servicio = validar_servicio(
+        fila
+    )
+
+    if servicio is None:
+
+        logging.warning(
+            f&quot;Fila incorrecta: &quot;
+            f&quot;{fila}&quot;
+        )
+
+        continue
+
+    resultado = (
+        diagnosticar_servicio(
+            servicio,
+            args.timeout
+        )
+    )
+
+    resultados.append(
+        resultado
+    )
+
+    print(
+        resultado[&quot;nombre&quot;]
+    )
+
+    print(
+        &quot;-&quot; * len(
+            resultado[&quot;nombre&quot;]
+        )
+    )
+
+    print(
+        f&quot;Host: &quot;
+        f&quot;{resultado['host']}&quot;
+    )
+
+    print(
+        f&quot;IP: &quot;
+        f&quot;{resultado['ip']}&quot;
+    )
+
+    print(
+        f&quot;Puerto: &quot;
+        f&quot;{resultado['puerto']}&quot;
+    )
+
+    print(
+        f&quot;DNS: &quot;
+        f&quot;{resultado['dns']}&quot;
+    )
+
+    print(
+        f&quot;TCP: &quot;
+        f&quot;{resultado['tcp']}&quot;
+    )
+
+    print()
+
+    logging.info(
+        f&quot;{resultado['nombre']} - &quot;
+        f&quot;{resultado['host']}:&quot;
+        f&quot;{resultado['puerto']} - &quot;
+        f&quot;DNS={resultado['dns']} - &quot;
+        f&quot;TCP={resultado['tcp']}&quot;
+    )
+
+
+total = len(
+    resultados
+)
+
+
+accesibles = sum(
+    1
+    for resultado in resultados
+    if resultado[&quot;tcp&quot;]
+    == &quot;ACCESIBLE&quot;
+)
+
+
+errores_dns = sum(
+    1
+    for resultado in resultados
+    if resultado[&quot;dns&quot;]
+    == &quot;ERROR&quot;
+)
+
+
+print(&quot;RESUMEN&quot;)
+print(&quot;=======&quot;)
+print()
+
+print(
+    f&quot;Servicios analizados: &quot;
+    f&quot;{total}&quot;
+)
+
+print(
+    f&quot;TCP accesibles: &quot;
+    f&quot;{accesibles}&quot;
+)
+
+print(
+    f&quot;Errores DNS: &quot;
+    f&quot;{errores_dns}&quot;
+)
+
+
+archivo_informe = generar_informe(
+    resultados
+)
+
+
+if archivo_informe is None:
+
+    print()
+
+    print(
+        &quot;No se ha podido &quot;
+        &quot;guardar el informe.&quot;
+    )
+
+else:
+
+    print()
+
+    print(
+        &quot;Informe generado:&quot;
+    )
+
+    print(
+        archivo_informe
+    )
+
+
+logging.info(
+    f&quot;Fin del diagnóstico. &quot;
+    f&quot;Servicios={total}, &quot;
+    f&quot;accesibles={accesibles}, &quot;
+    f&quot;errores_dns={errores_dns}&quot;
+)
+</code></pre>
+<hr />
+<h3 id="170-primera-ejecucion">170. Primera ejecución<a class="headerlink" href="#170-primera-ejecucion" title="Permanent link">&para;</a></h3>
+<p>Sitúate en:</p>
+<pre><code class="language-text">practicas/capitulo6/programas/
+</code></pre>
+<p>Podemos consultar primero la ayuda:</p>
+<pre><code class="language-powershell">python diagnostico_red.py --help
+</code></pre>
+<p>Deberemos ver los argumentos disponibles.</p>
+<p>Ahora ejecutamos:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv
+</code></pre>
+<p>También podemos indicar otro timeout:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv --timeout 3
+</code></pre>
+<hr />
+<h3 id="171-analizar-la-salida">171. Analizar la salida<a class="headerlink" href="#171-analizar-la-salida" title="Permanent link">&para;</a></h3>
+<p>Podríamos obtener una salida similar a:</p>
+<pre><code class="language-text">DIAGNÓSTICO DE RED
+==================
+
+Web de pruebas
+--------------
+Host: example.com
+IP: ...
+Puerto: 443
+DNS: CORRECTO
+TCP: ACCESIBLE
+
+Web HTTP
+--------
+Host: example.com
+IP: ...
+Puerto: 80
+DNS: CORRECTO
+TCP: ACCESIBLE
+
+RESUMEN
+=======
+
+Servicios analizados: 2
+TCP accesibles: 2
+Errores DNS: 0
+
+Informe generado:
+...\resultados\diagnostico_2026-09-21_12-15-30.txt
+</code></pre>
+<p>Los resultados concretos dependerán de la red y de los servicios utilizados.</p>
+<hr />
+<h3 id="172-comprobar-el-informe">172. Comprobar el informe<a class="headerlink" href="#172-comprobar-el-informe" title="Permanent link">&para;</a></h3>
+<p>En:</p>
+<pre><code class="language-text">practicas/capitulo6/resultados/
+</code></pre>
+<p>encontraremos un archivo similar a:</p>
+<pre><code class="language-text">diagnostico_2026-09-21_12-15-30.txt
+</code></pre>
+<p>El informe contendrá:</p>
+<pre><code class="language-text">INFORME DE DIAGNÓSTICO DE RED
+==============================
+
+Fecha: 2026-09-21 12:15:30
+
+Web de pruebas
+--------------
+Host: example.com
+IP: ...
+Puerto: 443
+DNS: CORRECTO
+TCP: ACCESIBLE
+
+Web HTTP
+--------
+Host: example.com
+IP: ...
+Puerto: 80
+DNS: CORRECTO
+TCP: ACCESIBLE
+
+RESUMEN
+=======
+
+Servicios analizados: 2
+TCP accesibles: 2
+Errores DNS: 0
+</code></pre>
+<hr />
+<h3 id="173-comprobar-el-log">173. Comprobar el log<a class="headerlink" href="#173-comprobar-el-log" title="Permanent link">&para;</a></h3>
+<p>También tendremos:</p>
+<pre><code class="language-text">practicas/capitulo6/logs/
+diagnostico_red.log
+</code></pre>
+<p>Podemos encontrar:</p>
+<pre><code class="language-text">2026-09-21 12:15:29 - INFO - Inicio del diagnóstico
+2026-09-21 12:15:29 - INFO - DNS correcto: example.com -&gt; ...
+2026-09-21 12:15:29 - INFO - Web de pruebas - example.com:443 - DNS=CORRECTO - TCP=ACCESIBLE
+2026-09-21 12:15:30 - INFO - Fin del diagnóstico. Servicios=2, accesibles=2, errores_dns=0
+</code></pre>
+<p>Ahora tenemos claramente diferenciados:</p>
+<pre><code class="language-text">PANTALLA
+    │
+    └── información inmediata
+
+
+INFORME
+    │
+    └── resultados del diagnóstico
+
+
+LOG
+    │
+    └── historial técnico
+</code></pre>
+<hr />
+<h3 id="174-probar-un-error-dns">174. Probar un error DNS<a class="headerlink" href="#174-probar-un-error-dns" title="Permanent link">&para;</a></h3>
+<p>Añade temporalmente al CSV:</p>
+<pre><code class="language-csv">Servidor inexistente,nombre-que-no-existe.invalid,80
+</code></pre>
+<p>Ejecuta de nuevo:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv
+</code></pre>
+<p>Para ese servicio deberíamos obtener:</p>
+<pre><code class="language-text">DNS: ERROR
+TCP: NO_COMPROBADO
+</code></pre>
+<p>Esto es importante.</p>
+<p>No mostramos:</p>
+<pre><code class="language-text">TCP: NO_ACCESIBLE
+</code></pre>
+<p>porque realmente <strong>no hemos realizado la comprobación TCP</strong>.</p>
+<p>El problema se ha producido en una fase anterior.</p>
+<hr />
+<h3 id="175-diferenciar-estados">175. Diferenciar estados<a class="headerlink" href="#175-diferenciar-estados" title="Permanent link">&para;</a></h3>
+<p>Nuestra herramienta distingue:</p>
+<pre><code class="language-text">DNS
+├── CORRECTO
+└── ERROR
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">TCP
+├── ACCESIBLE
+├── NO_ACCESIBLE
+├── TIMEOUT
+├── ERROR
+└── NO_COMPROBADO
+</code></pre>
+<p>Esto proporciona mucha más información que devolver simplemente:</p>
+<pre><code class="language-text">True
+</code></pre>
+<p>o:</p>
+<pre><code class="language-text">False
+</code></pre>
+<hr />
+<h3 id="176-diagnostico-por-etapas">176. Diagnóstico por etapas<a class="headerlink" href="#176-diagnostico-por-etapas" title="Permanent link">&para;</a></h3>
+<p>Nuestra herramienta sigue una estrategia:</p>
+<pre><code class="language-text">ETAPA 1
+Validar datos
+     │
+     ▼
+ETAPA 2
+Resolver DNS
+     │
+     ▼
+ETAPA 3
+Comprobar TCP
+     │
+     ▼
+ETAPA 4
+Registrar resultado
+     │
+     ▼
+ETAPA 5
+Generar informe
+</code></pre>
+<p>Si una etapa imprescindible falla, no siempre tiene sentido ejecutar las siguientes.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">DNS ERROR
+   │
+   ▼
+TCP NO_COMPROBADO
+</code></pre>
+<p>Esta forma de diseñar el programa facilita también localizar errores.</p>
+<hr />
+<h3 id="177-practica-anadir-servicios-conocidos">177. Práctica: añadir servicios conocidos<a class="headerlink" href="#177-practica-anadir-servicios-conocidos" title="Permanent link">&para;</a></h3>
+<p>Añade al programa:</p>
+<pre><code class="language-python">SERVICIOS_CONOCIDOS = {
+    21: &quot;FTP&quot;,
+    22: &quot;SSH&quot;,
+    25: &quot;SMTP&quot;,
+    53: &quot;DNS&quot;,
+    80: &quot;HTTP&quot;,
+    110: &quot;POP3&quot;,
+    143: &quot;IMAP&quot;,
+    443: &quot;HTTPS&quot;
+}
+</code></pre>
+<p>Dentro de:</p>
+<pre><code class="language-python">diagnosticar_servicio()
+</code></pre>
+<p>podemos obtener:</p>
+<pre><code class="language-python">tipo_servicio = (
+    SERVICIOS_CONOCIDOS.get(
+        puerto,
+        &quot;Desconocido&quot;
+    )
+)
+</code></pre>
+<p>Añade al diccionario de resultado:</p>
+<pre><code class="language-python">&quot;servicio&quot;: tipo_servicio
+</code></pre>
+<p>La salida podría mostrar:</p>
+<pre><code class="language-text">Puerto: 443
+Servicio habitual: HTTPS
+TCP: ACCESIBLE
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Servicio habitual</p>
+<p>El número de puerto únicamente nos permite indicar el servicio asociado habitualmente con él.</p>
+<p>No demuestra qué aplicación concreta está utilizando realmente ese puerto.</p>
+</div>
+<hr />
+<h3 id="178-practica-anadir-estadisticas">178. Práctica: añadir estadísticas<a class="headerlink" href="#178-practica-anadir-estadisticas" title="Permanent link">&para;</a></h3>
+<p>Amplía el resumen para mostrar:</p>
+<pre><code class="language-text">Servicios analizados
+DNS correctos
+Errores DNS
+TCP accesibles
+TCP no accesibles
+Timeouts
+Errores TCP
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">RESUMEN
+=======
+
+Servicios analizados: 8
+DNS correctos: 7
+Errores DNS: 1
+TCP accesibles: 5
+TCP no accesibles: 1
+Timeouts: 1
+Errores TCP: 0
+</code></pre>
+<p>Utiliza:</p>
+<pre><code class="language-python">sum()
+</code></pre>
+<p>para calcular cada categoría.</p>
+<hr />
+<h3 id="179-practica-anadir-salida-json">179. Práctica: añadir salida JSON<a class="headerlink" href="#179-practica-anadir-salida-json" title="Permanent link">&para;</a></h3>
+<p>En el capítulo 5 hemos trabajado con JSON.</p>
+<p>Podemos recuperar esos conocimientos importando:</p>
+<pre><code class="language-python">import json
+</code></pre>
+<p>Después podemos guardar:</p>
+<pre><code class="language-python">resultados
+</code></pre>
+<p>mediante:</p>
+<pre><code class="language-python">json.dumps(
+    resultados,
+    indent=4,
+    ensure_ascii=False
+)
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">archivo_json.write_text(
+    contenido_json,
+    encoding=&quot;utf-8&quot;
+)
+</code></pre>
+<p>De esta manera nuestra herramienta podría generar:</p>
+<pre><code class="language-text">diagnostico_2026-09-21_12-15-30.txt
+</code></pre>
+<p>y:</p>
+<pre><code class="language-text">diagnostico_2026-09-21_12-15-30.json
+</code></pre>
+<hr />
+<h3 id="180-ejemplo-de-resultado-json">180. Ejemplo de resultado JSON<a class="headerlink" href="#180-ejemplo-de-resultado-json" title="Permanent link">&para;</a></h3>
+<p>Podríamos obtener:</p>
+<pre><code class="language-json">[
+    {
+        &quot;nombre&quot;: &quot;Web de pruebas&quot;,
+        &quot;host&quot;: &quot;example.com&quot;,
+        &quot;ip&quot;: &quot;192.0.2.10&quot;,
+        &quot;puerto&quot;: 443,
+        &quot;dns&quot;: &quot;CORRECTO&quot;,
+        &quot;tcp&quot;: &quot;ACCESIBLE&quot;
+    },
+    {
+        &quot;nombre&quot;: &quot;Servidor inexistente&quot;,
+        &quot;host&quot;: &quot;nombre-que-no-existe.invalid&quot;,
+        &quot;ip&quot;: &quot;-&quot;,
+        &quot;puerto&quot;: 80,
+        &quot;dns&quot;: &quot;ERROR&quot;,
+        &quot;tcp&quot;: &quot;NO_COMPROBADO&quot;
+    }
+]
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Direcciones del ejemplo</p>
+<p>Las direcciones mostradas en los ejemplos son ilustrativas.</p>
+<p>Los resultados reales de una consulta DNS pueden ser diferentes.</p>
+</div>
+<hr />
+<h3 id="181-practica-opcion-json">181. Práctica: opción <code>--json</code><a class="headerlink" href="#181-practica-opcion-json" title="Permanent link">&para;</a></h3>
+<p>Podemos añadir:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;--json&quot;,
+    action=&quot;store_true&quot;,
+    help=(
+        &quot;Genera también &quot;
+        &quot;un informe JSON&quot;
+    )
+)
+</code></pre>
+<p>Entonces:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv --json
+</code></pre>
+<p>podría generar:</p>
+<pre><code class="language-text">informe TXT
++
+informe JSON
+</code></pre>
+<p>Así recuperamos:</p>
+<pre><code class="language-text">argparse
++
+flags booleanos
++
+JSON
+</code></pre>
+<hr />
+<h3 id="182-practica-modo-detallado">182. Práctica: modo detallado<a class="headerlink" href="#182-practica-modo-detallado" title="Permanent link">&para;</a></h3>
+<p>También podemos añadir:</p>
+<pre><code class="language-python">parser.add_argument(
+    &quot;-d&quot;,
+    &quot;--detallado&quot;,
+    action=&quot;store_true&quot;,
+    help=(
+        &quot;Muestra información &quot;
+        &quot;detallada&quot;
+    )
+)
+</code></pre>
+<p>Sin la opción:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv
+</code></pre>
+<p>podríamos mostrar únicamente:</p>
+<pre><code class="language-text">Web de pruebas: ACCESIBLE
+Web HTTP: ACCESIBLE
+</code></pre>
+<p>Con:</p>
+<pre><code class="language-powershell">python diagnostico_red.py ../datos/servicios.csv --detallado
+</code></pre>
+<p>mostraríamos:</p>
+<pre><code class="language-text">nombre
+host
+IP
+puerto
+DNS
+TCP
+</code></pre>
+<p>Esta técnica ya la estudiamos con:</p>
+<pre><code class="language-python">argparse
+</code></pre>
+<hr />
+<h3 id="183-practica-integrar-http">183. Práctica: integrar HTTP<a class="headerlink" href="#183-practica-integrar-http" title="Permanent link">&para;</a></h3>
+<p>Podemos ampliar voluntariamente la herramienta para los puertos:</p>
+<pre><code class="language-text">80
+443
+</code></pre>
+<p>Si encontramos un servicio TCP accesible, podríamos utilizar lo aprendido en el capítulo 5 mediante:</p>
+<pre><code class="language-python">requests
+</code></pre>
+<p>para intentar realizar una petición HTTP.</p>
+<p>El diagnóstico podría evolucionar:</p>
+<pre><code class="language-text">DNS
+ │
+ ▼
+TCP
+ │
+ ▼
+¿80 o 443?
+ │
+ ├── no ──► finalizar
+ │
+ └── sí
+      │
+      ▼
+    HTTP
+      │
+      ▼
+status_code
+</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Ampliación</p>
+<p>Esta ampliación no es necesaria para completar el capítulo.</p>
+<p>Su objetivo es relacionar los contenidos de los capítulos 5 y 6.</p>
+</div>
+<hr />
+<h3 id="184-practica-final-del-capitulo">184. Práctica final del capítulo<a class="headerlink" href="#184-practica-final-del-capitulo" title="Permanent link">&para;</a></h3>
+<p>Crea una nueva versión:</p>
+<pre><code class="language-text">diagnostico_red_v2.py
+</code></pre>
+<p>Debe incorporar:</p>
+<pre><code class="language-text">lectura CSV
+resolución DNS
+comprobación TCP
+identificación de servicios conocidos
+timeout configurable
+modo detallado
+informe TXT
+informe JSON opcional
+logging
+estadísticas
+control de errores
+</code></pre>
+<p>La ejecución deberá permitir:</p>
+<pre><code class="language-powershell">python diagnostico_red_v2.py ../datos/servicios.csv
+</code></pre>
+<p>También:</p>
+<pre><code class="language-powershell">python diagnostico_red_v2.py ../datos/servicios.csv --timeout 3
+</code></pre>
+<p>Y:</p>
+<pre><code class="language-powershell">python diagnostico_red_v2.py ../datos/servicios.csv --json --detallado
+</code></pre>
+<hr />
+<h3 id="185-requisitos-minimos-de-diagnostico_red_v2py">185. Requisitos mínimos de <code>diagnostico_red_v2.py</code><a class="headerlink" href="#185-requisitos-minimos-de-diagnostico_red_v2py" title="Permanent link">&para;</a></h3>
+<p>El programa deberá utilizar:</p>
+<pre><code class="language-text">argparse
+csv
+socket
+logging
+datetime
+pathlib
+json
+</code></pre>
+<p>y aplicar:</p>
+<pre><code class="language-text">funciones
+diccionarios
+listas
+bucles
+condicionales
+try / except
+validación de datos
+</code></pre>
+<p>El programa deberá estar dividido en funciones.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">resolver_host()
+comprobar_tcp()
+cargar_inventario()
+validar_servicio()
+diagnosticar_servicio()
+generar_informe_txt()
+generar_informe_json()
+mostrar_resumen()
+</code></pre>
+<hr />
+<h3 id="186-flujo-de-la-version-final">186. Flujo de la versión final<a class="headerlink" href="#186-flujo-de-la-version-final" title="Permanent link">&para;</a></h3>
+<p>La aplicación seguirá:</p>
+<pre><code class="language-text">               INICIO
+                  │
+                  ▼
+             argparse
+                  │
+                  ▼
+          validar argumentos
+                  │
+                  ▼
+             leer CSV
+                  │
+                  ▼
+          validar servicios
+                  │
+                  ▼
+          ┌────── DNS ──────┐
+          │                 │
+        ERROR               IP
+          │                 │
+          │                 ▼
+          │                TCP
+          │            ┌────┴────┐
+          │            │         │
+          │        ACCESIBLE   OTRO
+          │            │         │
+          └────────────┴────┬────┘
+                            │
+                            ▼
+                       resultados
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ▼             ▼             ▼
+           pantalla        TXT           JSON
+
+                            │
+                            ▼
+                           LOG
+</code></pre>
+<hr />
+<h3 id="187-que-conocimientos-estamos-integrando">187. Qué conocimientos estamos integrando<a class="headerlink" href="#187-que-conocimientos-estamos-integrando" title="Permanent link">&para;</a></h3>
+<p>Esta práctica recupera contenidos de varios capítulos.</p>
+<p>Del <strong>Capítulo 1</strong>:</p>
+<pre><code class="language-text">Path
+archivos
+CSV
+directorios
+</code></pre>
+<p>Del <strong>Capítulo 2</strong>:</p>
+<pre><code class="language-text">herramientas de diagnóstico
+comandos del sistema
+conceptos de red
+</code></pre>
+<p>Del <strong>Capítulo 3</strong>:</p>
+<pre><code class="language-text">automatización
+listas de equipos
+informes
+procesamiento repetitivo
+</code></pre>
+<p>Del <strong>Capítulo 4</strong>:</p>
+<pre><code class="language-text">argparse
+excepciones
+logging
+scripts parametrizables
+</code></pre>
+<p>Del <strong>Capítulo 5</strong>:</p>
+<pre><code class="language-text">JSON
+servicios de red
+HTTP
+APIs
+</code></pre>
+<p>Y del <strong>Capítulo 6</strong>:</p>
+<pre><code class="language-text">socket
+TCP
+puertos
+DNS
+resolución de nombres
+</code></pre>
+<hr />
+<h3 id="188-diferentes-niveles-del-diagnostico">188. Diferentes niveles del diagnóstico<a class="headerlink" href="#188-diferentes-niveles-del-diagnostico" title="Permanent link">&para;</a></h3>
+<p>Después de los capítulos 5 y 6 podemos distinguir:</p>
+<pre><code class="language-text">NOMBRE
+  │
+  ▼
+ DNS
+  │
+  ▼
+DIRECCIÓN IP
+  │
+  ▼
+ TCP
+  │
+  ▼
+PUERTO
+  │
+  ▼
+SERVICIO
+  │
+  ▼
+HTTP / API
+</code></pre>
+<p>Un problema puede aparecer en diferentes etapas.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">DNS ERROR
+</code></pre>
+<p>es diferente de:</p>
+<pre><code class="language-text">DNS CORRECTO
+TCP NO ACCESIBLE
+</code></pre>
+<p>y también es diferente de:</p>
+<pre><code class="language-text">DNS CORRECTO
+TCP ACCESIBLE
+HTTP 404
+</code></pre>
+<p>Cada resultado proporciona información distinta.</p>
+<hr />
+<h3 id="189-metodo-de-diagnostico">189. Método de diagnóstico<a class="headerlink" href="#189-metodo-de-diagnostico" title="Permanent link">&para;</a></h3>
+<p>Una estrategia útil consiste en avanzar por etapas:</p>
+<pre><code class="language-text">1. ¿Los datos son válidos?
+           │
+           ▼
+2. ¿Se resuelve el nombre?
+           │
+           ▼
+3. ¿Existe conectividad TCP?
+           │
+           ▼
+4. ¿Responde el servicio?
+           │
+           ▼
+5. ¿La respuesta es la esperada?
+</code></pre>
+<p>Este enfoque evita mezclar problemas diferentes.</p>
+<hr />
+<h3 id="190-buenas-practicas-aplicadas">190. Buenas prácticas aplicadas<a class="headerlink" href="#190-buenas-practicas-aplicadas" title="Permanent link">&para;</a></h3>
+<p>Durante el desarrollo hemos aplicado diferentes buenas prácticas:</p>
+<pre><code class="language-text">separar el programa en funciones
+validar los datos externos
+utilizar timeouts
+controlar excepciones concretas
+registrar operaciones
+generar informes
+usar rutas con pathlib
+parametrizar mediante argparse
+</code></pre>
+<p>También hemos evitado:</p>
+<pre><code class="language-text">valores fijos innecesarios
+rutas absolutas
+except genéricos innecesarios
+esperas de red sin timeout
+mezclar toda la lógica en un único bloque
+</code></pre>
+<hr />
+<h3 id="191-seguridad-y-uso-responsable">191. Seguridad y uso responsable<a class="headerlink" href="#191-seguridad-y-uso-responsable" title="Permanent link">&para;</a></h3>
+<p>Las herramientas de diagnóstico de red son útiles para:</p>
+<pre><code class="language-text">administración
+mantenimiento
+inventario
+monitorización
+resolución de incidencias
+</code></pre>
+<p>Pero deben utilizarse de forma responsable.</p>
+<div class="admonition warning">
+<p class="admonition-title">Uso autorizado</p>
+<p>Utiliza las herramientas de comprobación de puertos únicamente sobre:</p>
+<ul>
+<li>Tus propios sistemas.</li>
+<li>Equipos del laboratorio.</li>
+<li>Infraestructuras sobre las que tengas autorización.</li>
+</ul>
+<p>No realices comprobaciones masivas sobre sistemas ajenos.</p>
+</div>
+<hr />
+<h3 id="192-resumen-del-capitulo-6">192. Resumen del Capítulo 6<a class="headerlink" href="#192-resumen-del-capitulo-6" title="Permanent link">&para;</a></h3>
+<p>En este capítulo hemos aprendido a utilizar:</p>
+<pre><code class="language-python">socket
+</code></pre>
+<p>para realizar diagnósticos básicos de red.</p>
+<p>Primero hemos creado sockets TCP mediante:</p>
+<pre><code class="language-python">socket.socket(
+    socket.AF_INET,
+    socket.SOCK_STREAM
+)
+</code></pre>
+<p>Después hemos utilizado:</p>
+<pre><code class="language-python">connect_ex()
+</code></pre>
+<p>para comprobar la conectividad con determinados puertos.</p>
+<p>Hemos evolucionado desde:</p>
+<pre><code class="language-text">un puerto
+</code></pre>
+<p>hasta:</p>
+<pre><code class="language-text">varios puertos
+</code></pre>
+<p>y posteriormente:</p>
+<pre><code class="language-text">pequeños rangos de puertos
+</code></pre>
+<p>También hemos utilizado:</p>
+<pre><code class="language-python">socket.gethostbyname()
+</code></pre>
+<pre><code class="language-python">socket.gethostbyname_ex()
+</code></pre>
+<pre><code class="language-python">socket.getaddrinfo()
+</code></pre>
+<p>y:</p>
+<pre><code class="language-python">socket.gethostbyaddr()
+</code></pre>
+<p>para trabajar con resolución de nombres.</p>
+<p>Finalmente hemos combinado:</p>
+<pre><code class="language-text">CSV
++
+DNS
++
+TCP
++
+argparse
++
+excepciones
++
+logging
++
+informes
+</code></pre>
+<p>para desarrollar una herramienta de diagnóstico de red.</p>
+<hr />
+<h3 id="193-competencias-adquiridas">193. Competencias adquiridas<a class="headerlink" href="#193-competencias-adquiridas" title="Permanent link">&para;</a></h3>
+<p>Al finalizar el capítulo debemos ser capaces de:</p>
+<ul>
+<li>Comprender la relación entre una dirección IP y un puerto.</li>
+<li>Diferenciar una prueba ICMP de una conexión TCP.</li>
+<li>Crear sockets TCP desde Python.</li>
+<li>Comprobar la accesibilidad de un puerto.</li>
+<li>Recorrer pequeños conjuntos o rangos de puertos.</li>
+<li>Establecer tiempos de espera.</li>
+<li>Resolver nombres mediante DNS.</li>
+<li>Obtener direcciones IPv4 e IPv6.</li>
+<li>Realizar consultas de resolución inversa.</li>
+<li>Controlar errores de red.</li>
+<li>Leer inventarios desde CSV.</li>
+<li>Automatizar comprobaciones sobre varios servicios.</li>
+<li>Generar informes.</li>
+<li>Registrar operaciones mediante <code>logging</code>.</li>
+<li>Construir herramientas de diagnóstico parametrizables.</li>
+</ul>
+<hr />
+<h3 id="194-cierre-del-capitulo-6">194. Cierre del Capítulo 6<a class="headerlink" href="#194-cierre-del-capitulo-6" title="Permanent link">&para;</a></h3>
+<p>Con este capítulo hemos completado el bloque dedicado a:</p>
+<pre><code class="language-text">Diagnóstico básico de red
+</code></pre>
+<p>Nuestro recorrido ha sido:</p>
+<pre><code class="language-text">        RED
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+   DNS       TCP
+    │         │
+    ▼         ▼
+ nombre     puerto
+    │         │
+    └────┬────┘
+         ▼
+     diagnóstico
+         │
+    ┌────┴────┐
+    │         │
+    ▼         ▼
+ informe     log
+</code></pre>
+<div class="admonition success">
+<p class="admonition-title">Capítulo 6 completado</p>
+<p>Hemos desarrollado herramientas capaces de comprobar servicios de red mediante Python y hemos integrado los conocimientos de los capítulos anteriores en una aplicación completa de diagnóstico.</p>
+<p>Con este capítulo queda completado el bloque de <strong>Utilidades de Red y Conectividad</strong>.</p>
+</div>
+<hr />
+<h3 id="195-cierre-del-modulo-2">195. Cierre del Módulo 2<a class="headerlink" href="#195-cierre-del-modulo-2" title="Permanent link">&para;</a></h3>
+<p>Durante este módulo hemos trabajado dos grandes áreas.</p>
+<p>En el <strong>Capítulo 5</strong>:</p>
+<pre><code class="language-text">HTTP
+APIs
+requests
+GET
+POST
+JSON
+</code></pre>
+<p>En el <strong>Capítulo 6</strong>:</p>
+<pre><code class="language-text">socket
+TCP
+puertos
+DNS
+diagnóstico
+</code></pre>
+<p>Podemos resumir el módulo mediante:</p>
+<pre><code class="language-text">       PYTHON Y REDES
+             │
+      ┌──────┴──────┐
+      │             │
+      ▼             ▼
+     HTTP           TCP
+      │             │
+      ▼             ▼
+     API          socket
+      │             │
+      ▼             ▼
+    JSON        puertos/DNS
+      │             │
+      └──────┬──────┘
+             ▼
+       automatización
+         de redes
+</code></pre>
+<p>Con esto queda completado el:</p>
+<pre><code class="language-text">MÓDULO 2
+Automatización de Redes y APIs
+</code></pre>
+<p>El siguiente bloque del libro será el <strong>Módulo 3: Proyecto Final e Integración</strong>.</p>
+<p>Comenzaremos estudiando la <strong>depuración profesional en VS Code</strong>, trabajando con:</p>
+<pre><code class="language-text">breakpoints
+variables durante la ejecución
+ejecución paso a paso
+pila de llamadas
+consola de depuración
+</code></pre>
+<p>Después utilizaremos estos conocimientos para desarrollar el <strong>proyecto final integrador del curso</strong>.</p></div>
 
 <div class="monlau-page-navigation">
 
